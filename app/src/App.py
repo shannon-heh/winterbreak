@@ -34,7 +34,7 @@ def check_user_exists(username):
 @app.route('/create_user', methods=['POST'])
 def create_user():
     profile = request.json
-    if check_user_exists(profile['username']):
+    if check_user_exists(profile['username']).get_json == True:
         return jsonify(False)
 
     users.insert_one(profile)
