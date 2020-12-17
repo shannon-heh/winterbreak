@@ -1,5 +1,5 @@
 
-from flask import Flask, request
+from flask import Flask, request, jsonify, make_response
 from flask_pymongo import PyMongo
 
 app = Flask(__name__)
@@ -22,28 +22,29 @@ def index():
     return '<h2>backend server</h2>'
 
 
-@app.route('/check_user_exists/<username>')
+# Returns jsonified True if username already exists in collection
+@app.route('/check_user_exists/<username>', methods=['GET'])
 def check_user_exists(username):
-    return '1' if users.find_one({'username': username}) != {} else '0'
+    return jsonify(users.find_one({'username': username}) != None)
 
 
-'''
-    Inserts user profile into users collection.
-    Returns False if user profile already exists,
-    Returns True if user profile successfully added.
-'''
-
-
+# Inserts user profile into users collection.
+# Returns jsonified False if user profile already exists,
+# Returns jsonified True if user profile successfully added
 @app.route('/create_user', methods=['POST'])
 def create_user():
     profile = request.json
     if check_user_exists(profile['username']):
-        return False
+        return jsonify(False)
 
     users.insert_one(profile)
-    return True
+    return jsonify(True)
+
+# jsonify returns Response object - to extract boolean value, use response.json
 
 
 # run server
 if __name__ == '__main__':
+    from IPython import embed
+    embed()
     app.run(debug=True)
