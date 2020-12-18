@@ -22,29 +22,49 @@ def index():
     return '<h2>backend server</h2>'
 
 
-# Returns jsonified True if username already exists in collection
-@app.route('/check_user_exists/<username>', methods=['GET'])
-def check_user_exists(username):
-    return jsonify(users.find_one({'username': username}) != None)
+fields = ['username', 'pet_name', 'pet_bday', 'pet_breed',
+          'pet_weight', 'owner_name', 'owner_email']
 
 
 # Inserts user profile into users collection.
-# Returns jsonified False if user profile already exists,
-# Returns jsonified True if user profile successfully added
+# Returns 409 if profile already exists.
+# Returns 400 if profile is missing/has extraneous attributes.
+# Returns 201 if successful.
 @app.route('/create_user', methods=['POST'])
 def create_user():
+    def validate_profile(profile):
+        try:
+            for field in fields:
+                profile[field]
+        except:
+            return False
+
+        return len(profile) == len(fields)
+
     profile = request.json
-    if check_user_exists(profile['username']).get_json == True:
-        return jsonify(False)
+    if not validate_profile(profile):
+        return make_response(jsonify(), 400)
+
+    if users.find_one({'username': profile['username']}) != None:
+        return make_response(jsonify(), 409)
 
     users.insert_one(profile)
-    return jsonify(True)
+    return make_response(jsonify(), 201)
 
-# jsonify returns Response object - to extract boolean value, use response.json
+
+# Gets user profile from users collection.
+# Returns 404 if username not found.
+# Returns profile data and 200 if username is found.
+# User exists if get_user returns 200 for status code
+@app.route('/get_user/<username>', methods=['GET'])
+def get_user(username):
+    res = users.find_one({'username': username}, {'_id': False})
+    if(res == None):
+        return make_response(jsonify(), 404)
+
+    return make_response(jsonify(res), 200)
 
 
 # run server
 if __name__ == '__main__':
-    from IPython import embed
-    embed()
     app.run(debug=True)
