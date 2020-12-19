@@ -50,8 +50,7 @@ export function SignUp() {
         /* invalid username format */
         if (!username.match(/^\w+$/)) {
             submitBtn.disabled = true;
-            usernameStatus.innerHTML =
-                "Username must contain only letters, numbers, and/or _.";
+            usernameStatus.innerHTML = "Username must contain only letters, numbers, and/or _.";
             return;
         }
 
@@ -105,12 +104,7 @@ export function SignUp() {
                 <br />
                 <label>
                     Pet's Name:
-                    <input
-                        type="text"
-                        name="pet_name"
-                        placeholder="e.g. Lucky"
-                        required
-                    />
+                    <input type="text" name="pet_name" placeholder="e.g. Lucky" required />
                 </label>
                 <br />
                 <label>
@@ -130,12 +124,7 @@ export function SignUp() {
                 <br />
                 <label>
                     Pet's Weight:
-                    <input
-                        type="number"
-                        name="pet_weight"
-                        placeholder="in pounds"
-                        required
-                    />
+                    <input type="number" name="pet_weight" placeholder="in pounds" required />
                 </label>
                 <br />
                 <br />
@@ -143,12 +132,7 @@ export function SignUp() {
                 <br />
                 <label>
                     Owner's Name:
-                    <input
-                        type="text"
-                        name="owner_name"
-                        placeholder="Jane Doe"
-                        required
-                    />
+                    <input type="text" name="owner_name" placeholder="Jane Doe" required />
                 </label>
                 <br />
                 <label>

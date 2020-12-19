@@ -44,12 +44,7 @@ export function Login() {
                 <br />
                 <label>
                     Password:
-                    <input
-                        type="password"
-                        name="password"
-                        defaultValue=""
-                        required
-                    />
+                    <input type="password" name="password" defaultValue="" required />
                 </label>
                 <div id="login_status"></div>
                 <input id="login_submit" type="submit" value="Let's Go!" />
