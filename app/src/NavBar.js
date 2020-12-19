@@ -6,6 +6,7 @@ export function NavBar() {
 
     const handleClick = (event) => {
         localStorage.setItem("isLoggedIn", false); // IS THIS RIGHT??
+        localStorage.setItem("profile", JSON.stringify({})); // ???
         // console.log("CUM HERE: ", paths.landing);
         history.push(paths.landing);
     };

@@ -13,7 +13,11 @@ export const paths = {
 };
 
 export const isLoggedIn = () => {
-    return localStorage.getItem("isLoggedIn") === "true";
+    return JSON.parse(localStorage.getItem("isLoggedIn"));
+};
+
+export const getProfile = () => {
+    return JSON.parse(localStorage.getItem("profile"));
 };
 
 function App() {
