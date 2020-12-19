@@ -1,6 +1,15 @@
 import axios from "axios";
+import { useHistory } from "react-router-dom";
+import { useEffect } from "react";
+import { paths } from "./App";
 
 export function SignUp() {
+    let history = useHistory();
+
+    useEffect(() => {
+        document.title = "Sign Up";
+    }, []);
+
     const handleSubmit = (event) => {
         event.preventDefault();
 
@@ -8,6 +17,7 @@ export function SignUp() {
 
         const form = event.target;
         profile.username = form.username.value;
+        profile.password = form.password.value;
         profile.pet_name = form.pet_name.value;
         profile.pet_breed = form.pet_breed.value;
         profile.pet_bday = form.pet_bday.value;
@@ -18,6 +28,7 @@ export function SignUp() {
         axios.post("http://127.0.0.1:5000/create_user", profile).then(
             (res) => {
                 console.log("SUCCESS: ", res);
+                history.push(paths.login);
             },
             (error) => {
                 console.log("FAILURE: ", error);
@@ -47,7 +58,9 @@ export function SignUp() {
             return;
         }
 
-        axios.get(`http://127.0.0.1:5000/get_user/${username}`).then(
+        const name = { username: username };
+
+        axios.post("http://127.0.0.1:5000/check_user", name).then(
             (res) => {
                 /* username already exists */
                 submitBtn.disabled = true;
@@ -76,6 +89,17 @@ export function SignUp() {
                 />
             </label>
             <span id="username_status"></span>
+            <br />
+            <label>
+                Password:
+                <input
+                    type="password"
+                    name="password"
+                    defaultValue=""
+                    placeholder="Choose a strong password!"
+                    required
+                />
+            </label>
             <br />
             <br />
             Pet Information
