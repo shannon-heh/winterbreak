@@ -4,8 +4,9 @@ import { SignUp } from "./SignUp";
 import { Login } from "./Login";
 import { NavBar } from "./NavBar";
 
-/* endpoints for app */
+/* endpoints */
 export const paths = {
+    base: "/",
     landing: "/landing",
     login: "/login",
     signup: "/sign-up",
@@ -22,11 +23,12 @@ export const getProfile = () => {
     return JSON.parse(localStorage.getItem("profile"));
 };
 
+/* App is the parent component and manages initial routing to core children components */
 function App() {
     return (
         <>
             <Router>
-                <Route exact path="/">
+                <Route exact path={paths.base}>
                     <Redirect to={paths.landing} />
                 </Route>
                 <Route exact path={paths.landing}>

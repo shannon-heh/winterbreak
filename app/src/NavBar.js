@@ -1,6 +1,7 @@
 import { useHistory } from "react-router-dom";
 import { paths, isLoggedIn } from "./App";
 
+/* NavBar provides navbar functionality across all pages prefixed with /p/ */
 export function NavBar() {
     let history = useHistory();
 

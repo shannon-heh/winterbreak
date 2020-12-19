@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { paths, isLoggedIn } from "./App";
 
+/* Login provides user login functionality on /login */
 export function Login() {
     let history = useHistory();
 

@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import { useEffect } from "react";
 import { paths, isLoggedIn } from "./App";
 
+/* SignUp provides user registration functionality on /sign-up */
 export function SignUp() {
     let history = useHistory();
 
@@ -32,7 +33,7 @@ export function SignUp() {
                 history.push(paths.login);
             },
             (error) => {
-                console.log("USER CREATION FAILED: ", error)
+                console.log("USER CREATION FAILED: ", error);
             }
         );
     };
