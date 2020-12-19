@@ -10,6 +10,8 @@ export function SignUp() {
         document.title = "Sign Up";
     }, []);
 
+    /* if user correctly fills out sign up fields,
+    adds user profile to database and navigates to login page */
     const handleSubmit = (event) => {
         event.preventDefault();
 
@@ -29,10 +31,14 @@ export function SignUp() {
             (res) => {
                 history.push(paths.login);
             },
-            (error) => {}
+            (error) => {
+                console.log("USER CREATION FAILED: ", error)
+            }
         );
     };
 
+    /* when user clicks out of username field, 
+    verifies availability and format of username */
     const handleBlur = (event) => {
         event.preventDefault();
 

@@ -9,6 +9,7 @@ export function Landing() {
         document.title = "Landing";
     }, []);
 
+    /* navigates to login or signup page */
     const handleClick = (event) => {
         if (event.target.id === "login_button") history.push(paths.login);
         else history.push(paths.signup);

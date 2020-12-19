@@ -4,6 +4,7 @@ import { paths, isLoggedIn } from "./App";
 export function NavBar() {
     let history = useHistory();
 
+    /* handles click of logout button in navbar */
     const handleClick = (event) => {
         localStorage.setItem("isLoggedIn", false);
         localStorage.setItem("profile", JSON.stringify({}));

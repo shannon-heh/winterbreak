@@ -4,6 +4,7 @@ import { SignUp } from "./SignUp";
 import { Login } from "./Login";
 import { NavBar } from "./NavBar";
 
+/* endpoints for app */
 export const paths = {
     landing: "/landing",
     login: "/login",
@@ -11,10 +12,12 @@ export const paths = {
     home: "/p/home",
 };
 
+/* returns true if user is logged in, false if not */
 export const isLoggedIn = () => {
     return JSON.parse(localStorage.getItem("isLoggedIn"));
 };
 
+/* returns profile data for current user */
 export const getProfile = () => {
     return JSON.parse(localStorage.getItem("profile"));
 };

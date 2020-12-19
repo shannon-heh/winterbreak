@@ -4,12 +4,15 @@ import { useHistory } from "react-router-dom";
 import { paths, isLoggedIn } from "./App";
 
 export function Login() {
+    let history = useHistory();
+
     useEffect(() => {
         document.title = "Login";
     }, []);
 
-    let history = useHistory();
-
+    /* verifies login credentials
+    navigates to user home if successful 
+    or displays error message if unsuccessful */
     const handleSubmit = (event) => {
         event.preventDefault();
 
@@ -25,6 +28,7 @@ export function Login() {
             (res) => {
                 localStorage.setItem("isLoggedIn", true);
                 localStorage.setItem("profile", JSON.stringify(res.data));
+                loginStatus.innerHTML = "Success!";
                 history.push(paths.home);
             },
             (error) => {
