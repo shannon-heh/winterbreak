@@ -1,6 +1,6 @@
 import { useHistory } from "react-router-dom";
 import { useEffect } from "react";
-import { paths } from "./App";
+import { paths, isLoggedIn } from "./App";
 
 export function Landing() {
     let history = useHistory();
@@ -16,6 +16,8 @@ export function Landing() {
 
     return (
         <>
+            {/* {dirSwitch(paths.home, null)} */}
+            {isLoggedIn() ? history.push(paths.home) : null}
             <button id="login_button" type="button" onClick={handleClick}>
                 Login
             </button>

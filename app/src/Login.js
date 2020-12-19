@@ -1,15 +1,16 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useHistory, Redirect } from "react-router-dom";
-import { paths, isLoggedIn } from "./App";
+import { useHistory } from "react-router-dom";
+import { paths, dirSwitch } from "./App";
 
 export function Login() {
-    let history = useHistory();
-    const [render, reRender] = useState(0);
-
     useEffect(() => {
         document.title = "Login";
     }, []);
+
+    let history = useHistory();
+
+    let [stat, reRender] = useState(0)
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -28,7 +29,8 @@ export function Login() {
                 loginStatus.innerHTML = "Success!";
                 localStorage.setItem("isLoggedIn", true);
                 localStorage.setItem("profile", JSON.stringify(res.data));
-                console.log(localStorage.getItem("isLoggedIn"));
+                reRender(stat+1);
+                console.log("IS LOGGED IN: ", localStorage.getItem("isLoggedIn"));
                 // console.log(JSON.parse(localStorage.getItem("profile")));
                 // console.log(paths.home);
                 history.push(paths.home);
@@ -45,23 +47,26 @@ export function Login() {
     // }
 
     return (
-        <form onSubmit={handleSubmit}>
-            <label>
-                Username:
-                <input type="text" name="username" defaultValue="" required />
-            </label>
-            <br />
-            <label>
-                Password:
-                <input
-                    type="password"
-                    name="password"
-                    defaultValue=""
-                    required
-                />
-            </label>
-            <div id="login_status"></div>
-            <input id="login_submit" type="submit" value="Let's Go!" />
-        </form>
+        <>
+            {dirSwitch(paths.home, null)}
+            <form onSubmit={handleSubmit}>
+                <label>
+                    Username:
+                    <input type="text" name="username" defaultValue="" required />
+                </label>
+                <br />
+                <label>
+                    Password:
+                    <input
+                        type="password"
+                        name="password"
+                        defaultValue=""
+                        required
+                    />
+                </label>
+                <div id="login_status"></div>
+                <input id="login_submit" type="submit" value="Let's Go!" />
+            </form>
+        </>
     );
 }
