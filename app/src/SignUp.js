@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 import { useEffect } from "react";
-import { paths } from "./App";
+import { paths, isLoggedIn } from "./App";
 
 export function SignUp() {
     let history = useHistory();
@@ -27,12 +27,9 @@ export function SignUp() {
 
         axios.post("http://127.0.0.1:5000/create_user", profile).then(
             (res) => {
-                console.log("SUCCESS: ", res);
                 history.push(paths.login);
             },
-            (error) => {
-                console.log("FAILURE: ", error);
-            }
+            (error) => {}
         );
     };
 
@@ -75,94 +72,97 @@ export function SignUp() {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <label>
-                Username:
-                <input
-                    id="username"
-                    type="text"
-                    name="username"
-                    defaultValue=""
-                    placeholder="e.g. goldenlucky1"
-                    onBlur={handleBlur}
-                    required
-                />
-            </label>
-            <span id="username_status"></span>
-            <br />
-            <label>
-                Password:
-                <input
-                    type="password"
-                    name="password"
-                    defaultValue=""
-                    placeholder="Choose a strong password!"
-                    required
-                />
-            </label>
-            <br />
-            <br />
-            Pet Information
-            <br />
-            <label>
-                Pet's Name:
-                <input
-                    type="text"
-                    name="pet_name"
-                    placeholder="e.g. Lucky"
-                    required
-                />
-            </label>
-            <br />
-            <label>
-                Pet's Breed:
-                <input
-                    type="text"
-                    name="pet_breed"
-                    placeholder="e.g. Golden Retriever"
-                    required
-                />
-            </label>
-            <br />
-            <label>
-                Pet's Birthday:
-                <input type="month" name="pet_bday" required />
-            </label>
-            <br />
-            <label>
-                Pet's Weight:
-                <input
-                    type="number"
-                    name="pet_weight"
-                    placeholder="in pounds"
-                    required
-                />
-            </label>
-            <br />
-            <br />
-            Owner Information
-            <br />
-            <label>
-                Owner's Name:
-                <input
-                    type="text"
-                    name="owner_name"
-                    placeholder="Jane Doe"
-                    required
-                />
-            </label>
-            <br />
-            <label>
-                Owner's Email:
-                <input
-                    type="email"
-                    name="owner_email"
-                    placeholder="jane.doe@gmail.com"
-                    required
-                />
-            </label>
-            <br />
-            <input id="submit" type="submit" value="Let's Go!" disabled />
-        </form>
+        <>
+            {isLoggedIn() ? history.push(paths.home) : null}
+            <form onSubmit={handleSubmit}>
+                <label>
+                    Username:
+                    <input
+                        id="username"
+                        type="text"
+                        name="username"
+                        defaultValue=""
+                        placeholder="e.g. goldenlucky1"
+                        onBlur={handleBlur}
+                        required
+                    />
+                </label>
+                <span id="username_status"></span>
+                <br />
+                <label>
+                    Password:
+                    <input
+                        type="password"
+                        name="password"
+                        defaultValue=""
+                        placeholder="Choose a strong password!"
+                        required
+                    />
+                </label>
+                <br />
+                <br />
+                Pet Information
+                <br />
+                <label>
+                    Pet's Name:
+                    <input
+                        type="text"
+                        name="pet_name"
+                        placeholder="e.g. Lucky"
+                        required
+                    />
+                </label>
+                <br />
+                <label>
+                    Pet's Breed:
+                    <input
+                        type="text"
+                        name="pet_breed"
+                        placeholder="e.g. Golden Retriever"
+                        required
+                    />
+                </label>
+                <br />
+                <label>
+                    Pet's Birthday:
+                    <input type="month" name="pet_bday" required />
+                </label>
+                <br />
+                <label>
+                    Pet's Weight:
+                    <input
+                        type="number"
+                        name="pet_weight"
+                        placeholder="in pounds"
+                        required
+                    />
+                </label>
+                <br />
+                <br />
+                Owner Information
+                <br />
+                <label>
+                    Owner's Name:
+                    <input
+                        type="text"
+                        name="owner_name"
+                        placeholder="Jane Doe"
+                        required
+                    />
+                </label>
+                <br />
+                <label>
+                    Owner's Email:
+                    <input
+                        type="email"
+                        name="owner_email"
+                        placeholder="jane.doe@gmail.com"
+                        required
+                    />
+                </label>
+                <br />
+                <input id="submit" type="submit" value="Let's Go!" disabled />
+            </form>
+        </>
     );
 }

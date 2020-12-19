@@ -16,7 +16,6 @@ export function Landing() {
 
     return (
         <>
-            {/* {dirSwitch(paths.home, null)} */}
             {isLoggedIn() ? history.push(paths.home) : null}
             <button id="login_button" type="button" onClick={handleClick}>
                 Login

@@ -1,7 +1,7 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { paths, dirSwitch } from "./App";
+import { paths, isLoggedIn } from "./App";
 
 export function Login() {
     useEffect(() => {
@@ -9,8 +9,6 @@ export function Login() {
     }, []);
 
     let history = useHistory();
-
-    let [stat, reRender] = useState(0)
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -25,30 +23,19 @@ export function Login() {
 
         axios.post("http://127.0.0.1:5000/auth", credentials).then(
             (res) => {
-                console.log("SUCCESS: ", res);
-                loginStatus.innerHTML = "Success!";
                 localStorage.setItem("isLoggedIn", true);
                 localStorage.setItem("profile", JSON.stringify(res.data));
-                reRender(stat+1);
-                console.log("IS LOGGED IN: ", localStorage.getItem("isLoggedIn"));
-                // console.log(JSON.parse(localStorage.getItem("profile")));
-                // console.log(paths.home);
                 history.push(paths.home);
             },
             (error) => {
-                console.log("FAILURE: ", error);
                 loginStatus.innerHTML = "Invalid Username and/or Password!";
             }
         );
     };
 
-    // if (isLoggedIn()) {
-    //     return <Redirect to="/hi" />;
-    // }
-
     return (
         <>
-            {dirSwitch(paths.home, null)}
+            {isLoggedIn() ? history.push(paths.home) : null}
             <form onSubmit={handleSubmit}>
                 <label>
                     Username:
