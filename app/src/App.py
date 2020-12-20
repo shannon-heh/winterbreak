@@ -24,7 +24,7 @@ def index():
 
 
 fields = ['username', 'password', 'pet_name', 'pet_bday', 'pet_breed',
-          'pet_weight', 'owner_name', 'owner_email']
+          'pet_weight', 'owner_name', 'owner_email', 'owner_state', 'owner_city']
 
 
 # Inserts user profile into users collection.

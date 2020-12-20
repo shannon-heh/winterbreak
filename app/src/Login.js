@@ -1,7 +1,9 @@
 import axios from "axios";
 import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { paths, isLoggedIn } from "./App";
+import { paths, colors, isLoggedIn, setInvalidField } from "./App";
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
 
 /* Login provides user login functionality on /login */
 export function Login() {
@@ -20,40 +22,81 @@ export function Login() {
         let credentials = {};
 
         const form = event.target;
-        credentials.username = form.username.value;
-        credentials.password = form.password.value;
+        const fields = [form.username, form.password];
+       
+        let existInvalidField = false;
 
-        const loginStatus = document.getElementById("login_status");
+        fields.forEach(element => {
+            const id = element.id;
+            credentials[id] = element.value;
+            if (!credentials[id]) {
+                existInvalidField = true;
+                setInvalidField(element);
+            }
+        });
+        
+        if (existInvalidField) return;
+
+        const usernameStatus = document.getElementById("username_status");
+        const passwordStatus = document.getElementById("password_status");
 
         axios.post("http://127.0.0.1:5000/auth", credentials).then(
             (res) => {
                 localStorage.setItem("isLoggedIn", true);
                 localStorage.setItem("profile", JSON.stringify(res.data));
-                loginStatus.innerHTML = "Success!";
                 history.push(paths.home);
             },
             (error) => {
-                loginStatus.innerHTML = "Invalid Username and/or Password!";
+                usernameStatus.innerHTML = "";
+                passwordStatus.innerHTML = "Invalid username and/or password!";
+                passwordStatus.style.color = colors.danger;
             }
         );
     };
 
+
+    const handleBlur = (event) => {
+        event.preventDefault();
+
+        if (!event.target.value) setInvalidField(event.target);
+        else {
+            event.target.classList.remove("is-invalid");
+            document.getElementById(event.target.id+"_status").innerHTML = "";
+        }
+    }
+
     return (
         <>
             {isLoggedIn() ? history.push(paths.home) : null}
-            <form onSubmit={handleSubmit}>
-                <label>
-                    Username:
-                    <input type="text" name="username" defaultValue="" required />
-                </label>
-                <br />
-                <label>
-                    Password:
-                    <input type="password" name="password" defaultValue="" required />
-                </label>
-                <div id="login_status"></div>
-                <input id="login_submit" type="submit" value="Let's Go!" />
-            </form>
+            <Form onSubmit={handleSubmit}>
+                <Form.Group>
+                    <Form.Label>Username</Form.Label>
+                    <Form.Control 
+                        id="username"
+                        name="username"
+                        type="text" 
+                        placeholder="Username"
+                        onBlur={handleBlur}
+                    />
+                    <Form.Text id="username_status" />
+                </Form.Group>
+
+                <Form.Group>
+                    <Form.Label>Password</Form.Label>
+                    <Form.Control 
+                        id="password"
+                        name="password"
+                        type="password"
+                        placeholder="Password"
+                        onBlur={handleBlur}
+                    />
+                    <Form.Text id="password_status" />
+                </Form.Group>
+
+                <Button variant="primary" id="login_submit" type="submit">
+                    Let's Go!
+                </Button>
+            </Form>
         </>
     );
 }

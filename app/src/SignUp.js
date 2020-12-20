@@ -1,7 +1,9 @@
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 import { useEffect } from "react";
-import { paths, isLoggedIn } from "./App";
+import { paths, colors, isLoggedIn, setInvalidField, setValidField } from "./App";
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
 
 /* SignUp provides user registration functionality on /sign-up */
 export function SignUp() {
@@ -19,14 +21,21 @@ export function SignUp() {
         let profile = {};
 
         const form = event.target;
-        profile.username = form.username.value;
-        profile.password = form.password.value;
-        profile.pet_name = form.pet_name.value;
-        profile.pet_breed = form.pet_breed.value;
-        profile.pet_bday = form.pet_bday.value;
-        profile.pet_weight = form.pet_weight.value;
-        profile.owner_name = form.owner_name.value;
-        profile.owner_email = form.owner_email.value;
+        const fields = [form.username, form.password, form.pet_name, form.pet_breed, form.pet_bday,
+            form.pet_weight, form.owner_name, form.owner_email, form.owner_city, form.owner_state];
+       
+        let existInvalidField = false;
+
+        fields.forEach(element => {
+            const id = element.id;
+            profile[id] = element.value;
+            if (!profile[id]) {
+                existInvalidField = true;
+                setInvalidField(element);
+            }
+        });
+        
+        if (existInvalidField) return;
 
         axios.post("http://127.0.0.1:5000/create_user", profile).then(
             (res) => {
@@ -38,26 +47,34 @@ export function SignUp() {
         );
     };
 
-    /* when user clicks out of username field, 
-    verifies availability and format of username */
     const handleBlur = (event) => {
         event.preventDefault();
 
-        const username = document.getElementById("username").value;
-        const submitBtn = document.getElementById("submit");
+        if (!event.target.value) setInvalidField(event.target);
+        else setValidField(event.target);
+    }
+
+    /* when user clicks out of username field, 
+    verifies availability and format of username */
+    const handleUsernameBlur = (event) => {
+        event.preventDefault();
+
+        const usernameField = document.getElementById("username");
+        const username = usernameField.value;
         const usernameStatus = document.getElementById("username_status");
 
         /* username not provided */
         if (!username) {
-            submitBtn.disabled = true;
+            setInvalidField(usernameField);
             usernameStatus.innerHTML = "";
             return;
         }
 
         /* invalid username format */
         if (!username.match(/^\w+$/)) {
-            submitBtn.disabled = true;
+            setInvalidField(usernameField);
             usernameStatus.innerHTML = "Username must contain only letters, numbers, and/or _.";
+            usernameStatus.style.color = colors.danger;
             return;
         }
 
@@ -66,13 +83,15 @@ export function SignUp() {
         axios.post("http://127.0.0.1:5000/check_user", name).then(
             (res) => {
                 /* username already exists */
-                submitBtn.disabled = true;
+                setInvalidField(usernameField);
                 usernameStatus.innerHTML = "Username Unavailable!";
+                usernameStatus.style.color = colors.danger;
             },
             (error) => {
                 /* username doesn't exist */
-                submitBtn.disabled = false;
+                setValidField(usernameField);
                 usernameStatus.innerHTML = "Username Available!";
+                usernameStatus.style.color = colors.success;
             }
         );
     };
@@ -80,80 +99,129 @@ export function SignUp() {
     return (
         <>
             {isLoggedIn() ? history.push(paths.home) : null}
-            <form onSubmit={handleSubmit}>
-                <label>
-                    Username:
-                    <input
+            <Form onSubmit={handleSubmit} className="needs-validation">
+                <Form.Group>
+                    <Form.Label>Username</Form.Label>
+                    <Form.Control
                         id="username"
                         type="text"
-                        name="username"
+                        placeholder="Username"
                         defaultValue=""
-                        placeholder="e.g. goldenlucky1"
-                        onBlur={handleBlur}
-                        required
+                        onBlur={handleUsernameBlur}
                     />
-                </label>
-                <span id="username_status"></span>
-                <br />
-                <label>
-                    Password:
-                    <input
+                    <Form.Text id="username_status" />
+                </Form.Group>
+
+                <Form.Group>
+                    <Form.Label>Password</Form.Label>
+                    <Form.Control
+                        id="password"
                         type="password"
-                        name="password"
+                        placeholder="Password"
                         defaultValue=""
-                        placeholder="Choose a strong password!"
-                        required
+                        onBlur={handleBlur}
                     />
-                </label>
-                <br />
-                <br />
-                Pet Information
-                <br />
-                <label>
-                    Pet's Name:
-                    <input type="text" name="pet_name" placeholder="e.g. Lucky" required />
-                </label>
-                <br />
-                <label>
-                    Pet's Breed:
-                    <input
-                        type="text"
-                        name="pet_breed"
+                    <Form.Text id="password_status" />
+                </Form.Group>
+                
+                <Form.Group>
+                    <Form.Label>Pet's Name</Form.Label>
+                    <Form.Control
+                        id="pet_name"
+                        type="text" 
+                        placeholder="e.g. Lucky"
+                        defaultValue=""
+                        onBlur={handleBlur}
+                    />
+                    <Form.Text id="pet_name_status" />
+                </Form.Group>
+
+                <Form.Group>
+                    <Form.Label>Pet's Breed</Form.Label>
+                    <Form.Control
+                        id="pet_breed"
+                        type="text" 
                         placeholder="e.g. Golden Retriever"
-                        required
+                        defaultValue=""
+                        onBlur={handleBlur}
                     />
-                </label>
-                <br />
-                <label>
-                    Pet's Birthday:
-                    <input type="month" name="pet_bday" required />
-                </label>
-                <br />
-                <label>
-                    Pet's Weight:
-                    <input type="number" name="pet_weight" placeholder="in pounds" required />
-                </label>
-                <br />
-                <br />
-                Owner Information
-                <br />
-                <label>
-                    Owner's Name:
-                    <input type="text" name="owner_name" placeholder="Jane Doe" required />
-                </label>
-                <br />
-                <label>
-                    Owner's Email:
-                    <input
+                    <Form.Text id="pet_breed_status" />
+                </Form.Group>
+
+                <Form.Group>
+                    <Form.Label>Pet's Birthday</Form.Label>
+                    <Form.Control
+                        id="pet_bday"
+                        type="month"
+                        onBlur={handleBlur}
+                    />
+                    <Form.Text id="pet_bday_status" />
+                </Form.Group>
+
+                <Form.Group>
+                    <Form.Label>Pet's Weight</Form.Label>
+                    <Form.Control
+                        id="pet_weight"
+                        type="number"
+                        placeholder="In pounds"
+                        defaultValue=""
+                        onBlur={handleBlur}
+                    />
+                    <Form.Text id="pet_weight_status" />
+                </Form.Group>
+
+                <Form.Group>
+                    <Form.Label>Owner's Name</Form.Label>
+                    <Form.Control
+                        id="owner_name"
+                        type="text"
+                        placeholder="e.g. Jane Doe"
+                        defaultValue=""
+                        onBlur={handleBlur}
+                    />
+                    <Form.Text id="owner_name_status" />
+                </Form.Group>
+
+                <Form.Group>
+                    <Form.Label>Owner's Email</Form.Label>
+                    <Form.Control
+                        id="owner_email"
                         type="email"
-                        name="owner_email"
-                        placeholder="jane.doe@gmail.com"
-                        required
+                        placeholder="e.g. jane.doe@gmail.com"
+                        defaultValue=""
+                        onBlur={handleBlur}
                     />
-                </label>
-                <br />
-                <input id="submit" type="submit" value="Let's Go!" disabled />
-            </form>
+                    <Form.Text id="owner_email_status" />
+                </Form.Group>
+
+                <Form.Group>
+                    <Form.Label>Owner's City</Form.Label>
+                    <Form.Control
+                        id="owner_city"
+                        type="text"
+                        placeholder="e.g. Los Angeles"
+                        defaultValue=""
+                        onBlur={handleBlur}
+                    />
+                    <Form.Text id="owner_city_status" />
+                </Form.Group>
+
+                <Form.Group>
+                    <Form.Label>Owner's State</Form.Label>
+                    <Form.Control
+                        id="owner_state"
+                        type="text"
+                        placeholder="e.g. CA"
+                        defaultValue=""
+                        onBlur={handleBlur}
+                    />
+                    <Form.Text id="owner_state_status" />
+                </Form.Group>
+
+                <Button variant="primary" id="signup_submit" type="submit">
+                    Let's Go!
+                </Button>
+            </Form>
         </>
     );
 }

@@ -1,7 +1,9 @@
 import { useHistory } from "react-router-dom";
 import { useEffect } from "react";
 import { paths, isLoggedIn } from "./App";
+import Button from 'react-bootstrap/Button';
 
+/* Landing provides functionality for the logged-out state */
 export function Landing() {
     let history = useHistory();
 
@@ -18,12 +20,12 @@ export function Landing() {
     return (
         <>
             {isLoggedIn() ? history.push(paths.home) : null}
-            <button id="login_button" type="button" onClick={handleClick}>
+            <Button variant="primary" id="login_button" onClick={handleClick}>
                 Login
-            </button>
-            <button id="signup_button" type="button" onClick={handleClick}>
+            </Button>
+            <Button variant="primary" id="signup_button" onClick={handleClick}>
                 Sign Up
-            </button>
+            </Button>
         </>
     );
 }
