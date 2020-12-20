@@ -2,8 +2,8 @@ import axios from "axios";
 import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { paths, colors, isLoggedIn, setInvalidField } from "./App";
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
 
 /* Login provides user login functionality on /login */
 export function Login() {
@@ -14,7 +14,7 @@ export function Login() {
     }, []);
 
     /* verifies login credentials
-    navigates to user home if successful 
+    navigates to user home if successful
     or displays error message if unsuccessful */
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -23,10 +23,10 @@ export function Login() {
 
         const form = event.target;
         const fields = [form.username, form.password];
-       
+
         let existInvalidField = false;
 
-        fields.forEach(element => {
+        fields.forEach((element) => {
             const id = element.id;
             credentials[id] = element.value;
             if (!credentials[id]) {
@@ -34,7 +34,7 @@ export function Login() {
                 setInvalidField(element);
             }
         });
-        
+
         if (existInvalidField) return;
 
         const usernameStatus = document.getElementById("username_status");
@@ -54,16 +54,15 @@ export function Login() {
         );
     };
 
-
     const handleBlur = (event) => {
         event.preventDefault();
 
         if (!event.target.value) setInvalidField(event.target);
         else {
             event.target.classList.remove("is-invalid");
-            document.getElementById(event.target.id+"_status").innerHTML = "";
+            document.getElementById(event.target.id + "_status").innerHTML = "";
         }
-    }
+    };
 
     return (
         <>
@@ -71,10 +70,10 @@ export function Login() {
             <Form onSubmit={handleSubmit}>
                 <Form.Group>
                     <Form.Label>Username</Form.Label>
-                    <Form.Control 
+                    <Form.Control
                         id="username"
                         name="username"
-                        type="text" 
+                        type="text"
                         placeholder="Username"
                         onBlur={handleBlur}
                     />
@@ -83,7 +82,7 @@ export function Login() {
 
                 <Form.Group>
                     <Form.Label>Password</Form.Label>
-                    <Form.Control 
+                    <Form.Control
                         id="password"
                         name="password"
                         type="password"

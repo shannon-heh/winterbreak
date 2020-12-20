@@ -9,12 +9,12 @@ export function NavBar() {
     /* handles click of home button in navbar */
     const handleHome = (event) => {
         history.push(paths.home);
-    }
+    };
 
     /* handles click of profile button in navbar */
     const handleProfile = (event) => {
         history.push(paths.profile);
-    }
+    };
 
     /* handles click of logout button in navbar */
     const handleLogout = (event) => {

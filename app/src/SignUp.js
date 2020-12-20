@@ -2,8 +2,8 @@ import axios from "axios";
 import { useHistory } from "react-router-dom";
 import { useEffect } from "react";
 import { paths, colors, isLoggedIn, setInvalidField, setValidField } from "./App";
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
 
 /* SignUp provides user registration functionality on /sign-up */
 export function SignUp() {
@@ -21,12 +21,22 @@ export function SignUp() {
         let profile = {};
 
         const form = event.target;
-        const fields = [form.username, form.password, form.pet_name, form.pet_breed, form.pet_bday,
-            form.pet_weight, form.owner_name, form.owner_email, form.owner_city, form.owner_state];
-       
+        const fields = [
+            form.username,
+            form.password,
+            form.pet_name,
+            form.pet_breed,
+            form.pet_bday,
+            form.pet_weight,
+            form.owner_name,
+            form.owner_email,
+            form.owner_city,
+            form.owner_state,
+        ];
+
         let existInvalidField = false;
 
-        fields.forEach(element => {
+        fields.forEach((element) => {
             const id = element.id;
             profile[id] = element.value;
             if (!profile[id]) {
@@ -34,7 +44,7 @@ export function SignUp() {
                 setInvalidField(element);
             }
         });
-        
+
         if (existInvalidField) return;
 
         axios.post("http://127.0.0.1:5000/create_user", profile).then(
@@ -52,7 +62,7 @@ export function SignUp() {
 
         if (!event.target.value) setInvalidField(event.target);
         else setValidField(event.target);
-    }
+    };
 
     /* when user clicks out of username field, 
     verifies availability and format of username */
@@ -123,12 +133,12 @@ export function SignUp() {
                     />
                     <Form.Text id="password_status" />
                 </Form.Group>
-                
+
                 <Form.Group>
                     <Form.Label>Pet's Name</Form.Label>
                     <Form.Control
                         id="pet_name"
-                        type="text" 
+                        type="text"
                         placeholder="e.g. Lucky"
                         defaultValue=""
                         onBlur={handleBlur}
@@ -140,7 +150,7 @@ export function SignUp() {
                     <Form.Label>Pet's Breed</Form.Label>
                     <Form.Control
                         id="pet_breed"
-                        type="text" 
+                        type="text"
                         placeholder="e.g. Golden Retriever"
                         defaultValue=""
                         onBlur={handleBlur}
@@ -150,11 +160,7 @@ export function SignUp() {
 
                 <Form.Group>
                     <Form.Label>Pet's Birthday</Form.Label>
-                    <Form.Control
-                        id="pet_bday"
-                        type="month"
-                        onBlur={handleBlur}
-                    />
+                    <Form.Control id="pet_bday" type="month" onBlur={handleBlur} />
                     <Form.Text id="pet_bday_status" />
                 </Form.Group>
 
