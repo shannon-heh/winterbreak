@@ -1,7 +1,14 @@
 import axios from "axios";
 import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { paths, isLoggedIn, setInvalidField, server, setSuccessStatus, setDangerStatus } from "./App";
+import {
+    paths,
+    isLoggedIn,
+    setInvalidField,
+    server,
+    setSuccessStatus,
+    setDangerStatus,
+} from "./App";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 
@@ -12,9 +19,9 @@ export function Login() {
     useEffect(() => {
         /* displays successful profile creation status if previous
         url was sign up page */
-        const creationStatus =  document.getElementById("creation_status");
-        if(paths.current === paths.signup)
-            setSuccessStatus(creationStatus, "Successful Profile Creation!");
+        const creationStatus = document.getElementById("creation_status");
+        if (paths.current === paths.signup)
+            setSuccessStatus(creationStatus, "Profile successfully created!");
         else creationStatus.innerHTML = "";
 
         paths.current = paths.login;
@@ -58,7 +65,7 @@ export function Login() {
             },
             (error) => {
                 usernameStatus.innerHTML = "";
-                setDangerStatus(passwordStatus, "Invalid username and/or password!")
+                setDangerStatus(passwordStatus, "Invalid username and/or password!");
             }
         );
     };

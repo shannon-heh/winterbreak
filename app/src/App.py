@@ -17,14 +17,22 @@ matchups = db.matchups
 goals = db.goals
 tracking = db.tracking
 
+# user profile attributes
+fields = ['username',
+          'password',
+          'pet_name',
+          'pet_bday',
+          'pet_breed',
+          'pet_weight',
+          'owner_name',
+          'owner_email',
+          'owner_city',
+          'owner_state']
+
 
 @app.route('/')
 def index():
     return '<h2>backend server</h2>'
-
-
-fields = ['username', 'password', 'pet_name', 'pet_bday', 'pet_breed',
-          'pet_weight', 'owner_name', 'owner_email', 'owner_city', 'owner_state']
 
 
 # Inserts user profile into users collection.
@@ -43,7 +51,6 @@ def create_user():
         return len(profile) == len(fields)
 
     profile = request.json
-    print(profile)
     if not validate_profile(profile):
         return make_response(jsonify(), 400)
 

@@ -26,7 +26,7 @@ export const colors = {
 
 /* endpoints */
 export const paths = {
-    current: "/", /* current path */
+    current: "/" /* current path */,
     base: "/",
     landing: "/landing",
     login: "/login",
@@ -49,13 +49,13 @@ export const getProfile = () => {
 export const setSuccessStatus = (element, status) => {
     element.innerHTML = status;
     element.style.color = colors.success;
-}
+};
 
 /* helper method: displays element text & sets text to "danger" color */
 export const setDangerStatus = (element, status) => {
     element.innerHTML = status;
     element.style.color = colors.danger;
-}
+};
 
 /* helper method: sets field as valid */
 export const setValidField = (element) => {

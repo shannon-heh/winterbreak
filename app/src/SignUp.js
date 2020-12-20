@@ -1,7 +1,15 @@
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 import { useEffect } from "react";
-import { paths, setDangerStatus, setSuccessStatus, isLoggedIn, setInvalidField, setValidField, server } from "./App";
+import {
+    paths,
+    setDangerStatus,
+    setSuccessStatus,
+    isLoggedIn,
+    setInvalidField,
+    setValidField,
+    server,
+} from "./App";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 
@@ -54,9 +62,7 @@ export function SignUp() {
             (res) => {
                 history.push(paths.login);
             },
-            (error) => {
-                console.log("USER CREATION FAILED: ", error);
-            }
+            (error) => {}
         );
     };
 
@@ -89,7 +95,10 @@ export function SignUp() {
         /* invalid username format */
         if (!username.match(/^\w+$/)) {
             setInvalidField(usernameField);
-            setDangerStatus(usernameStatus, "Username must contain only letters, numbers, and/or _.");
+            setDangerStatus(
+                usernameStatus,
+                "Username must contain only letters, numbers, and/or _."
+            );
             return;
         }
 
@@ -136,7 +145,7 @@ export function SignUp() {
                     />
                     <Form.Text id="password_status" />
                 </Form.Group>
- 
+
                 <Form.Group>
                     <Form.Label>Pet's Name</Form.Label>
                     <Form.Control
@@ -225,7 +234,7 @@ export function SignUp() {
                         onBlur={handleBlur}
                     />
                     <Form.Text id="owner_state_status" />
-                </Form.Group> 
+                </Form.Group>
 
                 <Button variant="primary" id="signup_submit" type="submit">
                     Let's Go!
