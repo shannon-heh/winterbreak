@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 import { useEffect } from "react";
-import { paths, colors, isLoggedIn, setInvalidField, setValidField } from "./App";
+import { paths, setDangerStatus, setSuccessStatus, isLoggedIn, setInvalidField, setValidField, server } from "./App";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 
@@ -10,6 +10,7 @@ export function SignUp() {
     let history = useHistory();
 
     useEffect(() => {
+        paths.current = paths.signup;
         document.title = "Sign Up";
     }, []);
 
@@ -36,6 +37,7 @@ export function SignUp() {
 
         let existInvalidField = false;
 
+        /* checks validity of each input field */
         fields.forEach((element) => {
             const id = element.id;
             profile[id] = element.value;
@@ -45,9 +47,10 @@ export function SignUp() {
             }
         });
 
+        /* do not proceed to login if any field is invalid */
         if (existInvalidField) return;
 
-        axios.post("http://127.0.0.1:5000/create_user", profile).then(
+        axios.post(`${server}create_user`, profile).then(
             (res) => {
                 history.push(paths.login);
             },
@@ -57,6 +60,9 @@ export function SignUp() {
         );
     };
 
+    /* when user clicks out of a field, 
+    set field as invalid if field is empty, 
+    or set field as valid otherwise */
     const handleBlur = (event) => {
         event.preventDefault();
 
@@ -83,25 +89,22 @@ export function SignUp() {
         /* invalid username format */
         if (!username.match(/^\w+$/)) {
             setInvalidField(usernameField);
-            usernameStatus.innerHTML = "Username must contain only letters, numbers, and/or _.";
-            usernameStatus.style.color = colors.danger;
+            setDangerStatus(usernameStatus, "Username must contain only letters, numbers, and/or _.");
             return;
         }
 
         const name = { username: username };
 
-        axios.post("http://127.0.0.1:5000/check_user", name).then(
+        axios.post(`${server}check_user`, name).then(
             (res) => {
                 /* username already exists */
                 setInvalidField(usernameField);
-                usernameStatus.innerHTML = "Username Unavailable!";
-                usernameStatus.style.color = colors.danger;
+                setDangerStatus(usernameStatus, "Username Unavailable!");
             },
             (error) => {
                 /* username doesn't exist */
                 setValidField(usernameField);
-                usernameStatus.innerHTML = "Username Available!";
-                usernameStatus.style.color = colors.success;
+                setSuccessStatus(usernameStatus, "Username Available!");
             }
         );
     };
@@ -133,7 +136,7 @@ export function SignUp() {
                     />
                     <Form.Text id="password_status" />
                 </Form.Group>
-
+ 
                 <Form.Group>
                     <Form.Label>Pet's Name</Form.Label>
                     <Form.Control
@@ -222,7 +225,7 @@ export function SignUp() {
                         onBlur={handleBlur}
                     />
                     <Form.Text id="owner_state_status" />
-                </Form.Group>
+                </Form.Group> 
 
                 <Button variant="primary" id="signup_submit" type="submit">
                     Let's Go!

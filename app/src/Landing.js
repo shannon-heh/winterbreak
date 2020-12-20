@@ -8,6 +8,7 @@ export function Landing() {
     let history = useHistory();
 
     useEffect(() => {
+        paths.current = paths.landing;
         document.title = "Landing";
     }, []);
 

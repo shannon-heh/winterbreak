@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { paths, colors, isLoggedIn, setInvalidField } from "./App";
+import { paths, isLoggedIn, setInvalidField, server, setSuccessStatus, setDangerStatus } from "./App";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 
@@ -10,6 +10,14 @@ export function Login() {
     let history = useHistory();
 
     useEffect(() => {
+        /* displays successful profile creation status if previous
+        url was sign up page */
+        const creationStatus =  document.getElementById("creation_status");
+        if(paths.current === paths.signup)
+            setSuccessStatus(creationStatus, "Successful Profile Creation!");
+        else creationStatus.innerHTML = "";
+
+        paths.current = paths.login;
         document.title = "Login";
     }, []);
 
@@ -26,6 +34,7 @@ export function Login() {
 
         let existInvalidField = false;
 
+        /* checks validity of each input field */
         fields.forEach((element) => {
             const id = element.id;
             credentials[id] = element.value;
@@ -35,12 +44,13 @@ export function Login() {
             }
         });
 
+        /* do not proceed to user home if any field is invalid */
         if (existInvalidField) return;
 
         const usernameStatus = document.getElementById("username_status");
         const passwordStatus = document.getElementById("password_status");
 
-        axios.post("http://127.0.0.1:5000/auth", credentials).then(
+        axios.post(`${server}auth`, credentials).then(
             (res) => {
                 localStorage.setItem("isLoggedIn", true);
                 localStorage.setItem("profile", JSON.stringify(res.data));
@@ -48,12 +58,13 @@ export function Login() {
             },
             (error) => {
                 usernameStatus.innerHTML = "";
-                passwordStatus.innerHTML = "Invalid username and/or password!";
-                passwordStatus.style.color = colors.danger;
+                setDangerStatus(passwordStatus, "Invalid username and/or password!")
             }
         );
     };
 
+    /* when user clicks out of a field, 
+    set field as invalid if field is empty */
     const handleBlur = (event) => {
         event.preventDefault();
 
@@ -67,6 +78,7 @@ export function Login() {
     return (
         <>
             {isLoggedIn() ? history.push(paths.home) : null}
+            <div id="creation_status"></div>
             <Form onSubmit={handleSubmit}>
                 <Form.Group>
                     <Form.Label>Username</Form.Label>

@@ -6,6 +6,13 @@ import { NavBar } from "./NavBar";
 import { Home } from "./Home";
 import { Profile } from "./Profile";
 
+// /* url for app */
+// export const url = "http://localhost:3000/";
+
+/* url for server */
+export const server = "http://127.0.0.1:5000/";
+
+/* hex codes for react colors */
 export const colors = {
     primary: "#1266F1",
     secondary: "#B23CFD",
@@ -19,6 +26,7 @@ export const colors = {
 
 /* endpoints */
 export const paths = {
+    current: "/", /* current path */
     base: "/",
     landing: "/landing",
     login: "/login",
@@ -27,31 +35,46 @@ export const paths = {
     profile: "/p/profile",
 };
 
-/* returns true if user is logged in, false if not */
+/* helper method: returns true if user is logged in, false if not */
 export const isLoggedIn = () => {
     return JSON.parse(localStorage.getItem("isLoggedIn"));
 };
 
-/* returns profile data for current user */
+/* helper method: returns profile data for current user */
 export const getProfile = () => {
     return JSON.parse(localStorage.getItem("profile"));
 };
 
+/* helper method: displays element text & sets text to "success" color */
+export const setSuccessStatus = (element, status) => {
+    element.innerHTML = status;
+    element.style.color = colors.success;
+}
+
+/* helper method: displays element text & sets text to "danger" color */
+export const setDangerStatus = (element, status) => {
+    element.innerHTML = status;
+    element.style.color = colors.danger;
+}
+
+/* helper method: sets field as valid */
 export const setValidField = (element) => {
     element.classList.remove("is-invalid");
     element.className += " is-valid";
     document.getElementById(element.id + "_status").innerHTML = "";
 };
 
+/* helper method: sets field as invalid 
+by displaying status and highlighting field as red */
 export const setInvalidField = (element) => {
     element.classList.remove("is-valid");
     element.className += " is-invalid";
     const elementStatus = document.getElementById(element.id + "_status");
-    elementStatus.innerHTML = "Missing/invalid input!";
-    elementStatus.style.color = colors.danger;
+    setDangerStatus(elementStatus, "Missing/invalid input!");
 };
 
-/* App is the parent component and manages initial routing to core children components */
+/* App is the parent component and manages initial routing 
+to core children components */
 function App() {
     return (
         <>
