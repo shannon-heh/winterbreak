@@ -2,9 +2,10 @@ import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 import { Landing } from "./Landing";
 import { SignUp } from "./SignUp";
 import { Login } from "./Login";
-import { NavBar } from "./NavBar";
+import { Navigation } from "./Navigation";
 import { Home } from "./Home";
 import { Profile } from "./Profile";
+import './App.css'
 
 // /* url for app */
 // export const url = "http://localhost:3000/";
@@ -92,7 +93,7 @@ function App() {
                     <SignUp />
                 </Route>
                 <Route path="/p">
-                    <NavBar />
+                    <Navigation />
                 </Route>
                 <Route exact path={paths.profile}>
                     <Profile />

@@ -1,38 +1,69 @@
 .App {
+}
+
+input.form-control {
+    width: 25%;
+    margin: auto;
+}
+
+div#signup-form {
+    display: flex;
+    margin-top: 15vh;
+    margin-bottom: 15vh;
+    overflow: auto;
+}
+
+div#login-form {
+    display: flex;
+    /* justify-content: center;
+    align-items: center; */
+    margin-top: 30vh;
+    margin-bottom: 30vh;
+    /* height: 100vh; */
+    /* vertical-align: middle; */
+    overflow: auto;
+}
+
+div.form-group {
+    text-align: center;
+    font-size: 1.1em;
+    font-weight: 500;
+}
+
+#login-submit,
+#signup-submit {
+    margin: auto;
+    margin-top: 2vw;
+    width: 25%;
+    font-size: 1.1em;
+    font-weight: 650;
+}
+
+form {
+    width: 100%;
     text-align: center;
 }
 
-.App-logo {
-    height: 40vmin;
-    pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-    .App-logo {
-        animation: App-logo-spin infinite 20s linear;
-    }
-}
-
-.App-header {
-    background-color: #282c34;
-    min-height: 100vh;
+div#signup-fields {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
+    flex-direction: row;
 }
 
-.App-link {
-    color: #61dafb;
+div#signup-fields div {
+    width: 50%;
+    margin: auto;
 }
 
-@keyframes App-logo-spin {
-    from {
-        transform: rotate(0deg);
-    }
-    to {
-        transform: rotate(360deg);
-    }
+div#signup-fields div input.form-control {
+    width: 100%;
+}
+
+div#signup-fields div.left-col div.form-group {
+    margin-left: auto;
+    margin-right: 1vw;
+}
+
+div#signup-fields div.right-col div.form-group {
+    margin-right: auto;
+    margin-left: 1vw;
 }

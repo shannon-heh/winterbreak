@@ -83,7 +83,7 @@ export function Login() {
     };
 
     return (
-        <>
+        <div id="login-form">
             {isLoggedIn() ? history.push(paths.home) : null}
             <div id="creation_status"></div>
             <Form onSubmit={handleSubmit}>
@@ -93,7 +93,6 @@ export function Login() {
                         id="username"
                         name="username"
                         type="text"
-                        placeholder="Username"
                         onBlur={handleBlur}
                     />
                     <Form.Text id="username_status" />
@@ -105,16 +104,14 @@ export function Login() {
                         id="password"
                         name="password"
                         type="password"
-                        placeholder="Password"
                         onBlur={handleBlur}
                     />
                     <Form.Text id="password_status" />
                 </Form.Group>
-
-                <Button variant="primary" id="login_submit" type="submit">
+                <Button variant="info" id="login-submit" type="submit">
                     Let's Go!
                 </Button>
             </Form>
-        </>
+        </div>
     );
 }
