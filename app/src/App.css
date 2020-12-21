@@ -24,6 +24,10 @@ div#login-form {
     overflow: auto;
 }
 
+div#creation-status {
+    /* needs to be centered above the login form */
+}
+
 div.form-group {
     text-align: center;
     font-size: 1.1em;
@@ -32,9 +36,21 @@ div.form-group {
 
 #login-submit,
 #signup-submit {
+    /* needs to be properly vertically centered */
     margin: auto;
     margin-top: 2vw;
     width: 25%;
+    font-size: 1.1em;
+    font-weight: 650;
+}
+
+#login-button,
+#signup-button {
+    margin: auto;
+    margin-top: 10vh;
+    margin-bottom: 10vh;
+    width: 25%;
+    display: block;
     font-size: 1.1em;
     font-weight: 650;
 }

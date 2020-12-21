@@ -14,17 +14,17 @@ export function Landing() {
 
     /* navigates to login or signup page */
     const handleClick = (event) => {
-        if (event.target.id === "login_button") history.push(paths.login);
+        if (event.target.id === "login-button") history.push(paths.login);
         else history.push(paths.signup);
     };
 
     return (
         <>
             {isLoggedIn() ? history.push(paths.home) : null}
-            <Button variant="info" id="login_button" onClick={handleClick}>
+            <Button variant="info" id="login-button" onClick={handleClick}>
                 Login
             </Button>
-            <Button variant="info" id="signup_button" onClick={handleClick}>
+            <Button variant="info" id="signup-button" onClick={handleClick}>
                 Sign Up
             </Button>
         </>

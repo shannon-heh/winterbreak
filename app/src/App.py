@@ -20,14 +20,14 @@ tracking = db.tracking
 # user profile attributes
 fields = ['username',
           'password',
-          'pet_name',
-          'pet_bday',
-          'pet_breed',
-          'pet_weight',
-          'owner_name',
-          'owner_email',
-          'owner_city',
-          'owner_state']
+          'pet-name',
+          'pet-bday',
+          'pet-breed',
+          'pet-weight',
+          'owner-name',
+          'owner-email',
+          'owner-city',
+          'owner-state']
 
 
 @app.route('/')

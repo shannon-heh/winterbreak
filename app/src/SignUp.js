@@ -22,6 +22,60 @@ export function SignUp() {
         document.title = "Sign Up";
     }, []);
 
+    /* enable the submit button */
+    const enableSubmit = () => {
+        document.getElementById("signup-submit").disabled = false;
+    };
+
+    /* disable the submit button */
+    const disableSubmit = () => {
+        document.getElementById("signup-submit").disabled = true;
+    };
+
+    /* checks that a username is non-empty, consists of only letters, numbers, and/or _, and is
+    available in the database */
+    const isUsernameValid = () => {
+        const usernameField = document.getElementById("username");
+        const usernameStatus = document.getElementById("username-status");
+        const username = usernameField.value;
+
+        /* username not provided */
+        if (!username) {
+            setInvalidField(usernameField);
+            disableSubmit();
+            return false;
+        }
+
+        /* invalid username format */
+        if (!username.match(/^\w+$/)) {
+            setInvalidField(usernameField);
+            setDangerStatus(
+                usernameStatus,
+                "Username must contain only letters, numbers, and/or _."
+            );
+            disableSubmit();
+            return false;
+        }
+
+        const name = { username: username };
+        axios.post(`${server}check_user`, name).then(
+            (res) => {
+                /* username already exists */
+                setInvalidField(usernameField);
+                setDangerStatus(usernameStatus, "Username unavailable!");
+                disableSubmit();
+            },
+            (error) => {
+                /* username doesn't exist */
+                setValidField(usernameField);
+                setSuccessStatus(usernameStatus, "Username available!");
+                enableSubmit();
+            }
+        );
+
+        return true;
+    };
+
     /* if user correctly fills out sign up fields,
     adds user profile to database and navigates to login page */
     const handleSubmit = (event) => {
@@ -31,18 +85,18 @@ export function SignUp() {
 
         const form = event.target;
         const fields = [
-            form.username,
             form.password,
-            form.pet_name,
-            form.pet_breed,
-            form.pet_bday,
-            form.pet_weight,
-            form.owner_name,
-            form.owner_email,
-            form.owner_city,
-            form.owner_state,
+            form["pet-name"],
+            form["pet-breed"],
+            form["pet-bday"],
+            form["pet-weight"],
+            form["owner-name"],
+            form["owner-email"],
+            form["owner-city"],
+            form["owner-state"],
         ];
 
+        profile.username = form.username.value;
         let existInvalidField = false;
 
         /* checks validity of each input field */
@@ -56,7 +110,16 @@ export function SignUp() {
         });
 
         /* do not proceed to login if any field is invalid */
-        if (existInvalidField) return;
+        if (existInvalidField) {
+            disableSubmit();
+            return;
+        }
+
+        /* invalid username format */
+        existInvalidField = !isUsernameValid();
+
+        /* enable the submit button if all checks pass */
+        enableSubmit();
 
         axios.post(`${server}create_user`, profile).then(
             (res) => {
@@ -67,13 +130,18 @@ export function SignUp() {
     };
 
     /* when user clicks out of a field, 
-    set field as invalid if field is empty, 
-    or set field as valid otherwise */
+    set field as invalid if field is empty and disable the submit button, 
+    otherwise set field as valid and enable the submit button */
     const handleBlur = (event) => {
         event.preventDefault();
 
-        if (!event.target.value) setInvalidField(event.target);
-        else setValidField(event.target);
+        if (!event.target.value) {
+            setInvalidField(event.target);
+            disableSubmit();
+        } else {
+            setValidField(event.target);
+            enableSubmit();
+        }
     };
 
     /* when user clicks out of username field, 
@@ -81,40 +149,7 @@ export function SignUp() {
     const handleUsernameBlur = (event) => {
         event.preventDefault();
 
-        const usernameField = document.getElementById("username");
-        const username = usernameField.value;
-        const usernameStatus = document.getElementById("username_status");
-
-        /* username not provided */
-        if (!username) {
-            setInvalidField(usernameField);
-            return;
-        }
-
-        /* invalid username format */
-        if (!username.match(/^\w+$/)) {
-            setInvalidField(usernameField);
-            setDangerStatus(
-                usernameStatus,
-                "Username must contain only letters, numbers, and/or _."
-            );
-            return;
-        }
-
-        const name = { username: username };
-
-        axios.post(`${server}check_user`, name).then(
-            (res) => {
-                /* username already exists */
-                setInvalidField(usernameField);
-                setDangerStatus(usernameStatus, "Username unavailable!");
-            },
-            (error) => {
-                /* username doesn't exist */
-                setValidField(usernameField);
-                setSuccessStatus(usernameStatus, "Username available!");
-            }
-        );
+        isUsernameValid();
     };
 
     return (
@@ -122,7 +157,7 @@ export function SignUp() {
             {isLoggedIn() ? history.push(paths.home) : null}
             <Form onSubmit={handleSubmit} className="needs-validation">
                 <div id="signup-fields">
-                    <div class="left-col">
+                    <div className="left-col">
                         <Form.Group>
                             <Form.Label>Username</Form.Label>
                             <Form.Control
@@ -131,53 +166,53 @@ export function SignUp() {
                                 defaultValue=""
                                 onBlur={handleUsernameBlur}
                             />
-                            <Form.Text id="username_status" />
+                            <Form.Text id="username-status" />
                         </Form.Group>
 
                         <Form.Group>
                             <Form.Label>Pet's Name</Form.Label>
                             <Form.Control
-                                id="pet_name"
+                                id="pet-name"
                                 type="text"
                                 placeholder="e.g. Lucky"
                                 defaultValue=""
                                 onBlur={handleBlur}
                             />
-                            <Form.Text id="pet_name_status" />
+                            <Form.Text id="pet-name-status" />
                         </Form.Group>
 
                         <Form.Group>
                             <Form.Label>Pet's Birthday</Form.Label>
-                            <Form.Control id="pet_bday" type="month" onBlur={handleBlur} />
-                            <Form.Text id="pet_bday_status" />
+                            <Form.Control id="pet-bday" type="month" onBlur={handleBlur} />
+                            <Form.Text id="pet-bday-status" />
                         </Form.Group>
 
                         <Form.Group>
                             <Form.Label>Owner's Name</Form.Label>
                             <Form.Control
-                                id="owner_name"
+                                id="owner-name"
                                 type="text"
                                 placeholder="e.g. Jane Doe"
                                 defaultValue=""
                                 onBlur={handleBlur}
                             />
-                            <Form.Text id="owner_name_status" />
+                            <Form.Text id="owner-name-status" />
                         </Form.Group>
 
                         <Form.Group>
                             <Form.Label>Owner's City</Form.Label>
                             <Form.Control
-                                id="owner_city"
+                                id="owner-city"
                                 type="text"
                                 placeholder="e.g. Los Angeles"
                                 defaultValue=""
                                 onBlur={handleBlur}
                             />
-                            <Form.Text id="owner_city_status" />
+                            <Form.Text id="owner-city-status" />
                         </Form.Group>
                     </div>
 
-                    <div class="right-col">
+                    <div className="right-col">
                         <Form.Group>
                             <Form.Label>Password</Form.Label>
                             <Form.Control
@@ -186,55 +221,55 @@ export function SignUp() {
                                 defaultValue=""
                                 onBlur={handleBlur}
                             />
-                            <Form.Text id="password_status" />
+                            <Form.Text id="password-status" />
                         </Form.Group>
 
                         <Form.Group>
                             <Form.Label>Pet's Breed</Form.Label>
                             <Form.Control
-                                id="pet_breed"
+                                id="pet-breed"
                                 type="text"
                                 placeholder="e.g. Golden Retriever"
                                 defaultValue=""
                                 onBlur={handleBlur}
                             />
-                            <Form.Text id="pet_breed_status" />
+                            <Form.Text id="pet-breed-status" />
                         </Form.Group>
 
                         <Form.Group>
                             <Form.Label>Pet's Weight</Form.Label>
                             <Form.Control
-                                id="pet_weight"
+                                id="pet-weight"
                                 type="number"
                                 placeholder="In pounds"
                                 defaultValue=""
                                 onBlur={handleBlur}
                             />
-                            <Form.Text id="pet_weight_status" />
+                            <Form.Text id="pet-weight-status" />
                         </Form.Group>
 
                         <Form.Group>
                             <Form.Label>Owner's Email</Form.Label>
                             <Form.Control
-                                id="owner_email"
+                                id="owner-email"
                                 type="email"
                                 placeholder="e.g. jane.doe@gmail.com"
                                 defaultValue=""
                                 onBlur={handleBlur}
                             />
-                            <Form.Text id="owner_email_status" />
+                            <Form.Text id="owner-email-status" />
                         </Form.Group>
 
                         <Form.Group>
                             <Form.Label>Owner's State</Form.Label>
                             <Form.Control
-                                id="owner_state"
+                                id="owner-state"
                                 type="text"
                                 placeholder="e.g. CA"
                                 defaultValue=""
                                 onBlur={handleBlur}
                             />
-                            <Form.Text id="owner_state_status" />
+                            <Form.Text id="owner-state-status" />
                         </Form.Group>
                     </div>
                 </div>

@@ -19,7 +19,7 @@ export function Login() {
     useEffect(() => {
         /* displays successful profile creation status if previous
         url was sign up page */
-        const creationStatus = document.getElementById("creation_status");
+        const creationStatus = document.getElementById("creation-status");
         if (paths.current === paths.signup)
             setSuccessStatus(creationStatus, "Profile successfully created!");
         else creationStatus.innerHTML = "";
@@ -54,8 +54,8 @@ export function Login() {
         /* do not proceed to user home if any field is invalid */
         if (existInvalidField) return;
 
-        const usernameStatus = document.getElementById("username_status");
-        const passwordStatus = document.getElementById("password_status");
+        const usernameStatus = document.getElementById("username-status");
+        const passwordStatus = document.getElementById("password-status");
 
         axios.post(`${server}auth`, credentials).then(
             (res) => {
@@ -78,24 +78,19 @@ export function Login() {
         if (!event.target.value) setInvalidField(event.target);
         else {
             event.target.classList.remove("is-invalid");
-            document.getElementById(event.target.id + "_status").innerHTML = "";
+            document.getElementById(event.target.id + "-status").innerHTML = "";
         }
     };
 
     return (
         <div id="login-form">
             {isLoggedIn() ? history.push(paths.home) : null}
-            <div id="creation_status"></div>
+            <div id="creation-status"></div>
             <Form onSubmit={handleSubmit}>
                 <Form.Group>
                     <Form.Label>Username</Form.Label>
-                    <Form.Control
-                        id="username"
-                        name="username"
-                        type="text"
-                        onBlur={handleBlur}
-                    />
-                    <Form.Text id="username_status" />
+                    <Form.Control id="username" name="username" type="text" onBlur={handleBlur} />
+                    <Form.Text id="username-status" />
                 </Form.Group>
 
                 <Form.Group>
@@ -106,7 +101,7 @@ export function Login() {
                         type="password"
                         onBlur={handleBlur}
                     />
-                    <Form.Text id="password_status" />
+                    <Form.Text id="password-status" />
                 </Form.Group>
                 <Button variant="info" id="login-submit" type="submit">
                     Let's Go!

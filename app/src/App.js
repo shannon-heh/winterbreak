@@ -5,7 +5,7 @@ import { Login } from "./Login";
 import { Navigation } from "./Navigation";
 import { Home } from "./Home";
 import { Profile } from "./Profile";
-import './App.css'
+import "./App.css";
 
 // /* url for app */
 // export const url = "http://localhost:3000/";
@@ -62,7 +62,7 @@ export const setDangerStatus = (element, status) => {
 export const setValidField = (element) => {
     element.classList.remove("is-invalid");
     element.className += " is-valid";
-    document.getElementById(element.id + "_status").innerHTML = "";
+    document.getElementById(element.id + "-status").innerHTML = "";
 };
 
 /* helper method: sets field as invalid 
@@ -70,7 +70,7 @@ by displaying status and highlighting field as red */
 export const setInvalidField = (element) => {
     element.classList.remove("is-valid");
     element.className += " is-invalid";
-    const elementStatus = document.getElementById(element.id + "_status");
+    const elementStatus = document.getElementById(element.id + "-status");
     setDangerStatus(elementStatus, "Missing/invalid input!");
 };
 
