@@ -19,7 +19,7 @@ export function Landing() {
     };
 
     return (
-        <>
+        <div id="landing-buttons">
             {isLoggedIn() ? history.push(paths.home) : null}
             <Button variant="info" id="login-button" onClick={handleClick}>
                 Login
@@ -27,6 +27,6 @@ export function Landing() {
             <Button variant="info" id="signup-button" onClick={handleClick}>
                 Sign Up
             </Button>
-        </>
+        </div>
     );
 }

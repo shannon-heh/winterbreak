@@ -1,11 +1,24 @@
 .App {
 }
 
+/* FORM BASICS */
+form {
+    width: 100%;
+    text-align: center;
+}
+
 input.form-control {
     width: 25%;
     margin: auto;
 }
 
+div.form-group {
+    text-align: center;
+    font-size: 1.1em;
+    font-weight: 500;
+}
+
+/* LOGIN AND SIGNUP PAGES */
 div#signup-form {
     display: flex;
     margin-top: 15vh;
@@ -13,25 +26,34 @@ div#signup-form {
     overflow: auto;
 }
 
+#signup-form table {
+    margin: auto;
+    width: 100%;
+}
+
+#signup-form table input {
+    width: 75%;
+}
+
+#signup-form table td.left-col div.form-group {
+    padding-left: 40%;
+}
+
+#signup-form table td.right-col div.form-group {
+    padding-right: 40%;
+}
+
 div#login-form {
     display: flex;
-    /* justify-content: center;
-    align-items: center; */
     margin-top: 30vh;
     margin-bottom: 30vh;
-    /* height: 100vh; */
-    /* vertical-align: middle; */
     overflow: auto;
+    flex-direction: column;
 }
 
 div#creation-status {
-    /* needs to be centered above the login form */
-}
-
-div.form-group {
-    text-align: center;
-    font-size: 1.1em;
-    font-weight: 500;
+    margin: auto;
+    margin-bottom: 5vh;
 }
 
 #login-submit,
@@ -55,31 +77,18 @@ div.form-group {
     font-weight: 650;
 }
 
-form {
-    width: 100%;
-    text-align: center;
-}
-
-div#signup-fields {
+/* LANDING PAGE */
+#landing-buttons {
     display: flex;
     flex-direction: row;
+    height: 100vh;
+    align-items: center;
 }
 
-div#signup-fields div {
-    width: 50%;
-    margin: auto;
-}
-
-div#signup-fields div input.form-control {
-    width: 100%;
-}
-
-div#signup-fields div.left-col div.form-group {
-    margin-left: auto;
+#landing-buttons #login-button {
     margin-right: 1vw;
 }
 
-div#signup-fields div.right-col div.form-group {
-    margin-right: auto;
+#landing-buttons #signup-button {
     margin-left: 1vw;
 }

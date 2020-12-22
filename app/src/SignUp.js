@@ -156,123 +156,146 @@ export function SignUp() {
         <div id="signup-form">
             {isLoggedIn() ? history.push(paths.home) : null}
             <Form onSubmit={handleSubmit} className="needs-validation">
-                <div id="signup-fields">
-                    <div className="left-col">
-                        <Form.Group>
-                            <Form.Label>Username</Form.Label>
-                            <Form.Control
-                                id="username"
-                                type="text"
-                                defaultValue=""
-                                onBlur={handleUsernameBlur}
-                            />
-                            <Form.Text id="username-status" />
-                        </Form.Group>
+               <table>
+                    <tr>
+                        <td class="left-col">
+                            <Form.Group>
+                                <Form.Label>Username</Form.Label>
+                                <Form.Control
+                                    id="username"
+                                    type="text"
+                                    defaultValue=""
+                                    onBlur={handleUsernameBlur}
+                                />
+                                <Form.Text id="username-status" />
+                            </Form.Group>
+                        </td>
+                        <td class="right-col">
+                            <Form.Group>
+                                <Form.Label>Password</Form.Label>
+                                <Form.Control
+                                    id="password"
+                                    type="password"
+                                    defaultValue=""
+                                    onBlur={handleBlur}
+                                />
+                                <Form.Text id="password-status" />
+                            </Form.Group>
+                        </td>
+                    </tr>
 
-                        <Form.Group>
-                            <Form.Label>Pet's Name</Form.Label>
-                            <Form.Control
-                                id="pet-name"
-                                type="text"
-                                placeholder="e.g. Lucky"
-                                defaultValue=""
-                                onBlur={handleBlur}
-                            />
-                            <Form.Text id="pet-name-status" />
-                        </Form.Group>
+                    <tr>
+                        <td class="left-col">
+                            <Form.Group>
+                                <Form.Label>Pet's Name</Form.Label>
+                                <Form.Control
+                                    id="pet-name"
+                                    type="text"
+                                    placeholder="e.g. Lucky"
+                                    defaultValue=""
+                                    onBlur={handleBlur}
+                                />
+                                <Form.Text id="pet-name-status" />
+                            </Form.Group>
+                        </td>
+                        <td class="right-col">
+                            <Form.Group>
+                                <Form.Label>Pet's Breed</Form.Label>
+                                <Form.Control
+                                    id="pet-breed"
+                                    type="text"
+                                    placeholder="e.g. Golden Retriever"
+                                    defaultValue=""
+                                    onBlur={handleBlur}
+                                />
+                                <Form.Text id="pet-breed-status" />
+                            </Form.Group>
+                        </td>
+                    </tr>
 
-                        <Form.Group>
-                            <Form.Label>Pet's Birthday</Form.Label>
-                            <Form.Control id="pet-bday" type="month" onBlur={handleBlur} />
-                            <Form.Text id="pet-bday-status" />
-                        </Form.Group>
+                    <tr>
+                        <td class="left-col">
+                            <Form.Group>
+                                <Form.Label>Pet's Birthday</Form.Label>
+                                <Form.Control id="pet-bday" type="month" onBlur={handleBlur} />
+                                <Form.Text id="pet-bday-status" />
+                            </Form.Group>
+                        </td>
+                        <td class="right-col">
+                            <Form.Group>
+                                <Form.Label>Pet's Weight</Form.Label>
+                                <Form.Control
+                                    id="pet-weight"
+                                    type="number"
+                                    placeholder="In pounds"
+                                    defaultValue=""
+                                    onBlur={handleBlur}
+                                />
+                                <Form.Text id="pet-weight-status" />
+                            </Form.Group>
+                        </td>
+                    </tr>
 
-                        <Form.Group>
-                            <Form.Label>Owner's Name</Form.Label>
-                            <Form.Control
-                                id="owner-name"
-                                type="text"
-                                placeholder="e.g. Jane Doe"
-                                defaultValue=""
-                                onBlur={handleBlur}
-                            />
-                            <Form.Text id="owner-name-status" />
-                        </Form.Group>
+                    <tr>
+                        <td class="left-col">
+                            <Form.Group>
+                                <Form.Label>Owner's Name</Form.Label>
+                                <Form.Control
+                                    id="owner-name"
+                                    type="text"
+                                    placeholder="e.g. Jane Doe"
+                                    defaultValue=""
+                                    onBlur={handleBlur}
+                                />
+                                <Form.Text id="owner-name-status" />
+                            </Form.Group>
+                        </td>
 
-                        <Form.Group>
-                            <Form.Label>Owner's City</Form.Label>
-                            <Form.Control
-                                id="owner-city"
-                                type="text"
-                                placeholder="e.g. Los Angeles"
-                                defaultValue=""
-                                onBlur={handleBlur}
-                            />
-                            <Form.Text id="owner-city-status" />
-                        </Form.Group>
-                    </div>
+                        <td class="right-col">
+                            <Form.Group>
+                                <Form.Label>Owner's Email</Form.Label>
+                                <Form.Control
+                                    id="owner-email"
+                                    type="email"
+                                    placeholder="e.g. jane.doe@gmail.com"
+                                    defaultValue=""
+                                    onBlur={handleBlur}
+                                />
+                                <Form.Text id="owner-email-status" />
+                            </Form.Group>
+                        </td>
+                    </tr>
 
-                    <div className="right-col">
-                        <Form.Group>
-                            <Form.Label>Password</Form.Label>
-                            <Form.Control
-                                id="password"
-                                type="password"
-                                defaultValue=""
-                                onBlur={handleBlur}
-                            />
-                            <Form.Text id="password-status" />
-                        </Form.Group>
+                    <tr>
+                        <td class="left-col">
+                            <Form.Group>
+                                <Form.Label>Owner's City</Form.Label>
+                                <Form.Control
+                                    id="owner-city"
+                                    type="text"
+                                    placeholder="e.g. Los Angeles"
+                                    defaultValue=""
+                                    onBlur={handleBlur}
+                                />
+                                <Form.Text id="owner-city-status" />
+                            </Form.Group>
+                        </td>
 
-                        <Form.Group>
-                            <Form.Label>Pet's Breed</Form.Label>
-                            <Form.Control
-                                id="pet-breed"
-                                type="text"
-                                placeholder="e.g. Golden Retriever"
-                                defaultValue=""
-                                onBlur={handleBlur}
-                            />
-                            <Form.Text id="pet-breed-status" />
-                        </Form.Group>
-
-                        <Form.Group>
-                            <Form.Label>Pet's Weight</Form.Label>
-                            <Form.Control
-                                id="pet-weight"
-                                type="number"
-                                placeholder="In pounds"
-                                defaultValue=""
-                                onBlur={handleBlur}
-                            />
-                            <Form.Text id="pet-weight-status" />
-                        </Form.Group>
-
-                        <Form.Group>
-                            <Form.Label>Owner's Email</Form.Label>
-                            <Form.Control
-                                id="owner-email"
-                                type="email"
-                                placeholder="e.g. jane.doe@gmail.com"
-                                defaultValue=""
-                                onBlur={handleBlur}
-                            />
-                            <Form.Text id="owner-email-status" />
-                        </Form.Group>
-
-                        <Form.Group>
-                            <Form.Label>Owner's State</Form.Label>
-                            <Form.Control
-                                id="owner-state"
-                                type="text"
-                                placeholder="e.g. CA"
-                                defaultValue=""
-                                onBlur={handleBlur}
-                            />
-                            <Form.Text id="owner-state-status" />
-                        </Form.Group>
-                    </div>
-                </div>
+                        <td class="right-col">
+                            <Form.Group>
+                                <Form.Label>Owner's State</Form.Label>
+                                <Form.Control
+                                    id="owner-state"
+                                    type="text"
+                                    placeholder="e.g. CA"
+                                    defaultValue=""
+                                    onBlur={handleBlur}
+                                />
+                                <Form.Text id="owner-state-status" />
+                            </Form.Group>
+                        </td>
+                    </tr>
+                </table>
                 <Button variant="info" id="signup-submit" type="submit">
                     Let's Go!
                 </Button>
