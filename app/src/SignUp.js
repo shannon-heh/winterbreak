@@ -32,8 +32,8 @@ export function SignUp() {
         document.getElementById("signup-submit").disabled = true;
     };
 
-    /* checks that a username is non-empty, consists of only letters, numbers, and/or _, and is
-    available in the database */
+    /* checks that a username is non-empty, consists of only letters, 
+    numbers, and/or _, and is available in the database */
     const isUsernameValid = () => {
         const usernameField = document.getElementById("username");
         const usernameStatus = document.getElementById("username-status");
@@ -158,7 +158,7 @@ export function SignUp() {
             <Form onSubmit={handleSubmit} className="needs-validation">
                <table>
                     <tr>
-                        <td class="left-col">
+                        <td className="left-col">
                             <Form.Group>
                                 <Form.Label>Username</Form.Label>
                                 <Form.Control
@@ -170,7 +170,7 @@ export function SignUp() {
                                 <Form.Text id="username-status" />
                             </Form.Group>
                         </td>
-                        <td class="right-col">
+                        <td className="right-col">
                             <Form.Group>
                                 <Form.Label>Password</Form.Label>
                                 <Form.Control
@@ -185,7 +185,7 @@ export function SignUp() {
                     </tr>
 
                     <tr>
-                        <td class="left-col">
+                        <td className="left-col">
                             <Form.Group>
                                 <Form.Label>Pet's Name</Form.Label>
                                 <Form.Control
@@ -198,7 +198,7 @@ export function SignUp() {
                                 <Form.Text id="pet-name-status" />
                             </Form.Group>
                         </td>
-                        <td class="right-col">
+                        <td className="right-col">
                             <Form.Group>
                                 <Form.Label>Pet's Breed</Form.Label>
                                 <Form.Control
@@ -214,14 +214,14 @@ export function SignUp() {
                     </tr>
 
                     <tr>
-                        <td class="left-col">
+                        <td className="left-col">
                             <Form.Group>
                                 <Form.Label>Pet's Birthday</Form.Label>
                                 <Form.Control id="pet-bday" type="month" onBlur={handleBlur} />
                                 <Form.Text id="pet-bday-status" />
                             </Form.Group>
                         </td>
-                        <td class="right-col">
+                        <td className="right-col">
                             <Form.Group>
                                 <Form.Label>Pet's Weight</Form.Label>
                                 <Form.Control
@@ -237,7 +237,7 @@ export function SignUp() {
                     </tr>
 
                     <tr>
-                        <td class="left-col">
+                        <td className="left-col">
                             <Form.Group>
                                 <Form.Label>Owner's Name</Form.Label>
                                 <Form.Control
@@ -251,7 +251,7 @@ export function SignUp() {
                             </Form.Group>
                         </td>
 
-                        <td class="right-col">
+                        <td className="right-col">
                             <Form.Group>
                                 <Form.Label>Owner's Email</Form.Label>
                                 <Form.Control
@@ -267,7 +267,7 @@ export function SignUp() {
                     </tr>
 
                     <tr>
-                        <td class="left-col">
+                        <td className="left-col">
                             <Form.Group>
                                 <Form.Label>Owner's City</Form.Label>
                                 <Form.Control
@@ -281,7 +281,7 @@ export function SignUp() {
                             </Form.Group>
                         </td>
 
-                        <td class="right-col">
+                        <td className="right-col">
                             <Form.Group>
                                 <Form.Label>Owner's State</Form.Label>
                                 <Form.Control

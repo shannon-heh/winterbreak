@@ -1,6 +1,11 @@
 .App {
 }
 
+/* NAVBAR */
+.color-nav {
+    background-color: #ffeeff;
+}
+
 /* FORM BASICS */
 form {
     width: 100%;
@@ -35,6 +40,11 @@ div#signup-form {
     width: 75%;
 }
 
+#signup-form table td.left-col,
+#signup-form table td.right-col {
+    width: 50%;
+}
+
 #signup-form table td.left-col div.form-group {
     padding-left: 40%;
 }
@@ -64,6 +74,8 @@ div#creation-status {
     width: 25%;
     font-size: 1.1em;
     font-weight: 650;
+    background-color: #d1c4e9;
+    border-color: #a094b7;
 }
 
 #login-button,
@@ -75,6 +87,8 @@ div#creation-status {
     display: block;
     font-size: 1.1em;
     font-weight: 650;
+    background-color: #d1c4e9;
+    border-color: #a094b7;
 }
 
 /* LANDING PAGE */

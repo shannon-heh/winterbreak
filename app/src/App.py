@@ -77,6 +77,27 @@ def check_user():
     return make_response(jsonify(), 200)
 
 
+# Updates specific user profile attributes.
+# Returns 403 if unauthorized.
+# Return 200 if successful.
+@app.route('/update_profile', methods=['POST'])
+def update_profile():
+    username = request.json['username']
+    password = request.json['password']
+
+    profile = users.find_one({'username': username}, {'_id': False})
+
+    if profile is None or not bcrypt.checkpw(password.encode('utf-8'), profile['password']):
+        make_response(jsonify(), 403)
+
+    for field in request.json.keys():
+        if field not in fields:
+            continue
+        profile[field] = request.json[field]
+
+    make_response(jsonify(profile), 200)
+
+
 # Authenticates username and password
 # Returns 200 and user's profile data if authentication is successful
 # Returns 403 is authentication is unsuccessful
@@ -89,7 +110,7 @@ def auth():
 
     if profile is not None and bcrypt.checkpw(password.encode('utf-8'), profile['password']):
         # user exists
-        del profile['password']
+        profile['password'] = password
         return make_response(jsonify(profile), 200)
 
     # user does not exist

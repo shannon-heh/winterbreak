@@ -28,7 +28,7 @@ export function Navigation() {
     return (
         <>
             {isLoggedIn() ? null : history.push(paths.landing)}
-            <Navbar bg="light" variant="light" expand="lg" sticky="top">
+            <Navbar className="color-nav" expand="lg" sticky="top">
                 <Navbar.Brand onClick={handleHome}>Moo Moos' Petshop</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
