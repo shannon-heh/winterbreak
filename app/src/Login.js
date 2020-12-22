@@ -61,8 +61,8 @@ export function Login() {
             (res) => {
                 localStorage.setItem("isLoggedIn", true);
                 localStorage.setItem("profile", JSON.stringify(res.data));
-                localStorage.setItem("username", JSON.stringify(res.data['username']));
-                localStorage.setItem("password", JSON.stringify(res.data['password']));
+                localStorage.setItem("username", JSON.stringify(res.data["username"]));
+                localStorage.setItem("password", JSON.stringify(res.data["password"]));
                 history.push(paths.home);
             },
             (error) => {

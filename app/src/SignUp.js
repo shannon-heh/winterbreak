@@ -156,7 +156,7 @@ export function SignUp() {
         <div id="signup-form">
             {isLoggedIn() ? history.push(paths.home) : null}
             <Form onSubmit={handleSubmit} className="needs-validation">
-               <table>
+                <table>
                     <tr>
                         <td className="left-col">
                             <Form.Group>

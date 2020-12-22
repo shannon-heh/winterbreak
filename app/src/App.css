@@ -1,6 +1,16 @@
 .App {
 }
 
+:root {
+    --white: #ffffff;
+    --pri-color-main: #b2dfdb;
+    --pri-color-dark: #80cbc4;
+    --pri-color-light: #e5ffff;
+    --sec-color-main: #b3e5fc;
+    --sec-color-dark: #82b3c9;
+    --sec-color-light: #e6ffff;
+}
+
 /* NAVBAR */
 .color-nav {
     background-color: #ffeeff;
@@ -68,14 +78,12 @@ div#creation-status {
 
 #login-submit,
 #signup-submit {
-    /* needs to be properly vertically centered */
     margin: auto;
     margin-top: 2vw;
+    margin-bottom: 2vw;
     width: 25%;
     font-size: 1.1em;
     font-weight: 650;
-    background-color: #d1c4e9;
-    border-color: #a094b7;
 }
 
 #login-button,
@@ -87,8 +95,6 @@ div#creation-status {
     display: block;
     font-size: 1.1em;
     font-weight: 650;
-    background-color: #d1c4e9;
-    border-color: #a094b7;
 }
 
 /* LANDING PAGE */
@@ -105,4 +111,41 @@ div#creation-status {
 
 #landing-buttons #signup-button {
     margin-left: 1vw;
+}
+
+/* BUTTON STYLING */
+button.btn {
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    height: 40px;
+    border: none;
+    border-radius: 40px;
+    background-color: var(--pri-color-main);
+    color: var(--white);
+    box-shadow: 0px 8px 15px #00000026;
+    transition: all 0.25s ease 0s;
+    cursor: pointer;
+    outline: none;
+}
+
+button.btn:hover {
+    background-color: var(--pri-color-dark);
+    color: var(--white);
+    box-shadow: 0px 15px 20px var(--pri-color-light);
+    color: #fff;
+    transform: translateY(-3px);
+}
+
+button.btn:focus {
+    background-color: var(--pri-color-dark);
+    color: var(--white);
+}
+
+button.btn:active {
+    background-color: var(--pri-color-light);
+    color: var(--white);
+}
+
+button.btn:disabled {
+    background-color: var(--pri-color-main);
 }
