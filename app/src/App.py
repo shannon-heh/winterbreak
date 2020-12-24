@@ -1,6 +1,6 @@
 import base64
 import bcrypt
-from flask import Flask, request, jsonify, make_response
+from flask import Flask, request, jsonify, make_response, render_template
 from flask_pymongo import PyMongo
 
 app = Flask(__name__)
@@ -33,7 +33,7 @@ fields = ['username',
 
 @app.route('/')
 def index():
-    return '<h2>backend server</h2>'
+    return '<h1>Flask-MongoDB Backend Service</h1>'
 
 
 # Inserts user profile into users collection.
@@ -109,6 +109,9 @@ def update_profile():
     return make_response(jsonify(profile), 200)
 
 
+# Updates either the pet or the owner picture for a specific user.
+# Returns 403 if unauthorized.
+# Returns 200 if successful.
 @app.route('/update_picture', methods=['POST'])
 def update_picture():
     username = request.form['username']
@@ -126,9 +129,11 @@ def update_picture():
     images.update_one({'username': username}, {'$set': image_profile})
 
     return make_response(jsonify(), 200)
-    # return make_response(jsonify(base64.b64decode(image)), 200)
 
 
+# Returns either the pet or the owner picture for a specific user.
+# Returns 403 if unauthorized.
+# Returns 200 if successful.
 @app.route('/get_picture', methods=['POST'])
 def get_picture():
     username = request.json['username']
@@ -153,7 +158,6 @@ def auth():
 
     profile = users.find_one({'username': username}, {'_id': False})
 
-    # if profile is not None and image_profile is not None and bcrypt.checkpw(password.encode('utf-8'), profile['password']):
     if profile is not None and bcrypt.checkpw(password.encode('utf-8'), profile['password']):
         # user exists
         profile['password'] = password
@@ -163,8 +167,6 @@ def auth():
     return make_response(jsonify(), 403)
 
 
-# run server
+# Run server
 if __name__ == '__main__':
-    # from IPython import embed
-    # embed()
     app.run(debug=True)

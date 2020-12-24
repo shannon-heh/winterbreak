@@ -117,7 +117,7 @@ div#creation-status {
 button.btn {
     letter-spacing: 2px;
     text-transform: uppercase;
-    height: 40px;
+    height: 35px;
     border: none;
     border-radius: 40px;
     background-color: var(--pri-color-main);

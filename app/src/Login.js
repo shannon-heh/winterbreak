@@ -17,8 +17,7 @@ export function Login() {
     let history = useHistory();
 
     useEffect(() => {
-        /* displays successful profile creation status if previous
-        url was sign up page */
+        /* displays successful profile creation status if previous url was sign up page */
         const creationStatus = document.getElementById("creation-status");
         if (paths.current === paths.signup)
             setSuccessStatus(creationStatus, "Profile successfully created!");
@@ -29,8 +28,7 @@ export function Login() {
     }, []);
 
     /* verifies login credentials
-    navigates to user home if successful
-    or displays error message if unsuccessful */
+    navigates to user home if successful or displays error message if unsuccessful */
     const handleSubmit = (event) => {
         event.preventDefault();
 
@@ -79,8 +77,7 @@ export function Login() {
         );
     };
 
-    /* when user clicks out of a field, 
-    set field as invalid if field is empty */
+    /* when user clicks out of a field, set field as invalid if field is empty */
     const handleBlur = (event) => {
         event.preventDefault();
 
