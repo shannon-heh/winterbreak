@@ -61,8 +61,6 @@ export function Login() {
             (res) => {
                 localStorage.setItem("isLoggedIn", true);
                 const profile = res.data;
-                // const profile = res.data["profile"];
-                // const image_profile = res.data["image_profile"];
                 localStorage.setItem("profile", JSON.stringify(profile));
                 localStorage.setItem(
                     "username",
@@ -72,7 +70,6 @@ export function Login() {
                     "password",
                     JSON.stringify(profile["password"]).replace(/['"]+/g, "")
                 );
-                // localStorage.setItem("images", JSON.stringify(image_profile));
                 history.push(paths.home);
             },
             (error) => {

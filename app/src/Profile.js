@@ -1,6 +1,6 @@
 import ImageUploader from "react-images-upload";
 import axios from "axios";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { server, paths } from "./App";
 
 /* Profile provides user profile functionality on /p/profile */
@@ -10,35 +10,54 @@ export function Profile() {
     let profile = JSON.parse(localStorage.getItem("profile"));
     let images = JSON.parse(localStorage.getItem("images"));
 
+    let [isImageUploaded, setImageUploaded] = useState(false);
+    let imagesToLoad = ['pet', 'owner'];
+
     useEffect(() => {
         paths.current = paths.profile;
         document.title = "Profile";
-    }, []);
 
-    const onUpload = (picture) => {
+        imagesToLoad.forEach((image_type) => {
+            const image = {'username': username, 'password': password, 'image_type': image_type}
+
+            axios.post(`${server}get_picture`, image).then(
+                (res) => {
+                    console.log(res);
+                    document.getElementById(`${image_type}-image`).src = `data:image/png;base64,${res.data}`;
+                },
+                (error) => {}
+            );
+        }); 
+    });
+
+    const onPetUpload = (picture) => {
         const profilePic = new FormData();
         profilePic.append("file", picture[0]);
         profilePic.append("username", username);
         profilePic.append("password", password);
         profilePic.append("image_type", "pet");
 
-        /* 
-            we can't save images into localStorage because of the size limit in localStorage
-            so i think we should use something that just fetches both the owner and pet images upon
-            page load
+        axios.post(`${server}update_picture`, profilePic).then(
+            (res) => {
+                imagesToLoad = ["pet"];
+                setImageUploaded(!isImageUploaded);
+                // history.push(paths.home);
+            },
+            (error) => {}
+        );
+    };
 
-            and when you update either of the profile pictures, we need to just make a GET request
-            for the new image and update div holding it
-        */
-
-        // Array.from(profilePic.entries()).forEach((e) => console.log(e));
-
-        // images.pet = picture[0];
-        // console.log(images);
-        // localStorage.setItem("images", JSON.stringify(images));
+    const onOwnerUpload = (picture) => {
+        const profilePic = new FormData();
+        profilePic.append("file", picture[0]);
+        profilePic.append("username", username);
+        profilePic.append("password", password);
+        profilePic.append("image_type", "owner");
 
         axios.post(`${server}update_picture`, profilePic).then(
             (res) => {
+                imagesToLoad = ["owner"];
+                setImageUploaded(!isImageUploaded);
                 // history.push(paths.home);
             },
             (error) => {}
@@ -48,18 +67,27 @@ export function Profile() {
     return (
         <div id="profile">
             <ImageUploader
+                id="pet-uploader"
                 withIcon={false}
-                buttonText="Choose images"
-                onChange={onUpload}
+                buttonText="Choose Pet's Image"
+                onChange={onPetUpload}
                 imgExtension={[".jpg", ".jpeg", ".png"]}
                 maxFileSize={80000000}
-                label="Max image size: 8MB (.jpg, .jpeg, .png)"
+                label="Upload new pet picture: max 8MB (.jpg, .jpeg, .png)"
                 singleImage={true}
             />
-            {/* <div>{username}</div>
-            <div>{password}</div>
-            <div>{profile}</div>
-            <div>{imagestemp}</div> */}
+            <ImageUploader
+                id="owner-uploader"
+                withIcon={false}
+                buttonText="Choose Owner's Image"
+                onChange={onOwnerUpload}
+                imgExtension={[".jpg", ".jpeg", ".png"]}
+                maxFileSize={80000000}
+                label="Upload new owner picture: max 8MB (.jpg, .jpeg, .png)"
+                singleImage={true}
+            />
+            <img id="pet-image" src="" />
+            <img id="owner-image" src="" />
         </div>
     );
 }
