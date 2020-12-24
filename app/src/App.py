@@ -1,4 +1,4 @@
-
+import base64
 import bcrypt
 from flask import Flask, request, jsonify, make_response
 from flask_pymongo import PyMongo
@@ -13,6 +13,7 @@ db = mongo.db
 
 # creates collections
 users = db.users
+images = db.images
 matchups = db.matchups
 goals = db.goals
 tracking = db.tracking
@@ -88,14 +89,19 @@ def update_profile():
     profile = users.find_one({'username': username}, {'_id': False})
 
     if profile is None or not bcrypt.checkpw(password.encode('utf-8'), profile['password']):
-        make_response(jsonify(), 403)
+        return make_response(jsonify(), 403)
 
     for field in request.json.keys():
         if field not in fields:
             continue
         profile[field] = request.json[field]
 
-    make_response(jsonify(profile), 200)
+    return make_response(jsonify(profile), 200)
+
+
+@app.route('/update_picture', methods=['POST'])
+def update_picture():
+    base64.b64encode(request.files['file'].read())
 
 
 # Authenticates username and password
@@ -109,16 +115,5 @@ def auth():
     profile = users.find_one({'username': username}, {'_id': False})
 
     if profile is not None and bcrypt.checkpw(password.encode('utf-8'), profile['password']):
-        # user exists
-        profile['password'] = password
-        return make_response(jsonify(profile), 200)
-
-    # user does not exist
-    return make_response(jsonify(), 403)
-
-
-# run server
-if __name__ == '__main__':
-    # from IPython import embed
-    # embed()
-    app.run(debug=True)
+        # user does not exist
+        return make_response(jsonify(), 403)
