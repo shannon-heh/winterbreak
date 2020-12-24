@@ -61,7 +61,15 @@ def create_user():
     if users.find_one({'username': profile['username']}) != None:
         return make_response(jsonify(), 409)
 
+    image_profile = {
+        'username': profile['username'],
+        'password': profile['password'],
+        'pet': '',
+        'owner': '',
+    }
+
     users.insert_one(profile)
+    images.insert_one(image_profile)
     return make_response(jsonify(), 201)
 
 
@@ -96,24 +104,68 @@ def update_profile():
             continue
         profile[field] = request.json[field]
 
+    users.update_one({'username': username}, {'$set': profile})
+
     return make_response(jsonify(profile), 200)
 
 
 @app.route('/update_picture', methods=['POST'])
 def update_picture():
-    base64.b64encode(request.files['file'].read())
+    username = request.form['username']
+    password = request.form['password']
+    image_type = request.form['image_type']  # pet or owner
+    image = request.files['file'].read()
+    # image = base64.b64encode(request.files['file'].read())
 
+    image_profile = images.find_one({'username': username}, {'_id': False})
+
+    if image_profile is None or not bcrypt.checkpw(password.encode('utf-8'), image_profile['password']):
+        return make_response(jsonify(), 403)
+
+    if image_type == 'pet':
+        image_profile['pet'] = image
+    else:
+        image_profile['owner'] = image
+
+    images.update_one({'username': username}, {'$set': image_profile})
+
+    return make_response(jsonify(), 200)
+    # return make_response(jsonify(base64.b64decode(image)), 200)
 
 # Authenticates username and password
 # Returns 200 and user's profile data if authentication is successful
 # Returns 403 is authentication is unsuccessful
+
+
 @app.route('/auth', methods=['POST'])
 def auth():
     username = request.json['username']
     password = request.json['password']
 
     profile = users.find_one({'username': username}, {'_id': False})
+    # image_profile = images.find_one({'username': username}, {'_id': False})
 
+    # if profile is not None and image_profile is not None and bcrypt.checkpw(password.encode('utf-8'), profile['password']):
     if profile is not None and bcrypt.checkpw(password.encode('utf-8'), profile['password']):
-        # user does not exist
-        return make_response(jsonify(), 403)
+        # user exists
+        profile['password'] = password
+        # del image_profile['username']
+        # del image_profile['password']
+
+        # res = {
+        #     'profile': profile,
+        #     'image_profile': image_profile
+        # }
+
+        # return make_response(jsonify(res), 200)
+        return make_response(jsonify(profile), 200)
+
+    # user does not exist
+    return make_response(jsonify(), 403)
+
+
+# run server
+if __name__ == '__main__':
+    # from IPython import embed
+    # embed()
+    app.run(debug=True)

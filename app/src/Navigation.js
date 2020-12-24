@@ -37,7 +37,7 @@ export function Navigation() {
                         <Nav.Link onClick={handleProfile}>Profile</Nav.Link>
                     </Nav>
                     <Button onClick={handleLogout} variant="info">
-                        Logout
+                        Log Out
                     </Button>
                 </Navbar.Collapse>
             </Navbar>

@@ -60,9 +60,19 @@ export function Login() {
         axios.post(`${server}auth`, credentials).then(
             (res) => {
                 localStorage.setItem("isLoggedIn", true);
-                localStorage.setItem("profile", JSON.stringify(res.data));
-                localStorage.setItem("username", JSON.stringify(res.data["username"]));
-                localStorage.setItem("password", JSON.stringify(res.data["password"]));
+                const profile = res.data;
+                // const profile = res.data["profile"];
+                // const image_profile = res.data["image_profile"];
+                localStorage.setItem("profile", JSON.stringify(profile));
+                localStorage.setItem(
+                    "username",
+                    JSON.stringify(profile["username"]).replace(/['"]+/g, "")
+                );
+                localStorage.setItem(
+                    "password",
+                    JSON.stringify(profile["password"]).replace(/['"]+/g, "")
+                );
+                // localStorage.setItem("images", JSON.stringify(image_profile));
                 history.push(paths.home);
             },
             (error) => {

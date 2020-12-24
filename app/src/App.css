@@ -115,7 +115,7 @@ div#creation-status {
 
 /* BUTTON STYLING */
 button.btn {
-    letter-spacing: 3px;
+    letter-spacing: 2px;
     text-transform: uppercase;
     height: 40px;
     border: none;
