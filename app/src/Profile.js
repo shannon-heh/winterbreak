@@ -9,7 +9,6 @@ import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 
-
 /* Profile provides user profile functionality on /p/profile */
 export function Profile() {
     let history = useHistory();
@@ -69,32 +68,32 @@ export function Profile() {
     };
 
     const handleEditProfile = (event) => {
-        history.push(paths.edit_profile)
-    }
+        history.push(paths.edit_profile);
+    };
 
     const handleEnergyRating = (event) => {
-        console.log(event) /* number of stars */
-    }
+        console.log(event); /* number of stars */
+    };
 
     const handleDogFriendlyRating = (event) => {
-        console.log(event) /* number of stars */
-    }
+        console.log(event); /* number of stars */
+    };
 
     const handlePeopleFriendlyRating = (event) => {
-        console.log(event) /* number of stars */
-    }
+        console.log(event); /* number of stars */
+    };
 
     const handleBarkRating = (event) => {
-        console.log(event) /* number of stars */
-    }
+        console.log(event); /* number of stars */
+    };
 
     return (
         <Container id="profile-container">
             <Row id="profile-row">
                 <Col id="profile-left">
                     <figure>
-                        <img id="pet-image" className="profile-pic" src="" alt="Pet Profile"/>
-                        <figcaption>{profile['pet-name']}</figcaption>
+                        <img id="pet-image" className="profile-pic" src="" alt="Pet Profile" />
+                        <figcaption>{profile["pet-name"]}</figcaption>
                     </figure>
 
                     {/* <ImageUploader
@@ -110,7 +109,7 @@ export function Profile() {
 
                     <figure>
                         <img id="owner-image" className="profile-pic" src="" alt="Owner Profile" />
-                        <figcaption>{profile['owner-name']}</figcaption>
+                        <figcaption>{profile["owner-name"]}</figcaption>
                     </figure>
 
                     {/* <ImageUploader
@@ -131,62 +130,54 @@ export function Profile() {
                 <Col id="profile-middle">
                     <Row id="pet-info">
                         <div>About the Pet</div>
-                        <div>
-                            {profile['pet-breed']}
-                        </div>
-                        <div>
-                            {profile['pet-bday']}
-                        </div>
-                        <div>
-                            {profile['pet-weight']} pounds
-                        </div>
+                        <div>{profile["pet-breed"]}</div>
+                        <div>{profile["pet-bday"]}</div>
+                        <div>{profile["pet-weight"]} pounds</div>
                     </Row>
                     <Row id="owner-info">
                         <div>About the Owner</div>
+                        <div>{profile["owner-email"]}</div>
                         <div>
-                            {profile['owner-email']}
-                        </div>
-                        <div>
-                            {profile['owner-city']}, {profile['owner-state']}
+                            {profile["owner-city"]}, {profile["owner-state"]}
                         </div>
                     </Row>
                 </Col>
                 <Col id="profile-right">
                     <Row id="pet-metrics">
-                    <div>Energy Level</div>
-                    <ReactStars
-                        count={5}
-                        size={24}
-                        value={1}
-                        onChange={handleEnergyRating}
-                        activeColor="#ffd700"
-                    />
-                    <div>Dog-Friendly</div>
-                    <ReactStars
-                        count={5}
-                        size={24}
-                        value={1}
-                        onChange={handleDogFriendlyRating}
-                        activeColor="#ffd700"
-                    />
-                    <div>People-Friendly</div>
-                    <ReactStars
-                        count={5}
-                        size={24}
-                        value={1}
-                        onChange={handlePeopleFriendlyRating}
-                        activeColor="#ffd700"
-                    />
-                    <div>Tendency to Bark</div>
-                    <ReactStars
-                        count={5}
-                        size={24}
-                        value={1}
-                        onChange={handleBarkRating}
-                        activeColor="#ffd700"
-                    />
+                        <div>Energy Level</div>
+                        <ReactStars
+                            count={5}
+                            size={24}
+                            value={1}
+                            onChange={handleEnergyRating}
+                            activeColor="#ffd700"
+                        />
+                        <div>Dog-Friendly</div>
+                        <ReactStars
+                            count={5}
+                            size={24}
+                            value={1}
+                            onChange={handleDogFriendlyRating}
+                            activeColor="#ffd700"
+                        />
+                        <div>People-Friendly</div>
+                        <ReactStars
+                            count={5}
+                            size={24}
+                            value={1}
+                            onChange={handlePeopleFriendlyRating}
+                            activeColor="#ffd700"
+                        />
+                        <div>Tendency to Bark</div>
+                        <ReactStars
+                            count={5}
+                            size={24}
+                            value={1}
+                            onChange={handleBarkRating}
+                            activeColor="#ffd700"
+                        />
 
-                    <div>Interests</div>
+                        <div>Interests</div>
                     </Row>
                 </Col>
             </Row>
