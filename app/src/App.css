@@ -13,7 +13,8 @@
 
 /* NAVBAR */
 .color-nav {
-    background-color: #ffeeff;
+    background-color: #fbe9e7;
+    height: 8vh;
 }
 
 /* FORM BASICS */
@@ -115,11 +116,12 @@ div#creation-status {
 
 /* BUTTON STYLING */
 button.btn {
+    /* font-size: 1rem; */
     letter-spacing: 2px;
     text-transform: uppercase;
-    height: 35px;
+    height: 5%;
     border: none;
-    border-radius: 40px;
+    border-radius: 35px;
     background-color: var(--pri-color-main);
     color: var(--white);
     box-shadow: 0px 8px 15px #00000026;
@@ -131,7 +133,7 @@ button.btn {
 button.btn:hover {
     background-color: var(--pri-color-dark);
     color: var(--white);
-    box-shadow: 0px 15px 20px var(--pri-color-light);
+    box-shadow: 0px 15px 20px #00000031;
     color: #fff;
     transform: translateY(-3px);
 }
@@ -148,4 +150,153 @@ button.btn:active {
 
 button.btn:disabled {
     background-color: var(--pri-color-main);
+}
+
+/* PROFILE LEFT PANEL */
+img.profile-pic {
+    border-radius: 50%;
+    height: 25vmin;
+    width: 25vmin;
+    overflow: hidden;
+    border-radius: 50%;
+    border: 3px solid var(--pri-color-dark);
+    box-shadow: 0px 8px 15px #00000026;
+    transition: all 0.25s ease 0s;
+}
+
+img.profile-pic:hover {
+    color: var(--white);
+    box-shadow: 0px 15px 20px #00000031;
+    color: #fff;
+    transform: translateY(-3px);
+}
+
+#profile-left {
+    min-width: 33%;
+    padding: 0;
+    padding-right: 5px;
+    padding-left: 5px;
+    height: 92vh;
+    /* background-color: var(--sec-color-light); */
+    background-image: url("images/panel_bg.jpeg");
+    background-size: cover;
+    text-align: center;
+
+    /* display: flex;
+    flex-direction: column;
+    justify-content: center; */
+}
+
+#profile-left figure {
+    padding-top: 6vh;
+}
+
+#profile-left figcaption {
+    text-transform: uppercase;
+    font-weight: 500;
+    font-size: 2.5vmin;
+    padding-top: 2vh;
+}
+
+button.btn#edit-profile {
+    padding: 0;
+    margin: 6% auto;
+    width: 40%;
+    display: block;
+    font-size: 1.8vmin;
+}
+
+/* PROFILE MIDDLE PANEL */
+
+#profile-middle {
+    min-width: 33%;
+    height: 92vh;
+    max-height: 100%;
+    padding: 0;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#pet-info,
+#owner-info {
+    border: none;
+    border-radius: 25px;
+    height: 42vh;
+    margin: 8%;
+    background-image: url("images/panel_bg.jpeg");
+    background-size: cover;
+    /* background-color: var(--sec-color-main); */
+    border: 3px solid var(--pri-color-dark);
+    box-shadow: 0px 8px 15px #00000026;
+    transition: all 0.25s ease 0s;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#pet-info {
+    height: 55vh;
+    margin-bottom: 0%;
+}
+
+#pet-info div,
+#owner-info div {
+    margin: 3%;
+}
+
+#pet-info:hover,
+#owner-info:hover {
+    /* color: var(--white); */
+    box-shadow: 0px 15px 20px #00000031;
+    /* color: #fff; */
+    transform: translateY(-3px);
+}
+
+/* PROFILE RIGHT PANEL */
+
+#profile-right {
+    min-width: 33%;
+    max-height: 100%;
+    padding: 0;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#pet-metrics {
+    margin: 8%;
+    margin-left: 0%;
+    /* background-color: red; */
+    height: 94%;
+    border: none;
+    border-radius: 25px;
+    /* background-color: var(--sec-color-main); */
+    border: 3px solid var(--pri-color-dark);
+    box-shadow: 0px 8px 15px #00000026;
+    transition: all 0.25s ease 0s;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    background-image: url("images/panel_bg.jpeg");
+    background-size: cover;
+}
+
+#pet-metrics:hover {
+    /* color: var(--white); */
+    box-shadow: 0px 15px 20px #00000031;
+    /* color: #fff; */
+    transform: translateY(-3px);
+}
+
+div.container#profile-container {
+    margin: 0;
+    max-width: 100%;
 }

@@ -61,11 +61,17 @@ def create_user():
     if users.find_one({'username': profile['username']}) != None:
         return make_response(jsonify(), 409)
 
+    with open("images/pet_default.png", "rb") as f:
+        pet_avatar = base64.b64encode(f.read())
+
+    with open("images/owner_default.png", "rb") as f:
+        owner_avatar = base64.b64encode(f.read())
+
     image_profile = {
         'username': profile['username'],
         'password': profile['password'],
-        'pet': '',
-        'owner': '',
+        'pet': pet_avatar,
+        'owner': owner_avatar,
     }
 
     users.insert_one(profile)
