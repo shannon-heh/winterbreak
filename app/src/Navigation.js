@@ -28,17 +28,18 @@ export function Navigation() {
     return (
         <>
             {isLoggedIn() ? null : history.push(paths.landing)}
-            <Navbar className="color-nav" expand="lg" sticky="top">
-                <Navbar.Brand onClick={handleHome}>Moo Moos' Petshop</Navbar.Brand>
+            <Navbar className="color-nav" variant="pills" expand="lg" sticky="top">
+                <Navbar.Brand id="site-name">Moo Moos' Petshop</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="mr-auto">
                         <Nav.Link onClick={handleHome}>Home</Nav.Link>
                         <Nav.Link onClick={handleProfile}>Profile</Nav.Link>
                     </Nav>
-                    <Button onClick={handleLogout} variant="info">
+                    <Nav.Link onClick={handleLogout}>Log Out</Nav.Link>
+                    {/* <Button onClick={handleLogout} variant="info">
                         Log Out
-                    </Button>
+                    </Button> */}
                 </Navbar.Collapse>
             </Navbar>
         </>

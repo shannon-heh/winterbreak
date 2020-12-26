@@ -15,6 +15,17 @@
 .color-nav {
     background-color: #fbe9e7;
     height: 8vh;
+    font-size: 2vmin;
+}
+
+.navbar-brand#site-name {
+    font-size: 2.5vmin;
+    letter-spacing: 1.5px;
+    font-weight: 500;
+}
+
+#basic-navbar-nav a {
+    color: var(--sec-color-dark);
 }
 
 /* FORM BASICS */
@@ -25,12 +36,13 @@ form {
 
 input.form-control {
     width: 25%;
+    height: 5vh;
     margin: auto;
 }
 
 div.form-group {
     text-align: center;
-    font-size: 1.1em;
+    font-size: 2.5vmin;
     font-weight: 500;
 }
 
@@ -79,22 +91,13 @@ div#creation-status {
 
 #login-submit,
 #signup-submit {
+    height: 5vh;
+    padding: 0;
     margin: auto;
-    margin-top: 2vw;
-    margin-bottom: 2vw;
-    width: 25%;
-    font-size: 1.1em;
-    font-weight: 650;
-}
-
-#login-button,
-#signup-button {
-    margin: auto;
-    margin-top: 10vh;
+    margin-top: 4vh;
     margin-bottom: 10vh;
     width: 25%;
-    display: block;
-    font-size: 1.1em;
+    font-size: 2.5vmin;
     font-weight: 650;
 }
 
@@ -104,6 +107,18 @@ div#creation-status {
     flex-direction: row;
     height: 100vh;
     align-items: center;
+}
+
+#login-button,
+#signup-button {
+    padding: 0;
+    margin: auto;
+    margin-top: 10vh;
+    margin-bottom: 10vh;
+    width: 25%;
+    display: block;
+    font-size: 2.5vmin;
+    font-weight: 650;
 }
 
 #landing-buttons #login-button {
@@ -177,14 +192,9 @@ img.profile-pic:hover {
     padding-right: 5px;
     padding-left: 5px;
     height: 92vh;
-    /* background-color: var(--sec-color-light); */
     background-image: url("images/panel_bg.jpeg");
     background-size: cover;
     text-align: center;
-
-    /* display: flex;
-    flex-direction: column;
-    justify-content: center; */
 }
 
 #profile-left figure {
@@ -192,16 +202,15 @@ img.profile-pic:hover {
 }
 
 #profile-left figcaption {
-    text-transform: uppercase;
-    font-weight: 500;
     font-size: 2.5vmin;
+    font-weight: 500;
     padding-top: 2vh;
 }
 
 button.btn#edit-profile {
     padding: 0;
-    margin: 6% auto;
-    width: 40%;
+    margin: 7% auto;
+    width: 45%;
     display: block;
     font-size: 1.8vmin;
 }
@@ -221,13 +230,13 @@ button.btn#edit-profile {
 
 #pet-info,
 #owner-info {
+    font-size: 2.2vmin;
     border: none;
     border-radius: 25px;
     height: 42vh;
     margin: 8%;
     background-image: url("images/panel_bg.jpeg");
     background-size: cover;
-    /* background-color: var(--sec-color-main); */
     border: 3px solid var(--pri-color-dark);
     box-shadow: 0px 8px 15px #00000026;
     transition: all 0.25s ease 0s;
@@ -250,9 +259,7 @@ button.btn#edit-profile {
 
 #pet-info:hover,
 #owner-info:hover {
-    /* color: var(--white); */
     box-shadow: 0px 15px 20px #00000031;
-    /* color: #fff; */
     transform: translateY(-3px);
 }
 
@@ -269,13 +276,12 @@ button.btn#edit-profile {
 }
 
 #pet-metrics {
+    font-size: 2.2vmin;
     margin: 8%;
     margin-left: 0%;
-    /* background-color: red; */
     height: 94%;
     border: none;
     border-radius: 25px;
-    /* background-color: var(--sec-color-main); */
     border: 3px solid var(--pri-color-dark);
     box-shadow: 0px 8px 15px #00000026;
     transition: all 0.25s ease 0s;
@@ -290,9 +296,7 @@ button.btn#edit-profile {
 }
 
 #pet-metrics:hover {
-    /* color: var(--white); */
     box-shadow: 0px 15px 20px #00000031;
-    /* color: #fff; */
     transform: translateY(-3px);
 }
 

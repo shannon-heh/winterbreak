@@ -151,6 +151,7 @@ export function Profile() {
                             value={1}
                             onChange={handleEnergyRating}
                             activeColor="#ffd700"
+                            edit={false}
                         />
                         <div>Dog-Friendly</div>
                         <ReactStars
@@ -159,6 +160,7 @@ export function Profile() {
                             value={1}
                             onChange={handleDogFriendlyRating}
                             activeColor="#ffd700"
+                            edit={false}
                         />
                         <div>People-Friendly</div>
                         <ReactStars
@@ -167,6 +169,7 @@ export function Profile() {
                             value={1}
                             onChange={handlePeopleFriendlyRating}
                             activeColor="#ffd700"
+                            edit={false}
                         />
                         <div>Tendency to Bark</div>
                         <ReactStars
@@ -175,6 +178,7 @@ export function Profile() {
                             value={1}
                             onChange={handleBarkRating}
                             activeColor="#ffd700"
+                            edit={false}
                         />
 
                         <div>Interests</div>
