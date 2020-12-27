@@ -55,6 +55,14 @@ export function Login() {
         const usernameStatus = document.getElementById("username-status");
         const passwordStatus = document.getElementById("password-status");
 
+        axios.post(`${server}get_qualities`, credentials).then(
+            (res) => {
+                const qualities = res.data;
+                localStorage.setItem("qualities", JSON.stringify(qualities));
+            },
+            (error) => {}
+        );
+
         axios.post(`${server}auth`, credentials).then(
             (res) => {
                 localStorage.setItem("isLoggedIn", true);

@@ -5,6 +5,7 @@ import { Login } from "./Login";
 import { Navigation } from "./Navigation";
 import { Home } from "./Home";
 import { Profile } from "./Profile";
+import { EditProfile } from "./EditProfile";
 import "./App.css";
 
 // /* url for app */
@@ -98,6 +99,9 @@ function App() {
                 </Route>
                 <Route exact path={paths.profile}>
                     <Profile />
+                </Route>
+                <Route exact path={paths.edit_profile}>
+                    <EditProfile />
                 </Route>
                 <Route exact path={paths.home}>
                     <Home />

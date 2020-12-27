@@ -18,6 +18,12 @@
 }
 
 /* NAVBAR */
+img#logo {
+    padding-right: 5%;
+    margin-top: -0.5vh;
+    height: 5vmin;
+}
+
 .color-nav {
     background-color: #ffecb3;
     height: 8vh;
@@ -26,6 +32,14 @@
 
 .navbar-brand#site-name {
     font-size: 3.75vmin;
+    letter-spacing: 1.8px;
+    font-weight: 700;
+    color: var(--navbar-text);
+}
+
+.navbar-text#current-user {
+    padding-right: 5%;
+    font-size: 2vmin;
     letter-spacing: 1.8px;
     font-weight: 700;
     color: var(--navbar-text);
@@ -294,8 +308,7 @@ button.btn#edit-profile {
     transform: translateY(-3px);
 }
 
-#pet-info-title,
-#owner-info-title {
+div.panel-title {
     font-size: 2.4vmin;
     letter-spacing: 1.8px;
     font-weight: 700;
@@ -341,4 +354,23 @@ button.btn#edit-profile {
 div.container#profile-container {
     margin: 0;
     max-width: 100%;
+}
+
+#pet-metrics > div.pet-trait {
+    margin: 3%;
+    margin-bottom: 0.75%;
+}
+
+/* EDIT PROFILE */
+div > input {
+    width: 25vmin;
+}
+
+#owner-state-input {
+    width: 6vmin;
+}
+
+#owner-city-input {
+    width: 18vmin;
+    margin-right: 1vmin;
 }

@@ -2,6 +2,7 @@ import { useHistory } from "react-router-dom";
 import { paths, isLoggedIn } from "./App";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
+import logo from "./images/logo.svg";
 
 /* NavBar provides navbar functionality 
 across all pages prefixed with /p/ */
@@ -28,13 +29,22 @@ export function Navigation() {
         <>
             {isLoggedIn() ? null : history.push(paths.landing)}
             <Navbar className="color-nav" expand="lg" sticky="top">
-                <Navbar.Brand id="site-name">Moo Moo Moo Moo</Navbar.Brand>
+                <Navbar.Brand id="site-name">
+                    <img
+                        id="logo"
+                        src={logo}
+                    />
+                    Moo Moo Moo Moo
+                </Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="mr-auto">
                         <Nav.Link onClick={handleHome}>Home</Nav.Link>
                         <Nav.Link onClick={handleProfile}>Profile</Nav.Link>
                     </Nav>
+                    <Navbar.Text id="current-user">
+                        Signed in as {localStorage.getItem("username")}
+                    </Navbar.Text>
                     <Nav.Link onClick={handleLogout}>Log Out</Nav.Link>
                 </Navbar.Collapse>
             </Navbar>
