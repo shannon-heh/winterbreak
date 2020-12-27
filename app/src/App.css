@@ -1,4 +1,8 @@
-.App {
+* {
+    font-family: "Karla", sans-serif;
+    font-weight: 500;
+    user-select: none;
+    color: #616161;
 }
 
 :root {
@@ -9,23 +13,41 @@
     --sec-color-main: #b3e5fc;
     --sec-color-dark: #82b3c9;
     --sec-color-light: #e6ffff;
+    --navbar-text: #c88719;
+    --navbar-text-hover: #ffca28;
 }
 
 /* NAVBAR */
 .color-nav {
-    background-color: #fbe9e7;
+    background-color: #ffecb3;
     height: 8vh;
-    font-size: 2vmin;
+    font-size: 2.5vmin;
 }
 
 .navbar-brand#site-name {
-    font-size: 2.5vmin;
-    letter-spacing: 1.5px;
-    font-weight: 500;
+    font-size: 3.75vmin;
+    letter-spacing: 1.8px;
+    font-weight: 700;
+    color: var(--navbar-text);
 }
 
 #basic-navbar-nav a {
-    color: var(--sec-color-dark);
+    padding-left: 30%;
+    font-size: 2vmin;
+    letter-spacing: 1.8px;
+    font-weight: 700;
+    color: var(--navbar-text);
+    transition: all 0.25s ease 0s;
+}
+
+#basic-navbar-nav a:hover {
+    font-size: 2.15vmin;
+    color: var(--navbar-text-hover);
+}
+
+#basic-navbar-nav > a {
+    font-size: 2vmin;
+    padding-left: 16px;
 }
 
 /* FORM BASICS */
@@ -131,7 +153,6 @@ div#creation-status {
 
 /* BUTTON STYLING */
 button.btn {
-    /* font-size: 1rem; */
     letter-spacing: 2px;
     text-transform: uppercase;
     height: 5%;
@@ -169,6 +190,7 @@ button.btn:disabled {
 
 /* PROFILE LEFT PANEL */
 img.profile-pic {
+    object-fit: cover;
     border-radius: 50%;
     height: 25vmin;
     width: 25vmin;
@@ -202,8 +224,10 @@ img.profile-pic:hover {
 }
 
 #profile-left figcaption {
+    text-transform: uppercase;
     font-size: 2.5vmin;
-    font-weight: 500;
+    letter-spacing: 1.8px;
+    font-weight: 700;
     padding-top: 2vh;
 }
 
@@ -257,10 +281,24 @@ button.btn#edit-profile {
     margin: 3%;
 }
 
+#pet-info img,
+#owner-info img {
+    height: 3vmin;
+    margin-right: 8px;
+    /* width: 3.5vmin; */
+}
+
 #pet-info:hover,
 #owner-info:hover {
     box-shadow: 0px 15px 20px #00000031;
     transform: translateY(-3px);
+}
+
+#pet-info-title,
+#owner-info-title {
+    font-size: 2.4vmin;
+    letter-spacing: 1.8px;
+    font-weight: 700;
 }
 
 /* PROFILE RIGHT PANEL */

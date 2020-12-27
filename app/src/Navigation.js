@@ -2,7 +2,6 @@ import { useHistory } from "react-router-dom";
 import { paths, isLoggedIn } from "./App";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
-import Button from "react-bootstrap/Button";
 
 /* NavBar provides navbar functionality 
 across all pages prefixed with /p/ */
@@ -28,8 +27,8 @@ export function Navigation() {
     return (
         <>
             {isLoggedIn() ? null : history.push(paths.landing)}
-            <Navbar className="color-nav" variant="pills" expand="lg" sticky="top">
-                <Navbar.Brand id="site-name">Moo Moos' Petshop</Navbar.Brand>
+            <Navbar className="color-nav" expand="lg" sticky="top">
+                <Navbar.Brand id="site-name">Moo Moo Moo Moo</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="mr-auto">

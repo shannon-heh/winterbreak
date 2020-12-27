@@ -8,6 +8,11 @@ import ReactStars from "react-rating-stars-component";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import breed from "./images/dog.svg";
+import email from "./images/email.svg";
+import home from "./images/home.svg";
+import bday from "./images/birthday-cake.svg";
+import weight from "./images/weight-scale.svg";
 
 /* Profile provides user profile functionality on /p/profile */
 export function Profile() {
@@ -20,6 +25,8 @@ export function Profile() {
     let [isImageUploaded, setImageUploaded] = useState(false);
     let imagesToLoad = ["pet", "owner"];
     const maxImageSize = 8388608;
+
+    const starColor = "#80cbc4";
 
     /* fetches and renders pet and owner pictures upon page load and/or new picture upload */
     useEffect(() => {
@@ -92,7 +99,13 @@ export function Profile() {
             <Row id="profile-row">
                 <Col id="profile-left">
                     <figure>
-                        <img id="pet-image" className="profile-pic" src="" alt="Pet Profile" />
+                        <img
+                            id="pet-image"
+                            className="profile-pic"
+                            src=""
+                            alt="Pet Profile"
+                            draggable="false"
+                        />
                         <figcaption>{profile["pet-name"]}</figcaption>
                     </figure>
 
@@ -108,7 +121,13 @@ export function Profile() {
                     /> */}
 
                     <figure>
-                        <img id="owner-image" className="profile-pic" src="" alt="Owner Profile" />
+                        <img
+                            id="owner-image"
+                            className="profile-pic"
+                            src=""
+                            alt="Owner Profile"
+                            draggable="false"
+                        />
                         <figcaption>{profile["owner-name"]}</figcaption>
                     </figure>
 
@@ -129,16 +148,31 @@ export function Profile() {
                 </Col>
                 <Col id="profile-middle">
                     <Row id="pet-info">
-                        <div>About the Pet</div>
-                        <div>{profile["pet-breed"]}</div>
-                        <div>{profile["pet-bday"]}</div>
-                        <div>{profile["pet-weight"]} pounds</div>
+                        <div id="pet-info-title">About the Pet</div>
+                        <div>
+                            <img src={breed} draggable="false" />
+                            <span>{profile["pet-breed"]}</span>
+                        </div>
+                        <div>
+                            <img src={bday} draggable="false" />
+                            <span>{profile["pet-bday"]}</span>
+                        </div>
+                        <div>
+                            <img src={weight} draggable="false" />
+                            <span>{profile["pet-weight"]} pounds</span>
+                        </div>
                     </Row>
                     <Row id="owner-info">
-                        <div>About the Owner</div>
-                        <div>{profile["owner-email"]}</div>
+                        <div id="owner-info-title">About the Owner</div>
                         <div>
-                            {profile["owner-city"]}, {profile["owner-state"]}
+                            <img src={email} draggable="false" />
+                            <span>{profile["owner-email"]}</span>
+                        </div>
+                        <div>
+                            <img src={home} draggable="false" />
+                            <span>
+                                {profile["owner-city"]}, {profile["owner-state"]}
+                            </span>
                         </div>
                     </Row>
                 </Col>
@@ -150,7 +184,7 @@ export function Profile() {
                             size={24}
                             value={1}
                             onChange={handleEnergyRating}
-                            activeColor="#ffd700"
+                            activeColor={starColor}
                             edit={false}
                         />
                         <div>Dog-Friendly</div>
@@ -159,7 +193,7 @@ export function Profile() {
                             size={24}
                             value={1}
                             onChange={handleDogFriendlyRating}
-                            activeColor="#ffd700"
+                            activeColor={starColor}
                             edit={false}
                         />
                         <div>People-Friendly</div>
@@ -168,7 +202,7 @@ export function Profile() {
                             size={24}
                             value={1}
                             onChange={handlePeopleFriendlyRating}
-                            activeColor="#ffd700"
+                            activeColor={starColor}
                             edit={false}
                         />
                         <div>Tendency to Bark</div>
@@ -177,7 +211,7 @@ export function Profile() {
                             size={24}
                             value={1}
                             onChange={handleBarkRating}
-                            activeColor="#ffd700"
+                            activeColor={starColor}
                             edit={false}
                         />
 
