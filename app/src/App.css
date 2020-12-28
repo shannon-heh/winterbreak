@@ -21,6 +21,7 @@ html,
     --sec-color-light: #e6ffff;
     --navbar-text: #c88719;
     --navbar-text-hover: #ffca28;
+    --bg: #fafafa;
 }
 
 /* NAVBAR */
@@ -117,14 +118,6 @@ div.form-group {
 #signup-form table td.right-col div.form-group {
     padding-right: 40%;
 }
-
-/* div#login-form {
-    display: flex;
-    margin-top: 11em;
-    margin-bottom: 11em;
-    overflow: auto;
-    flex-direction: column;
-} */
 
 div#creation-status {
     margin: auto;
@@ -227,7 +220,7 @@ img.profile-pic {
     object-fit: cover;
     border-radius: 50%;
     /* height: 11em; */
-    width: 38%;
+    width: 35%;
     overflow: hidden;
     border-radius: 50%;
     border: 3px solid var(--pri-color-dark);
@@ -247,18 +240,12 @@ img.profile-pic:hover {
     padding: 0;
     padding-right: 5px;
     padding-left: 5px;
+    padding-top: 20px;
+    padding-bottom: 10px;
     background-image: url("images/panel_bg.jpeg");
     background-size: cover;
     text-align: center;
     overflow: auto;
-
-    /* min-height: 93vh; */
-    padding-top: 45px;
-    padding-bottom: 10px;
-    /* display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center; */
 }
 
 #profile-left figure {
@@ -285,29 +272,21 @@ button.btn#delete-profile {
     width: 45%;
     display: block;
     font-size: 0.8em;
-    height: 23%;
+    height: 30px;
 }
 
 button.btn#edit-profile {
-    margin-top: 2em;
-    margin-bottom: 1em;
-}
-
-button.btn#delete-profile {
-    margin-top: 1em;
-    margin-bottom: 2em;
+    margin-top: 40px;
+    margin-bottom: 15px;
 }
 
 /* PROFILE MIDDLE PANEL */
 #profile-middle {
     min-width: 33%;
     padding: 0;
-
     padding-top: 25px;
     padding-bottom: 110px;
-    /* display: flex;
-    flex-direction: column;
-    justify-content: center; */
+    background: var(--bg);
 }
 
 #pet-info,
@@ -318,7 +297,6 @@ button.btn#delete-profile {
     margin-top: 25px;
     margin-left: 6%;
     margin-right: 6%;
-    /* margin: 6%; */
     display: block;
     background-image: url("images/panel_bg.jpeg");
     background-size: cover;
@@ -333,14 +311,12 @@ button.btn#delete-profile {
 }
 
 #pet-info {
-    height: 410px;
-    /* height: 50%; */
+    height: 310px;
     margin-bottom: 0%;
 }
 
 #owner-info {
-    height: 265px;
-    /* height: 32%; */
+    height: 245px;
 }
 
 #pet-info div,
@@ -356,7 +332,6 @@ button.btn#delete-profile {
 #owner-info img {
     height: 1.3em;
     margin-right: 8px;
-    /* width: 3.5vmin; */
 }
 
 #pet-info:hover,
@@ -377,21 +352,16 @@ header.panel-title {
 #profile-right {
     min-width: 33%;
     padding: 0;
-
     padding-top: 25px;
-    /* display: flex;
-    flex-direction: column;
-    justify-content: center; */
+    background: var(--bg);
 }
 
 #pet-metrics {
     font-size: 1em;
-    /* margin: 6% 8%; */
     margin-right: 8%;
     margin-top: 25px;
     margin-left: 0%;
-    height: 700px;
-    /* height: 86%; */
+    height: 580px;
     border: none;
     border-radius: 25px;
     border: 3px solid var(--pri-color-dark);
@@ -463,15 +433,35 @@ header.panel-title {
 }
 
 /* EDIT PROFILE */
-div > input {
-    width: 25vmin;
+#pet-name-input,
+#owner-name-input {
+    margin-top: 20px;
+}
+
+#profile-middle > input,
+#profile-right > input {
+    width: 80%;
+}
+
+#owner-location-input {
+    text-align: center;
 }
 
 #owner-state-input {
-    width: 6vmin;
+    width: 10%;
 }
 
 #owner-city-input {
-    width: 18vmin;
-    margin-right: 1vmin;
+    width: 40%;
+    margin-right: 1%;
+}
+
+#pet-interests {
+    width: 100%;
+}
+
+#interests-input {
+    width: 100%;
+    resize: none;
+    height: 75%;
 }

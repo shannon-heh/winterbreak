@@ -41,6 +41,13 @@ export function EditProfile() {
         "owner-state"
     ]
 
+    const ratingFields = [
+        "energy-level",
+        "dog-friendly",
+        "people-friendly",
+        "tendency-to-bark"
+    ]
+
     /* fetches and renders pet and owner pictures upon page load and/or new picture upload */
     useEffect(() => {
         paths.current = paths.edit_profile;
@@ -88,6 +95,7 @@ export function EditProfile() {
     };
 
     const handleDoneEditing = (event) => {
+        /* handle profile in middle panel */
         let profile = {};
         profile["username"] = username;
         profile["password"] = password;
@@ -95,48 +103,46 @@ export function EditProfile() {
         inputFields.forEach((input) => {
             profile[input] = document.getElementById(`${input}-input`).value
         });
-        
+
+        /* handle ratings in right panel */
+        let qualities = {};
+        qualities["username"] = username;
+        qualities["password"] = password;
+        qualities.traits = {};
+        qualities.interests = document.getElementById("interests-input").value;
+
+        ratingFields.forEach((field) => {
+            qualities.traits[field] = document.getElementById(`${field}-rating`).nextSibling.childNodes[0].childNodes[6].innerHTML;
+        })
+
+        /* handle interests in right panel */
+        // let interests = {};
+        // interests["username"] = username;
+        // interests["password"] = password;
+        // interests["traits_or_interests"] = "interests"
+        // interests["all_data"] = document.getElementById("interests-input").value;
+
+        /* update local storage */
+        let newQualities = {
+            interests: qualities.interests,
+            traits: qualities.traits
+        }
+
         localStorage.setItem("profile", JSON.stringify(profile));
+        localStorage.setItem("qualities", JSON.stringify(newQualities));
         
+        /* update backend*/
         axios.post(`${server}update_profile`, profile).then(
             (res) => {},
             (error) => {}
         );
 
-        history.push(paths.profile);
-    };
-
-    const handleRatingChange = (trait, rating) => {
-        let params = {
-            username: username, 
-            password: password,
-            traits_or_interests: trait,
-            trait_rating_or_interests: rating
-        }
-
-        axios.post(`${server}update_qualities`, params).then(
-            (res) => {
-                qualities.traits[trait] = rating;
-                localStorage.setItem("qualities", JSON.stringify(qualities));
-            },
+        axios.post(`${server}update_qualities`, qualities).then(
+            (res) => {},
             (error) => {}
         );
-    }
 
-    const handleEnergyLevelRating = (event) => {
-        handleRatingChange("energy-level", event)
-    };
-
-    const handleDogFriendlyRating = (event) => {
-        handleRatingChange("dog-friendly", event)
-    };
-
-    const handlePeopleFriendlyRating = (event) => {
-        handleRatingChange("people-friendly", event)
-    };
-
-    const handleTendencyToBarkRating = (event) => {
-        handleRatingChange("tendency-to-bark", event)
+        history.push(paths.profile);
     };
 
     return (
@@ -156,7 +162,7 @@ export function EditProfile() {
                     <input 
                         id="pet-name-input"
                         defaultValue={profile["pet-name"]}
-                        placeholder="e.g. Lucky" style={{"text-align":"center"}}
+                        placeholder="e.g. Lucky" style={{"textAlign":"center"}}
                     />
 
                     {/* <ImageUploader
@@ -182,7 +188,7 @@ export function EditProfile() {
                     <input 
                         id="owner-name-input"
                         defaultValue={profile["owner-name"]}
-                        placeholder="e.g. Jane Doe" style={{'text-align':'center'}}
+                        placeholder="e.g. Jane Doe" style={{'textAlign':'center'}}
                     />
 
                     {/* <ImageUploader
@@ -202,7 +208,7 @@ export function EditProfile() {
                 </Col>
                 <Col id="profile-middle">
                     <Row id="pet-info">
-                        <div className="panel-title">About the Pet</div>
+                        <header className="panel-title">About the Pet</header>
                         <div>
                             <img src={breed} draggable="false" />
                             <input 
@@ -230,7 +236,7 @@ export function EditProfile() {
                         </div>
                     </Row>
                     <Row id="owner-info">
-                        <div className="panel-title">About the Owner</div>
+                        <header className="panel-title">About the Owner</header>
                         <div>
                             <img src={email} draggable="false" />
                             <input 
@@ -240,7 +246,7 @@ export function EditProfile() {
                                 placeholder="e.g. jane.doe@gmail.com"
                             />
                         </div>
-                        <div>
+                        <div id="owner-location-input">
                             <img src={home} draggable="false" />
                             <input 
                                 id="owner-city-input" 
@@ -257,49 +263,53 @@ export function EditProfile() {
                 </Col>
                 <Col id="profile-right">
                     <Row id="pet-metrics">
-                        <div className="panel-title">Pet Traits</div>
-                        <div className="pet-trait">Energy Level</div>
+                        <header className="panel-title">Pet Traits</header>
+                        <div id="energy-level-rating" className="pet-trait">Energy Level</div>
                         <ReactStars
                             count={5}
                             size={starSize}
-                            value={qualities.traits["energy-level"]}
+                            value={parseFloat(qualities.traits["energy-level"])}
                             isHalf={true}
-                            onChange={handleEnergyLevelRating}
                             activeColor={starColor}
                             edit={true}
                         />
-                        <div className="pet-trait">Dog-Friendly</div>
+                        <div id="dog-friendly-rating" className="pet-trait">Dog-Friendly</div>
                         <ReactStars
                             count={5}
                             size={starSize}
-                            value={qualities.traits["dog-friendly"]}
+                            value={parseFloat(qualities.traits["dog-friendly"])}
                             isHalf={true}
-                            onChange={handleDogFriendlyRating}
                             activeColor={starColor}
                             edit={true}
                         />
-                        <div className="pet-trait">People-Friendly</div>
+                        <div id="people-friendly-rating" className="pet-trait">People-Friendly</div>
                         <ReactStars
                             count={5}
                             size={starSize}
-                            value={qualities.traits["people-friendly"]}
+                            value={parseFloat(qualities.traits["people-friendly"])}
                             isHalf={true}
-                            onChange={handlePeopleFriendlyRating}
                             activeColor={starColor}
                             edit={true}
                         />
-                        <div className="pet-trait">Tendency to Bark</div>
+                        <div id="tendency-to-bark-rating" className="pet-trait">Tendency to Bark</div>
                         <ReactStars
                             count={5}
                             size={starSize}
-                            value={qualities.traits["tendency-to-bark"]}
+                            value={parseFloat(qualities.traits["tendency-to-bark"])}
                             isHalf={true}
-                            onChange={handleTendencyToBarkRating}
                             activeColor={starColor}
                             edit={true}
                         />
                         <br />
-                        <div className="panel-title">Pet Interests</div>
+                        <div id="pet-interests">
+                            <header className="panel-title">Pet Interests</header>
+                            <textarea 
+                                id="interests-input"
+                                maxLength={200}
+                                defaultValue={qualities["interests"]}
+                                placeholder = "e.g. fetching, dog bones, play structures, grass fields, biscuits, long walks"
+                            />
+                        </div>
                     </Row>
                 </Col>
             </Row>

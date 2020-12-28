@@ -180,7 +180,7 @@ export function Profile() {
                         <ReactStars
                             count={5}
                             size={starSize}
-                            value={qualities.traits["energy-level"]}
+                            value={parseFloat(qualities.traits["energy-level"])}
                             isHalf={true}
                             activeColor={starColor}
                             edit={false}
@@ -189,7 +189,7 @@ export function Profile() {
                         <ReactStars
                             count={5}
                             size={starSize}
-                            value={qualities.traits["dog-friendly"]}
+                            value={parseFloat(qualities.traits["dog-friendly"])}
                             isHalf={true}
                             activeColor={starColor}
                             edit={false}
@@ -198,7 +198,7 @@ export function Profile() {
                         <ReactStars
                             count={5}
                             size={starSize}
-                            value={qualities.traits["people-friendly"]}
+                            value={parseFloat(qualities.traits["people-friendly"])}
                             isHalf={true}
                             activeColor={starColor}
                             edit={false}
@@ -207,7 +207,7 @@ export function Profile() {
                         <ReactStars
                             count={5}
                             size={starSize}
-                            value={qualities.traits["tendency-to-bark"]}
+                            value={parseFloat(qualities.traits["tendency-to-bark"])}
                             isHalf={true}
                             activeColor={starColor}
                             edit={false}

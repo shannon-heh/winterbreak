@@ -178,21 +178,19 @@ def get_picture():
 def update_qualities():
     username = request.json['username']
     password = request.json['password']
-    # name of a trait or "interests"
-    traits_or_interests = request.json['traits_or_interests']
-    # rating for trait or all interests
-    trait_rating_or_interests = request.json['trait_rating_or_interests']
+    traits = request.json['traits']
+    interests = request.json['interests']
 
     pet_qualities = qualities.find_one({'username': username}, {'_id': False})
 
     if pet_qualities is None or not bcrypt.checkpw(password.encode('utf-8'), pet_qualities['password']):
         return make_response(jsonify(), 403)
 
-    if traits_or_interests != "interests":
-        pet_qualities['traits'][traits_or_interests] = float(
-            trait_rating_or_interests)
-    else:
-        pet_qualities['interests'] = trait_rating_or_interests
+    pet_qualities['traits'] = traits
+    pet_qualities['interests'] = interests
+
+    # print(pet_qualities[traits_or_interests])
+    # print(pet_qualities)
 
     qualities.update_one({'username': username}, {'$set': pet_qualities})
 
@@ -202,7 +200,7 @@ def update_qualities():
 # Returns all pet qualities (traits and interests).
 # Returns 403 if unauthorized.
 # Returns 200 if successful.
-@app.route('/get_qualities', methods=['POST'])
+@ app.route('/get_qualities', methods=['POST'])
 def get_qualities():
     username = request.json['username']
     password = request.json['password']
@@ -221,7 +219,7 @@ def get_qualities():
 # Authenticates username and password
 # Returns 200 and user's profile data if authentication is successful
 # Returns 403 is authentication is unsuccessful
-@app.route('/auth', methods=['POST'])
+@ app.route('/auth', methods=['POST'])
 def auth():
     username = request.json['username']
     password = request.json['password']
