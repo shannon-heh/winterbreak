@@ -28,24 +28,11 @@ export function Navigation() {
     return (
         <>
             {isLoggedIn() ? null : history.push(paths.landing)}
-            {/* <Navbar bg="light" expand="lg">
-                <Navbar.Brand href="#home">React-Bootstrap</Navbar.Brand>
-                <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                <Navbar.Collapse id="basic-navbar-nav">
-                    <Nav className="mr-auto">
-                    <Nav.Link href="#home">Home</Nav.Link>
-                    <Nav.Link href="#link">Link</Nav.Link>
-                    </Nav>
-                </Navbar.Collapse>
-            </Navbar> */}
 
             <Navbar className="color-nav" expand="lg">
                 <Navbar.Brand id="site-name">
-                    {/* <img
-                        id="logo"
-                        src={logo}
-                    /> */}
-                    Moo Moo Moo Moo
+                    <img id="logo" src={logo} />
+                    Moo Moo Loves Moo Moo
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
@@ -58,6 +45,10 @@ export function Navigation() {
                     </Navbar.Text>
                     <Nav.Link onClick={handleLogout}>Log Out</Nav.Link>
                 </Navbar.Collapse>
+            </Navbar>
+
+            <Navbar className="color-nav justify-content-center" expand="lg" fixed="bottom">
+                <Navbar.Text id="current-user">Made with 💕 in 2020</Navbar.Text>
             </Navbar>
         </>
     );

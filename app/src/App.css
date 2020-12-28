@@ -25,9 +25,8 @@ html,
 
 /* NAVBAR */
 img#logo {
-    /* padding-right: 5%;
-    margin-top: -0.5vh;
-    height: 5vmin; */
+    padding-right: 5%;
+    height: 40px;
 }
 
 .color-nav {
@@ -43,7 +42,8 @@ img#logo {
 }
 
 .navbar-text#current-user {
-    padding-right: 5%;
+    padding-left: 45px;
+    padding-right: 45px;
     font-size: 1em;
     letter-spacing: 1.8px;
     font-weight: 700;
@@ -51,7 +51,8 @@ img#logo {
 }
 
 #basic-navbar-nav a {
-    padding-left: 30%;
+    /* padding-left: 30%; */
+    padding-left: 45px;
     font-size: 1em;
     letter-spacing: 1.8px;
     font-weight: 700;
@@ -66,7 +67,7 @@ img#logo {
 
 #basic-navbar-nav > a {
     font-size: 1em;
-    padding-left: 16px;
+    padding-left: 45px;
 }
 
 /* FORM BASICS */
@@ -88,12 +89,12 @@ div.form-group {
 }
 
 /* LOGIN AND SIGNUP PAGES */
-div#signup-form {
-    /* display: flex;
+/* div#signup-form {
+    display: flex;
     margin-top: 7em;
     margin-bottom: 7em;
-    overflow: auto; */
-}
+    overflow: auto;
+} */
 
 #signup-form table {
     margin: auto;
@@ -117,13 +118,13 @@ div#signup-form {
     padding-right: 40%;
 }
 
-div#login-form {
-    /* display: flex;
+/* div#login-form {
+    display: flex;
     margin-top: 11em;
     margin-bottom: 11em;
     overflow: auto;
-    flex-direction: column; */
-}
+    flex-direction: column;
+} */
 
 div#creation-status {
     margin: auto;
@@ -251,10 +252,13 @@ img.profile-pic:hover {
     text-align: center;
     overflow: auto;
 
-    display: flex;
+    /* min-height: 93vh; */
+    padding-top: 45px;
+    padding-bottom: 10px;
+    /* display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    align-items: center; */
 }
 
 #profile-left figure {
@@ -299,9 +303,11 @@ button.btn#delete-profile {
     min-width: 33%;
     padding: 0;
 
-    display: flex;
+    padding-top: 25px;
+    padding-bottom: 110px;
+    /* display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: center; */
 }
 
 #pet-info,
@@ -309,7 +315,11 @@ button.btn#delete-profile {
     font-size: 1em;
     border: none;
     border-radius: 25px;
-    margin: 6%;
+    margin-top: 25px;
+    margin-left: 6%;
+    margin-right: 6%;
+    /* margin: 6%; */
+    display: block;
     background-image: url("images/panel_bg.jpeg");
     background-size: cover;
     border: 3px solid var(--pri-color-dark);
@@ -323,12 +333,14 @@ button.btn#delete-profile {
 }
 
 #pet-info {
-    height: 50%;
+    height: 410px;
+    /* height: 50%; */
     margin-bottom: 0%;
 }
 
 #owner-info {
-    height: 32%;
+    height: 265px;
+    /* height: 32%; */
 }
 
 #pet-info div,
@@ -366,16 +378,20 @@ header.panel-title {
     min-width: 33%;
     padding: 0;
 
-    display: flex;
+    padding-top: 25px;
+    /* display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: center; */
 }
 
 #pet-metrics {
     font-size: 1em;
-    margin: 6% 8%;
+    /* margin: 6% 8%; */
+    margin-right: 8%;
+    margin-top: 25px;
     margin-left: 0%;
-    height: 87%;
+    height: 700px;
+    /* height: 86%; */
     border: none;
     border-radius: 25px;
     border: 3px solid var(--pri-color-dark);

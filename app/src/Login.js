@@ -11,6 +11,8 @@ import {
 } from "./App";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import Navbar from "react-bootstrap/Navbar";
+import Nav from "react-bootstrap/Nav";
 
 /* Login provides user login functionality on /login */
 export function Login() {
@@ -97,30 +99,51 @@ export function Login() {
     };
 
     return (
-        <div id="login-form">
-            {isLoggedIn() ? history.push(paths.home) : null}
-            <div id="creation-status"></div>
-            <Form onSubmit={handleSubmit}>
-                <Form.Group>
-                    <Form.Label>Username</Form.Label>
-                    <Form.Control id="username" name="username" type="text" onBlur={handleBlur} />
-                    <Form.Text id="username-status" />
-                </Form.Group>
-
-                <Form.Group>
-                    <Form.Label>Password</Form.Label>
-                    <Form.Control
-                        id="password"
-                        name="password"
-                        type="password"
-                        onBlur={handleBlur}
+        <>
+            {/* <Navbar className="color-nav justify-content-center" expand="lg" fixed="top">
+                <Navbar.Brand id="site-name">
+                    <img
+                        id="logo"
+                        src={logo}
                     />
-                    <Form.Text id="password-status" />
-                </Form.Group>
-                <Button variant="info" id="login-submit" type="submit">
-                    Let's Go!
-                </Button>
-            </Form>
-        </div>
+                    Moo Moo Moo Moo
+                </Navbar.Brand>
+            </Navbar>
+
+            <Navbar className="color-nav justify-content-center" expand="lg" fixed="bottom">
+                <Navbar.Text id="current-user">Made with 💕 in 2020</Navbar.Text>
+            </Navbar> */}
+
+            <div id="login-form">
+                {isLoggedIn() ? history.push(paths.home) : null}
+                <div id="creation-status"></div>
+                <Form onSubmit={handleSubmit}>
+                    <Form.Group>
+                        <Form.Label>Username</Form.Label>
+                        <Form.Control
+                            id="username"
+                            name="username"
+                            type="text"
+                            onBlur={handleBlur}
+                        />
+                        <Form.Text id="username-status" />
+                    </Form.Group>
+
+                    <Form.Group>
+                        <Form.Label>Password</Form.Label>
+                        <Form.Control
+                            id="password"
+                            name="password"
+                            type="password"
+                            onBlur={handleBlur}
+                        />
+                        <Form.Text id="password-status" />
+                    </Form.Group>
+                    <Button variant="info" id="login-submit" type="submit">
+                        Let's Go!
+                    </Button>
+                </Form>
+            </div>
+        </>
     );
 }
