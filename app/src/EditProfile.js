@@ -30,6 +30,17 @@ export function EditProfile() {
     const starColor = "#80cbc4";
     const starSize = 20;
 
+    const inputFields = [
+        "pet-name",
+        "pet-bday",
+        "pet-breed",
+        "pet-weight",
+        "owner-name",
+        "owner-email",
+        "owner-city",
+        "owner-state"
+    ]
+
     /* fetches and renders pet and owner pictures upon page load and/or new picture upload */
     useEffect(() => {
         paths.current = paths.edit_profile;
@@ -77,16 +88,21 @@ export function EditProfile() {
     };
 
     const handleDoneEditing = (event) => {
-        // let profile = {
+        let profile = {};
+        profile["username"] = username;
+        profile["password"] = password;
+        
+        inputFields.forEach((input) => {
+            profile[input] = document.getElementById(`${input}-input`).value
+        });
+        
+        localStorage.setItem("profile", JSON.stringify(profile));
+        
+        axios.post(`${server}update_profile`, profile).then(
+            (res) => {},
+            (error) => {}
+        );
 
-        // }
-        // axios.post(`${server}update_profile`, profile).then(
-        //     (res) => {
-        //         imagesToLoad = [image_type];
-        //         setImageUploaded(!isImageUploaded);
-        //     },
-        //     (error) => {}
-        // );
         history.push(paths.profile);
     };
 
@@ -137,7 +153,11 @@ export function EditProfile() {
                         />
                         {/* <figcaption>{profile["pet-name"]}</figcaption> */}
                     </figure>
-                    <input defaultValue={profile["pet-name"]}placeholder="e.g. Lucky" style={{'text-align':'center'}}/>
+                    <input 
+                        id="pet-name-input"
+                        defaultValue={profile["pet-name"]}
+                        placeholder="e.g. Lucky" style={{"text-align":"center"}}
+                    />
 
                     {/* <ImageUploader
                         id="pet-uploader"
@@ -159,7 +179,11 @@ export function EditProfile() {
                             draggable="false"
                         />
                     </figure>
-                    <input defaultValue={profile["owner-name"]}placeholder="e.g. Jane Doe" style={{'text-align':'center'}}/>
+                    <input 
+                        id="owner-name-input"
+                        defaultValue={profile["owner-name"]}
+                        placeholder="e.g. Jane Doe" style={{'text-align':'center'}}
+                    />
 
                     {/* <ImageUploader
                         id="owner-uploader"
@@ -181,22 +205,40 @@ export function EditProfile() {
                         <div className="panel-title">About the Pet</div>
                         <div>
                             <img src={breed} draggable="false" />
-                            <input defaultValue={profile["pet-breed"]} placeholder="e.g. Golden Retriever"/>
+                            <input 
+                                id="pet-breed-input"
+                                defaultValue={profile["pet-breed"]} 
+                                placeholder="e.g. Golden Retriever"
+                            />
                         </div>
                         <div>
                             <img src={bday} draggable="false" />
-                            <input type="month" defaultValue={profile["pet-bday"]}/>
+                            <input 
+                                id="pet-bday-input"
+                                type="month" 
+                                defaultValue={profile["pet-bday"]}
+                            />
                         </div>
                         <div>
                             <img src={weight} draggable="false" />
-                            <input type="number" defaultValue={profile["pet-weight"]} placeholder="In pounds"/>
+                            <input 
+                                id="pet-weight-input"
+                                type="number" 
+                                defaultValue={profile["pet-weight"]} 
+                                placeholder="In pounds"
+                            />
                         </div>
                     </Row>
                     <Row id="owner-info">
                         <div className="panel-title">About the Owner</div>
                         <div>
                             <img src={email} draggable="false" />
-                            <input type="email" defaultValue={profile["owner-email"]} placeholder="e.g. jane.doe@gmail.com"/>
+                            <input 
+                                id="owner-email-input"
+                                type="email" 
+                                defaultValue={profile["owner-email"]} 
+                                placeholder="e.g. jane.doe@gmail.com"
+                            />
                         </div>
                         <div>
                             <img src={home} draggable="false" />

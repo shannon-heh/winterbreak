@@ -28,12 +28,23 @@ export function Navigation() {
     return (
         <>
             {isLoggedIn() ? null : history.push(paths.landing)}
-            <Navbar className="color-nav" expand="lg" sticky="top">
+            {/* <Navbar bg="light" expand="lg">
+                <Navbar.Brand href="#home">React-Bootstrap</Navbar.Brand>
+                <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                <Navbar.Collapse id="basic-navbar-nav">
+                    <Nav className="mr-auto">
+                    <Nav.Link href="#home">Home</Nav.Link>
+                    <Nav.Link href="#link">Link</Nav.Link>
+                    </Nav>
+                </Navbar.Collapse>
+            </Navbar> */}
+
+            <Navbar className="color-nav" expand="lg">
                 <Navbar.Brand id="site-name">
-                    <img
+                    {/* <img
                         id="logo"
                         src={logo}
-                    />
+                    /> */}
                     Moo Moo Moo Moo
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />

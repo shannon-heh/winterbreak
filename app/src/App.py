@@ -124,6 +124,9 @@ def update_profile():
             continue
         profile[field] = request.json[field]
 
+    del profile['username']
+    del profile['password']
+
     users.update_one({'username': username}, {'$set': profile})
 
     return make_response(jsonify(profile), 200)

@@ -80,6 +80,12 @@ export function Profile() {
         history.push(paths.edit_profile);
     };
 
+    const handleDeleteProfile = (event) => {
+        // clear local storage 
+        // delete entrise from backend
+        // sign out 
+    }
+
     return (
         <Container id="profile-container">
             <Row id="profile-row">
@@ -127,14 +133,19 @@ export function Profile() {
                         label="Upload new owner picture (.jpg, .jpeg, .png - max 8MB)"
                         singleImage={true}
                     /> */}
-                    <Button variant="info" id="edit-profile" onClick={handleEditProfile}>
-                        Edit Profile
-                    </Button>
+                    <div id="profile-buttons">
+                        <Button variant="info" id="edit-profile" onClick={handleEditProfile}>
+                            Edit Profile
+                        </Button>
+                        <Button variant="info" id="delete-profile" onClick={handleDeleteProfile}>
+                            Delete Profile
+                        </Button>
+                    </div>
                     {/* <button onClick={handleEditProfile}>Edit Profile</button> */}
                 </Col>
                 <Col id="profile-middle">
                     <Row id="pet-info">
-                        <div className="panel-title">About the Pet</div>
+                        <header className="panel-title">About the Pet</header>
                         <div>
                             <img src={breed} draggable="false" />
                             <span>{profile["pet-breed"]}</span>
@@ -149,7 +160,7 @@ export function Profile() {
                         </div>
                     </Row>
                     <Row id="owner-info">
-                        <div className="panel-title">About the Owner</div>
+                        <header className="panel-title">About the Owner</header>
                         <div>
                             <img src={email} draggable="false" />
                             <span>{profile["owner-email"]}</span>
@@ -164,7 +175,7 @@ export function Profile() {
                 </Col>
                 <Col id="profile-right">
                     <Row id="pet-metrics">
-                        <div className="panel-title">Pet Traits</div>
+                        <header className="panel-title">Pet Traits</header>
                         <div className="pet-trait">Energy Level</div>
                         <ReactStars
                             count={5}
@@ -202,7 +213,10 @@ export function Profile() {
                             edit={false}
                         />
                         <br />
-                        <div className="panel-title">Pet Interests</div>
+                        <div id="pet-interests">
+                            <header className="panel-title">Pet Interests</header>
+                            <div>{qualities["interests"]}</div>
+                        </div>
                     </Row>
                 </Col>
             </Row>
