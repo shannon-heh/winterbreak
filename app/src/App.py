@@ -93,6 +93,26 @@ def create_user():
     return make_response(jsonify(), 201)
 
 
+# Deletes user profile into users collection.
+# Returns 403 if unauthorized.
+# Returns 200 if successful.
+@app.route('/delete_user', methods=['POST'])
+def delete_user():
+    username = request.json['username']
+    password = request.json['password']
+
+    profile = users.find_one({'username': username}, {'_id': False})
+
+    if profile is None or not bcrypt.checkpw(password.encode('utf-8'), profile['password']):
+        return make_response(jsonify(), 403)
+
+    users.delete_one({'username': username})
+    images.delete_one({'username': username})
+    qualities.delete_one({'username': username})
+
+    return make_response(jsonify(), 200)
+
+
 # Checks if user exists in users collection.
 # Returns 404 if username not found.
 # Returns 200 if username is found.
@@ -188,9 +208,6 @@ def update_qualities():
 
     pet_qualities['traits'] = traits
     pet_qualities['interests'] = interests
-
-    # print(pet_qualities[traits_or_interests])
-    # print(pet_qualities)
 
     qualities.update_one({'username': username}, {'$set': pet_qualities})
 

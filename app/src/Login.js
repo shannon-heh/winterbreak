@@ -18,6 +18,8 @@ import Nav from "react-bootstrap/Nav";
 export function Login() {
     let history = useHistory();
 
+    let imagesToLoad = ["pet", "owner"];
+
     useEffect(() => {
         /* displays successful profile creation status if previous url was sign up page */
         const creationStatus = document.getElementById("creation-status");
@@ -69,22 +71,32 @@ export function Login() {
             (res) => {
                 localStorage.setItem("isLoggedIn", true);
                 const profile = res.data;
+
+                const username = JSON.stringify(profile["username"]).replace(/['"]+/g, "");
+                const password = JSON.stringify(profile["password"]).replace(/['"]+/g, "");
+
                 localStorage.setItem("profile", JSON.stringify(profile));
-                localStorage.setItem(
-                    "username",
-                    JSON.stringify(profile["username"]).replace(/['"]+/g, "")
-                );
-                localStorage.setItem(
-                    "password",
-                    JSON.stringify(profile["password"]).replace(/['"]+/g, "")
-                );
-                history.push(paths.home);
+                localStorage.setItem("username", username);
+                localStorage.setItem("password", password);
+
+                imagesToLoad.forEach((image_type) => {
+                    const image = { username: username, password: password, image_type: image_type };
+        
+                    axios.post(`${server}get_picture`, image).then(
+                        (res) => {
+                            localStorage.setItem(`${image_type}-image`, `data:image/png;base64,${res.data}`);
+                            history.push(paths.home);
+                        },
+                        (error) => {}
+                    );
+                });
             },
             (error) => {
                 usernameStatus.innerHTML = "";
                 setDangerStatus(passwordStatus, "Invalid username and/or password!");
             }
         );
+
     };
 
     /* when user clicks out of a field, set field as invalid if field is empty */

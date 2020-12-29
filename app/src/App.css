@@ -121,6 +121,7 @@ div.form-group {
 
 div#creation-status {
     margin: auto;
+    margin-top: 0;
     margin-bottom: 2em;
 }
 
@@ -147,6 +148,10 @@ div#creation-status {
     overflow: auto;
     padding-top: 5%;
     padding-bottom: 5%;
+}
+
+#login-form {
+    flex-direction: column;
 }
 
 #login-button,
@@ -219,8 +224,8 @@ div.container#profile-container {
 img.profile-pic {
     object-fit: cover;
     border-radius: 50%;
-    /* height: 11em; */
-    width: 35%;
+    height: 12vw;
+    width: 12vw;
     overflow: hidden;
     border-radius: 50%;
     border: 3px solid var(--pri-color-dark);
@@ -266,26 +271,32 @@ img.profile-pic:hover {
 }
 
 button.btn#edit-profile,
-button.btn#delete-profile {
+button.btn#delete-profile,
+button.btn#done-editing {
     padding: 0;
     margin: auto;
     width: 45%;
     display: block;
     font-size: 0.8em;
-    height: 30px;
+    height: 35px;
 }
 
-button.btn#edit-profile {
+button.btn#edit-profile,
+button.btn#done-editing {
     margin-top: 40px;
     margin-bottom: 15px;
 }
+
+/* button.btn#edit-profile {
+    height: 45px;
+} */
 
 /* PROFILE MIDDLE PANEL */
 #profile-middle {
     min-width: 33%;
     padding: 0;
     padding-top: 25px;
-    padding-bottom: 110px;
+    padding-bottom: 100px;
     background: var(--bg);
 }
 
@@ -406,7 +417,8 @@ header.panel-title {
         font-size: 0.8em;
     }
     button.btn#edit-profile,
-    button.btn#delete-profile {
+    button.btn#delete-profile,
+    button.btn#done-editing {
         font-size: 0.6em;
         width: 55%;
     }
@@ -426,7 +438,8 @@ header.panel-title {
         font-size: 0.9em;
     }
     button.btn#edit-profile,
-    button.btn#delete-profile {
+    button.btn#delete-profile,
+    button.btn#done-editing {
         font-size: 0.35em;
         width: 65%;
     }
@@ -464,4 +477,59 @@ header.panel-title {
     width: 100%;
     resize: none;
     height: 75%;
+}
+
+.profile-image-container {
+    position: relative;
+}
+
+div.fileUploader {
+    width: 35%;
+    margin: auto;
+    background-color: #ffffff00;
+    position: absolute;
+    top: 32px;
+    left: 32.5%;
+}
+
+div.fileContainer {
+    padding: 0;
+    margin: 0;
+    background-color: #ffffff00;
+    box-shadow: none;
+}
+
+.fileContainer .chooseFileButton {
+    margin: 0;
+    height: 12vw;
+    width: 12vw;
+    border-radius: 50%;
+    background: none;
+}
+
+.fileContainer .chooseFileButton :nth-child(1) {
+    font-size: 0em;
+    transition: all 0.25s ease 0s;
+}
+
+.fileContainer .chooseFileButton:hover {
+    background: #00000031;
+}
+
+.fileContainer .chooseFileButton:hover :nth-child(1) {
+    font-size: 2em;
+    color: var(--pri-color-dark);
+}
+
+i.fa-upload {
+    font-size: 2em;
+    color: var(--pri-color-dark);
+}
+
+div.errorMessage {
+    margin-top: -20px;
+    width: 30vw;
+    overflow-x: scroll;
+    white-space: nowrap;
+    text-align: center;
 }

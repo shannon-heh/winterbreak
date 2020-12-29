@@ -21,11 +21,13 @@ export function EditProfile() {
     let username = localStorage.getItem("username");
     let password = localStorage.getItem("password");
     let profile = JSON.parse(localStorage.getItem("profile"));
-    let qualities = JSON.parse(localStorage.getItem("qualities"))
+    let qualities = JSON.parse(localStorage.getItem("qualities"));
+    let petImage = localStorage.getItem("pet-image");
+    let ownerImage = localStorage.getItem("owner-image");
 
     let [isImageUploaded, setImageUploaded] = useState(false);
     let imagesToLoad = ["pet", "owner"];
-    const maxImageSize = 8388608;
+    const maxImageSize = 3145728;
 
     const starColor = "#80cbc4";
     const starSize = 20;
@@ -53,19 +55,12 @@ export function EditProfile() {
         paths.current = paths.edit_profile;
         document.title = "Edit Profile";
 
-        imagesToLoad.forEach((image_type) => {
-            const image = { username: username, password: password, image_type: image_type };
-
-            axios.post(`${server}get_picture`, image).then(
-                (res) => {
-                    document.getElementById(
-                        `${image_type}-image`
-                    ).src = `data:image/png;base64,${res.data}`;
-                },
-                (error) => {}
-            );
-        });
-    });
+        const uploadButtons = document.getElementsByClassName("chooseFileButton");
+        const tag = document.createElement("i");
+        tag.className = "fas fa-upload";
+        uploadButtons[0].appendChild(tag);
+        uploadButtons[1].appendChild(tag.cloneNode(true));
+    }, []);
 
     /* uploads and replaces a new pet or owner picture */
     const doUpload = (image_type, image) => {
@@ -78,7 +73,17 @@ export function EditProfile() {
         axios.post(`${server}update_picture`, profilePic).then(
             (res) => {
                 imagesToLoad = [image_type];
-                setImageUploaded(!isImageUploaded);
+                imagesToLoad.forEach((image_type) => {
+                    const image = { username: username, password: password, image_type: image_type };
+        
+                    axios.post(`${server}get_picture`, image).then(
+                        (res) => {
+                            localStorage.setItem(`${image_type}-image`, `data:image/png;base64,${res.data}`);
+                            setImageUploaded(!isImageUploaded);
+                        },
+                        (error) => {}
+                    );
+                });
             },
             (error) => {}
         );
@@ -115,13 +120,6 @@ export function EditProfile() {
             qualities.traits[field] = document.getElementById(`${field}-rating`).nextSibling.childNodes[0].childNodes[6].innerHTML;
         })
 
-        /* handle interests in right panel */
-        // let interests = {};
-        // interests["username"] = username;
-        // interests["password"] = password;
-        // interests["traits_or_interests"] = "interests"
-        // interests["all_data"] = document.getElementById("interests-input").value;
-
         /* update local storage */
         let newQualities = {
             interests: qualities.interests,
@@ -145,66 +143,99 @@ export function EditProfile() {
         history.push(paths.profile);
     };
 
+    const handleDeleteProfile = (event) => {
+        if (!window.confirm("Are you sure you want to delete your profile?"))
+            return;
+
+        const credentials = {
+            username: username,
+            password: password
+        }
+
+        axios.post(`${server}delete_user`, credentials).then(
+            (res) => {},
+            (error) => {}
+        );
+
+        localStorage.clear();
+        history.push(paths.landing);
+    }
+
     return (
         <Container id="profile-container">
             <Row id="profile-row">
                 <Col id="profile-left">
-                    <figure>
-                        <img
-                            id="pet-image"
-                            className="profile-pic"
-                            src=""
-                            alt="Pet Profile"
-                            draggable="false"
+                    <div class="profile-image-container">
+                        <figure>
+                            <img
+                                id="pet-image"
+                                className="profile-pic"
+                                src={petImage}
+                                alt="Pet Profile"
+                                draggable="false"
+                            />
+                        </figure>
+
+                        <ImageUploader
+                            id="pet-uploader"
+                            withIcon={false}
+                            buttonText="Choose Pet's Image"
+                            onChange={handlePetUpload}
+                            imgExtension={[".jpg", ".jpeg", ".png"]}
+                            maxFileSize={maxImageSize}
+                            label="Upload new pet picture (.jpg, .jpeg, .png - max 3MB)"
+                            withLabel={false}
+                            singleImage={true}
+                            buttonText=""
+                            fileSizeError="must be < 3MB"
+                            fileTypeError="not supported"
                         />
-                        {/* <figcaption>{profile["pet-name"]}</figcaption> */}
-                    </figure>
+                    </div>
                     <input 
                         id="pet-name-input"
                         defaultValue={profile["pet-name"]}
                         placeholder="e.g. Lucky" style={{"textAlign":"center"}}
                     />
 
-                    {/* <ImageUploader
-                        id="pet-uploader"
-                        withIcon={false}
-                        buttonText="Choose Pet's Image"
-                        onChange={handlePetUpload}
-                        imgExtension={[".jpg", ".jpeg", ".png"]}
-                        maxFileSize={maxImageSize}
-                        label="Upload new pet picture (.jpg, .jpeg, .png - max 8MB)"
-                        singleImage={true}
-                    /> */}
+                    <div class="profile-image-container">
+                        <figure>
+                            <img
+                                id="owner-image"
+                                className="profile-pic"
+                                src={ownerImage}
+                                alt="Owner Profile"
+                                draggable="false"
+                            />
+                        </figure>
 
-                    <figure>
-                        <img
-                            id="owner-image"
-                            className="profile-pic"
-                            src=""
-                            alt="Owner Profile"
-                            draggable="false"
+                        <ImageUploader
+                            id="owner-uploader"
+                            withIcon={false}
+                            buttonText="Choose Owner's Image"
+                            onChange={handleOwnerUpload}
+                            imgExtension={[".jpg", ".jpeg", ".png"]}
+                            maxFileSize={maxImageSize}
+                            label="Upload new owner picture (.jpg, .jpeg, .png - max 3MB)"
+                            withLabel={false}
+                            singleImage={true}
+                            buttonText=""
+                            fileSizeError="must be < 3MB"
+                            fileTypeError="not supported"
                         />
-                    </figure>
+                    </div>
                     <input 
                         id="owner-name-input"
                         defaultValue={profile["owner-name"]}
                         placeholder="e.g. Jane Doe" style={{'textAlign':'center'}}
                     />
-
-                    {/* <ImageUploader
-                        id="owner-uploader"
-                        withIcon={false}
-                        buttonText="Choose Owner's Image"
-                        onChange={handleOwnerUpload}
-                        imgExtension={[".jpg", ".jpeg", ".png"]}
-                        maxFileSize={maxImageSize}
-                        label="Upload new owner picture (.jpg, .jpeg, .png - max 8MB)"
-                        singleImage={true}
-                    /> */}
-                    <Button variant="info" id="edit-profile" onClick={handleDoneEditing}>
-                        Done Editing
-                    </Button>
-                    {/* <button onClick={handleDoneEditing}>Edit Profile</button> */}
+                    <div id="edit-profile-buttons">
+                        <Button variant="info" id="done-editing" onClick={handleDoneEditing}>
+                            Done Editing
+                        </Button>
+                        <Button variant="info" id="delete-profile" onClick={handleDeleteProfile}>
+                            Delete Profile
+                        </Button>
+                    </div>
                 </Col>
                 <Col id="profile-middle">
                     <Row id="pet-info">

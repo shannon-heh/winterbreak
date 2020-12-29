@@ -22,10 +22,8 @@ export function Profile() {
     let password = localStorage.getItem("password");
     let profile = JSON.parse(localStorage.getItem("profile"));
     let qualities = JSON.parse(localStorage.getItem("qualities"))
-
-    let [isImageUploaded, setImageUploaded] = useState(false);
-    let imagesToLoad = ["pet", "owner"];
-    const maxImageSize = 8388608;
+    let petImage = localStorage.getItem("pet-image");
+    let ownerImage = localStorage.getItem("owner-image");
 
     const starColor = "#80cbc4";
     const starSize = 20;
@@ -34,57 +32,11 @@ export function Profile() {
     useEffect(() => {
         paths.current = paths.profile;
         document.title = "Profile";
-
-        imagesToLoad.forEach((image_type) => {
-            const image = { username: username, password: password, image_type: image_type };
-
-            axios.post(`${server}get_picture`, image).then(
-                (res) => {
-                    document.getElementById(
-                        `${image_type}-image`
-                    ).src = `data:image/png;base64,${res.data}`;
-                },
-                (error) => {}
-            );
-        });
-    });
-
-    /* uploads and replaces a new pet or owner picture */
-    const doUpload = (image_type, image) => {
-        const profilePic = new FormData();
-        profilePic.append("file", image);
-        profilePic.append("username", username);
-        profilePic.append("password", password);
-        profilePic.append("image_type", image_type);
-
-        axios.post(`${server}update_picture`, profilePic).then(
-            (res) => {
-                imagesToLoad = [image_type];
-                setImageUploaded(!isImageUploaded);
-            },
-            (error) => {}
-        );
-    };
-
-    /* new pet picture upload */
-    const handlePetUpload = (picture) => {
-        doUpload("pet", picture[0]);
-    };
-
-    /* new owner picture upload */
-    const handleOwnerUpload = (picture) => {
-        doUpload("owner", picture[0]);
-    };
+    }, []);
 
     const handleEditProfile = (event) => {
         history.push(paths.edit_profile);
     };
-
-    const handleDeleteProfile = (event) => {
-        // clear local storage 
-        // delete entrise from backend
-        // sign out 
-    }
 
     return (
         <Container id="profile-container">
@@ -94,29 +46,18 @@ export function Profile() {
                         <img
                             id="pet-image"
                             className="profile-pic"
-                            src=""
+                            src={petImage}
                             alt="Pet Profile"
                             draggable="false"
                         />
                         <figcaption>{profile["pet-name"]}</figcaption>
                     </figure>
 
-                    {/* <ImageUploader
-                        id="pet-uploader"
-                        withIcon={false}
-                        buttonText="Choose Pet's Image"
-                        onChange={handlePetUpload}
-                        imgExtension={[".jpg", ".jpeg", ".png"]}
-                        maxFileSize={maxImageSize}
-                        label="Upload new pet picture (.jpg, .jpeg, .png - max 8MB)"
-                        singleImage={true}
-                    /> */}
-
                     <figure>
                         <img
                             id="owner-image"
                             className="profile-pic"
-                            src=""
+                            src={ownerImage}
                             alt="Owner Profile"
                             draggable="false"
                         />
@@ -136,9 +77,6 @@ export function Profile() {
                     <div id="profile-buttons">
                         <Button variant="info" id="edit-profile" onClick={handleEditProfile}>
                             Edit Profile
-                        </Button>
-                        <Button variant="info" id="delete-profile" onClick={handleDeleteProfile}>
-                            Delete Profile
                         </Button>
                     </div>
                     {/* <button onClick={handleEditProfile}>Edit Profile</button> */}
