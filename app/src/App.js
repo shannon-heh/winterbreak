@@ -35,7 +35,7 @@ export const paths = {
     signup: "/sign-up",
     home: "/p/home",
     profile: "/p/profile",
-    edit_profile: "/p/profile/edit"
+    edit_profile: "/p/profile/edit",
 };
 
 /* helper method: returns true if user is logged in, false if not */

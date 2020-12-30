@@ -25,6 +25,7 @@ html,
 }
 
 /* NAVBAR */
+
 img#logo {
     padding-right: 5%;
     height: 40px;
@@ -32,7 +33,6 @@ img#logo {
 
 .color-nav {
     background-color: #ffecb3;
-    /* height: 9%; */
 }
 
 .navbar-brand#site-name {
@@ -52,7 +52,6 @@ img#logo {
 }
 
 #basic-navbar-nav a {
-    /* padding-left: 30%; */
     padding-left: 45px;
     font-size: 1em;
     letter-spacing: 1.8px;
@@ -72,6 +71,7 @@ img#logo {
 }
 
 /* FORM BASICS */
+
 form {
     width: 100%;
     text-align: center;
@@ -90,12 +90,6 @@ div.form-group {
 }
 
 /* LOGIN AND SIGNUP PAGES */
-/* div#signup-form {
-    display: flex;
-    margin-top: 7em;
-    margin-bottom: 7em;
-    overflow: auto;
-} */
 
 #signup-form table {
     margin: auto;
@@ -138,6 +132,7 @@ div#creation-status {
 }
 
 /* LANDING PAGE */
+
 #landing-buttons,
 #login-form,
 #signup-form {
@@ -174,6 +169,7 @@ div#creation-status {
 }
 
 /* BUTTON STYLING */
+
 button.btn {
     letter-spacing: 2px;
     text-transform: uppercase;
@@ -210,6 +206,7 @@ button.btn:disabled {
 }
 
 /* PROFILE PAGE GENERALS */
+
 div.container#profile-container {
     margin: 0;
     max-width: 100%;
@@ -221,6 +218,7 @@ div.container#profile-container {
 }
 
 /* PROFILE LEFT PANEL */
+
 img.profile-pic {
     object-fit: cover;
     border-radius: 50%;
@@ -287,11 +285,8 @@ button.btn#done-editing {
     margin-bottom: 15px;
 }
 
-/* button.btn#edit-profile {
-    height: 45px;
-} */
-
 /* PROFILE MIDDLE PANEL */
+
 #profile-middle {
     min-width: 33%;
     padding: 0;
@@ -360,6 +355,7 @@ header.panel-title {
 }
 
 /* PROFILE RIGHT PANEL */
+
 #profile-right {
     min-width: 33%;
     padding: 0;
@@ -446,6 +442,7 @@ header.panel-title {
 }
 
 /* EDIT PROFILE */
+
 #pet-name-input,
 #owner-name-input {
     margin-top: 20px;

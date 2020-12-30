@@ -21,7 +21,7 @@ export function Profile() {
     let username = localStorage.getItem("username");
     let password = localStorage.getItem("password");
     let profile = JSON.parse(localStorage.getItem("profile"));
-    let qualities = JSON.parse(localStorage.getItem("qualities"))
+    let qualities = JSON.parse(localStorage.getItem("qualities"));
     let petImage = localStorage.getItem("pet-image");
     let ownerImage = localStorage.getItem("owner-image");
 

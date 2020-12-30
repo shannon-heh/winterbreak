@@ -40,15 +40,10 @@ export function EditProfile() {
         "owner-name",
         "owner-email",
         "owner-city",
-        "owner-state"
-    ]
+        "owner-state",
+    ];
 
-    const ratingFields = [
-        "energy-level",
-        "dog-friendly",
-        "people-friendly",
-        "tendency-to-bark"
-    ]
+    const ratingFields = ["energy-level", "dog-friendly", "people-friendly", "tendency-to-bark"];
 
     /* fetches and renders pet and owner pictures upon page load and/or new picture upload */
     useEffect(() => {
@@ -74,11 +69,18 @@ export function EditProfile() {
             (res) => {
                 imagesToLoad = [image_type];
                 imagesToLoad.forEach((image_type) => {
-                    const image = { username: username, password: password, image_type: image_type };
-        
+                    const image = {
+                        username: username,
+                        password: password,
+                        image_type: image_type,
+                    };
+
                     axios.post(`${server}get_picture`, image).then(
                         (res) => {
-                            localStorage.setItem(`${image_type}-image`, `data:image/png;base64,${res.data}`);
+                            localStorage.setItem(
+                                `${image_type}-image`,
+                                `data:image/png;base64,${res.data}`
+                            );
                             setImageUploaded(!isImageUploaded);
                         },
                         (error) => {}
@@ -104,9 +106,9 @@ export function EditProfile() {
         let profile = {};
         profile["username"] = username;
         profile["password"] = password;
-        
+
         inputFields.forEach((input) => {
-            profile[input] = document.getElementById(`${input}-input`).value
+            profile[input] = document.getElementById(`${input}-input`).value;
         });
 
         /* handle ratings in right panel */
@@ -117,18 +119,20 @@ export function EditProfile() {
         qualities.interests = document.getElementById("interests-input").value;
 
         ratingFields.forEach((field) => {
-            qualities.traits[field] = document.getElementById(`${field}-rating`).nextSibling.childNodes[0].childNodes[6].innerHTML;
-        })
+            qualities.traits[field] = document.getElementById(
+                `${field}-rating`
+            ).nextSibling.childNodes[0].childNodes[6].innerHTML;
+        });
 
         /* update local storage */
         let newQualities = {
             interests: qualities.interests,
-            traits: qualities.traits
-        }
+            traits: qualities.traits,
+        };
 
         localStorage.setItem("profile", JSON.stringify(profile));
         localStorage.setItem("qualities", JSON.stringify(newQualities));
-        
+
         /* update backend*/
         axios.post(`${server}update_profile`, profile).then(
             (res) => {},
@@ -144,13 +148,12 @@ export function EditProfile() {
     };
 
     const handleDeleteProfile = (event) => {
-        if (!window.confirm("Are you sure you want to delete your profile?"))
-            return;
+        if (!window.confirm("Are you sure you want to delete your profile?")) return;
 
         const credentials = {
             username: username,
-            password: password
-        }
+            password: password,
+        };
 
         axios.post(`${server}delete_user`, credentials).then(
             (res) => {},
@@ -159,7 +162,7 @@ export function EditProfile() {
 
         localStorage.clear();
         history.push(paths.landing);
-    }
+    };
 
     return (
         <Container id="profile-container">
@@ -191,10 +194,11 @@ export function EditProfile() {
                             fileTypeError="not supported"
                         />
                     </div>
-                    <input 
+                    <input
                         id="pet-name-input"
                         defaultValue={profile["pet-name"]}
-                        placeholder="e.g. Lucky" style={{"textAlign":"center"}}
+                        placeholder="e.g. Lucky"
+                        style={{ textAlign: "center" }}
                     />
 
                     <div class="profile-image-container">
@@ -223,10 +227,11 @@ export function EditProfile() {
                             fileTypeError="not supported"
                         />
                     </div>
-                    <input 
+                    <input
                         id="owner-name-input"
                         defaultValue={profile["owner-name"]}
-                        placeholder="e.g. Jane Doe" style={{'textAlign':'center'}}
+                        placeholder="e.g. Jane Doe"
+                        style={{ textAlign: "center" }}
                     />
                     <div id="edit-profile-buttons">
                         <Button variant="info" id="done-editing" onClick={handleDoneEditing}>
@@ -242,26 +247,26 @@ export function EditProfile() {
                         <header className="panel-title">About the Pet</header>
                         <div>
                             <img src={breed} draggable="false" />
-                            <input 
+                            <input
                                 id="pet-breed-input"
-                                defaultValue={profile["pet-breed"]} 
+                                defaultValue={profile["pet-breed"]}
                                 placeholder="e.g. Golden Retriever"
                             />
                         </div>
                         <div>
                             <img src={bday} draggable="false" />
-                            <input 
+                            <input
                                 id="pet-bday-input"
-                                type="month" 
+                                type="month"
                                 defaultValue={profile["pet-bday"]}
                             />
                         </div>
                         <div>
                             <img src={weight} draggable="false" />
-                            <input 
+                            <input
                                 id="pet-weight-input"
-                                type="number" 
-                                defaultValue={profile["pet-weight"]} 
+                                type="number"
+                                defaultValue={profile["pet-weight"]}
                                 placeholder="In pounds"
                             />
                         </div>
@@ -270,23 +275,23 @@ export function EditProfile() {
                         <header className="panel-title">About the Owner</header>
                         <div>
                             <img src={email} draggable="false" />
-                            <input 
+                            <input
                                 id="owner-email-input"
-                                type="email" 
-                                defaultValue={profile["owner-email"]} 
+                                type="email"
+                                defaultValue={profile["owner-email"]}
                                 placeholder="e.g. jane.doe@gmail.com"
                             />
                         </div>
                         <div id="owner-location-input">
                             <img src={home} draggable="false" />
-                            <input 
-                                id="owner-city-input" 
-                                defaultValue={profile["owner-city"]} 
+                            <input
+                                id="owner-city-input"
+                                defaultValue={profile["owner-city"]}
                                 placeholder="e.g. Los Angeles"
                             />
-                            <input 
-                                id="owner-state-input" 
-                                defaultValue={profile["owner-state"]} 
+                            <input
+                                id="owner-state-input"
+                                defaultValue={profile["owner-state"]}
                                 placeholder="e.g. CA"
                             />
                         </div>
@@ -295,7 +300,9 @@ export function EditProfile() {
                 <Col id="profile-right">
                     <Row id="pet-metrics">
                         <header className="panel-title">Pet Traits</header>
-                        <div id="energy-level-rating" className="pet-trait">Energy Level</div>
+                        <div id="energy-level-rating" className="pet-trait">
+                            Energy Level
+                        </div>
                         <ReactStars
                             count={5}
                             size={starSize}
@@ -304,7 +311,9 @@ export function EditProfile() {
                             activeColor={starColor}
                             edit={true}
                         />
-                        <div id="dog-friendly-rating" className="pet-trait">Dog-Friendly</div>
+                        <div id="dog-friendly-rating" className="pet-trait">
+                            Dog-Friendly
+                        </div>
                         <ReactStars
                             count={5}
                             size={starSize}
@@ -313,7 +322,9 @@ export function EditProfile() {
                             activeColor={starColor}
                             edit={true}
                         />
-                        <div id="people-friendly-rating" className="pet-trait">People-Friendly</div>
+                        <div id="people-friendly-rating" className="pet-trait">
+                            People-Friendly
+                        </div>
                         <ReactStars
                             count={5}
                             size={starSize}
@@ -322,7 +333,9 @@ export function EditProfile() {
                             activeColor={starColor}
                             edit={true}
                         />
-                        <div id="tendency-to-bark-rating" className="pet-trait">Tendency to Bark</div>
+                        <div id="tendency-to-bark-rating" className="pet-trait">
+                            Tendency to Bark
+                        </div>
                         <ReactStars
                             count={5}
                             size={starSize}
@@ -334,11 +347,11 @@ export function EditProfile() {
                         <br />
                         <div id="pet-interests">
                             <header className="panel-title">Pet Interests</header>
-                            <textarea 
+                            <textarea
                                 id="interests-input"
                                 maxLength={200}
                                 defaultValue={qualities["interests"]}
-                                placeholder = "e.g. fetching, dog bones, play structures, grass fields, biscuits, long walks"
+                                placeholder="e.g. fetching, dog bones, play structures, grass fields, biscuits, long walks"
                             />
                         </div>
                     </Row>

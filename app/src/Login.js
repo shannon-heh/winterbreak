@@ -80,11 +80,18 @@ export function Login() {
                 localStorage.setItem("password", password);
 
                 imagesToLoad.forEach((image_type) => {
-                    const image = { username: username, password: password, image_type: image_type };
-        
+                    const image = {
+                        username: username,
+                        password: password,
+                        image_type: image_type,
+                    };
+
                     axios.post(`${server}get_picture`, image).then(
                         (res) => {
-                            localStorage.setItem(`${image_type}-image`, `data:image/png;base64,${res.data}`);
+                            localStorage.setItem(
+                                `${image_type}-image`,
+                                `data:image/png;base64,${res.data}`
+                            );
                             history.push(paths.home);
                         },
                         (error) => {}
@@ -96,7 +103,6 @@ export function Login() {
                 setDangerStatus(passwordStatus, "Invalid username and/or password!");
             }
         );
-
     };
 
     /* when user clicks out of a field, set field as invalid if field is empty */
