@@ -11,8 +11,7 @@ import {
 } from "./App";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import Navbar from "react-bootstrap/Navbar";
-import Nav from "react-bootstrap/Nav";
+import Spinner from "react-bootstrap/Spinner";
 
 /* Login provides user login functionality on /login */
 export function Login() {
@@ -36,6 +35,12 @@ export function Login() {
     const handleSubmit = (event) => {
         event.preventDefault();
 
+        const spinner = document.getElementById("login-spinner");
+        const submitBtn = document.getElementById("login-submit");
+
+        spinner.style = "display: inline-block;";
+        submitBtn.disabled = true;
+
         let credentials = {};
 
         const form = event.target;
@@ -54,18 +59,14 @@ export function Login() {
         });
 
         /* do not proceed to user home if any field is invalid */
-        if (existInvalidField) return;
+        if (existInvalidField) {
+            spinner.style = "display: none;";
+            submitBtn.disabled = false;
+            return;
+        }
 
         const usernameStatus = document.getElementById("username-status");
         const passwordStatus = document.getElementById("password-status");
-
-        axios.post(`${server}get_qualities`, credentials).then(
-            (res) => {
-                const qualities = res.data;
-                localStorage.setItem("qualities", JSON.stringify(qualities));
-            },
-            (error) => {}
-        );
 
         axios.post(`${server}auth`, credentials).then(
             (res) => {
@@ -78,6 +79,14 @@ export function Login() {
                 localStorage.setItem("profile", JSON.stringify(profile));
                 localStorage.setItem("username", username);
                 localStorage.setItem("password", password);
+
+                axios.post(`${server}get_qualities`, credentials).then(
+                    (res) => {
+                        const qualities = res.data;
+                        localStorage.setItem("qualities", JSON.stringify(qualities));
+                    },
+                    (error) => {}
+                );
 
                 imagesToLoad.forEach((image_type) => {
                     const image = {
@@ -99,6 +108,8 @@ export function Login() {
                 });
             },
             (error) => {
+                spinner.style = "display: none;";
+                submitBtn.disabled = false;
                 usernameStatus.innerHTML = "";
                 setDangerStatus(passwordStatus, "Invalid username and/or password!");
             }
@@ -118,20 +129,6 @@ export function Login() {
 
     return (
         <>
-            {/* <Navbar className="color-nav justify-content-center" expand="lg" fixed="top">
-                <Navbar.Brand id="site-name">
-                    <img
-                        id="logo"
-                        src={logo}
-                    />
-                    Moo Moo Moo Moo
-                </Navbar.Brand>
-            </Navbar>
-
-            <Navbar className="color-nav justify-content-center" expand="lg" fixed="bottom">
-                <Navbar.Text id="current-user">Made with 💕 in 2020</Navbar.Text>
-            </Navbar> */}
-
             <div id="login-form">
                 {isLoggedIn() ? history.push(paths.home) : null}
                 <div id="creation-status"></div>
@@ -159,6 +156,7 @@ export function Login() {
                     </Form.Group>
                     <Button variant="info" id="login-submit" type="submit">
                         Let's Go!
+                        <Spinner id="login-spinner" animation="border" variant="light" size="sm"/>
                     </Button>
                 </Form>
             </div>

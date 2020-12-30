@@ -6,6 +6,7 @@ import { Navigation } from "./Navigation";
 import { Home } from "./Home";
 import { Profile } from "./Profile";
 import { EditProfile } from "./EditProfile";
+import { Banner } from "./Banner"
 import "./App.css";
 
 // /* url for app */
@@ -86,12 +87,15 @@ function App() {
                     <Redirect to={paths.landing} />
                 </Route>
                 <Route exact path={paths.landing}>
+                    <Banner />
                     <Landing />
                 </Route>
                 <Route exact path={paths.login}>
+                    <Banner />
                     <Login />
                 </Route>
                 <Route exact path={paths.signup}>
+                    <Banner />
                     <SignUp />
                 </Route>
                 <Route path="/p">

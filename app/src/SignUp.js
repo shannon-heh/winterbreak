@@ -12,6 +12,7 @@ import {
 } from "./App";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import Spinner from "react-bootstrap/Spinner";
 
 /* SignUp provides user registration functionality on /sign-up */
 export function SignUp() {
@@ -81,6 +82,12 @@ export function SignUp() {
     const handleSubmit = (event) => {
         event.preventDefault();
 
+        let spinner = document.getElementById("signup-spinner");
+        let submitBtn = document.getElementById("signup-submit");
+
+        spinner.style = "display: inline-block;";
+        submitBtn.disabled = true;
+
         let profile = {};
 
         const form = event.target;
@@ -111,6 +118,7 @@ export function SignUp() {
 
         /* do not proceed to login if any field is invalid */
         if (existInvalidField) {
+            spinner.style = "display: none;";
             disableSubmit();
             return;
         }
@@ -298,6 +306,7 @@ export function SignUp() {
                 </table>
                 <Button variant="info" id="signup-submit" type="submit">
                     Let's Go!
+                    <Spinner id="signup-spinner" animation="border" variant="light" size="sm"/>
                 </Button>
             </Form>
         </div>
