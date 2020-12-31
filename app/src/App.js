@@ -6,7 +6,7 @@ import { Navigation } from "./Navigation";
 import { Home } from "./Home";
 import { Profile } from "./Profile";
 import { EditProfile } from "./EditProfile";
-import { Banner } from "./Banner"
+import { Banner } from "./Banner";
 import "./App.css";
 
 // /* url for app */

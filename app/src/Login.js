@@ -156,7 +156,7 @@ export function Login() {
                     </Form.Group>
                     <Button variant="info" id="login-submit" type="submit">
                         Let's Go!
-                        <Spinner id="login-spinner" animation="border" variant="light" size="sm"/>
+                        <Spinner id="login-spinner" animation="border" variant="light" size="sm" />
                     </Button>
                 </Form>
             </div>

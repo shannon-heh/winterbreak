@@ -306,7 +306,7 @@ export function SignUp() {
                 </table>
                 <Button variant="info" id="signup-submit" type="submit">
                     Let's Go!
-                    <Spinner id="signup-spinner" animation="border" variant="light" size="sm"/>
+                    <Spinner id="signup-spinner" animation="border" variant="light" size="sm" />
                 </Button>
             </Form>
         </div>

@@ -6,7 +6,7 @@ export function Banner() {
         <>
             <Navbar className="color-nav justify-content-center" expand="lg" fixed="top">
                 <Navbar.Brand id="site-name">
-                <img id="logo" src={logo} alt="logo" />
+                    <img id="logo" src={logo} alt="logo" />
                     Moo Moo
                 </Navbar.Brand>
             </Navbar>

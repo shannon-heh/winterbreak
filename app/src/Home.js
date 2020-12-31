@@ -9,7 +9,5 @@ export function Home() {
         document.title = "Home";
     });
 
-    return (
-        <ResourceLocator />
-    );
+    return <ResourceLocator />;
 }
