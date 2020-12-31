@@ -1,8 +1,6 @@
 import { useHistory } from "react-router-dom";
-import ImageUploader from "react-images-upload";
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { server, paths } from "./App";
+import { useEffect } from "react";
+import { paths } from "./App";
 import Button from "react-bootstrap/Button";
 import ReactStars from "react-rating-stars-component";
 import Container from "react-bootstrap/Container";
@@ -18,8 +16,6 @@ import weight from "./images/weight-scale.svg";
 export function Profile() {
     let history = useHistory();
 
-    let username = localStorage.getItem("username");
-    let password = localStorage.getItem("password");
     let profile = JSON.parse(localStorage.getItem("profile"));
     let qualities = JSON.parse(localStorage.getItem("qualities"));
     let petImage = localStorage.getItem("pet-image");
@@ -47,7 +43,7 @@ export function Profile() {
                             id="pet-image"
                             className="profile-pic"
                             src={petImage}
-                            alt="Pet Profile"
+                            alt="pet profile"
                             draggable="false"
                         />
                         <figcaption>{profile["pet-name"]}</figcaption>
@@ -58,53 +54,41 @@ export function Profile() {
                             id="owner-image"
                             className="profile-pic"
                             src={ownerImage}
-                            alt="Owner Profile"
+                            alt="owner profile"
                             draggable="false"
                         />
                         <figcaption>{profile["owner-name"]}</figcaption>
                     </figure>
-
-                    {/* <ImageUploader
-                        id="owner-uploader"
-                        withIcon={false}
-                        buttonText="Choose Owner's Image"
-                        onChange={handleOwnerUpload}
-                        imgExtension={[".jpg", ".jpeg", ".png"]}
-                        maxFileSize={maxImageSize}
-                        label="Upload new owner picture (.jpg, .jpeg, .png - max 8MB)"
-                        singleImage={true}
-                    /> */}
                     <div id="profile-buttons">
                         <Button variant="info" id="edit-profile" onClick={handleEditProfile}>
                             Edit Profile
                         </Button>
                     </div>
-                    {/* <button onClick={handleEditProfile}>Edit Profile</button> */}
                 </Col>
                 <Col id="profile-middle">
                     <Row id="pet-info">
                         <header className="panel-title">About the Pet</header>
                         <div>
-                            <img src={breed} draggable="false" />
+                            <img src={breed} draggable="false" alt="pet breed" />
                             <span>{profile["pet-breed"]}</span>
                         </div>
                         <div>
-                            <img src={bday} draggable="false" />
+                            <img src={bday} draggable="false" alt="pet birthday" />
                             <span>{profile["pet-bday"]}</span>
                         </div>
                         <div>
-                            <img src={weight} draggable="false" />
+                            <img src={weight} draggable="false" alt="pet weight" />
                             <span>{profile["pet-weight"]} pounds</span>
                         </div>
                     </Row>
                     <Row id="owner-info">
                         <header className="panel-title">About the Owner</header>
                         <div>
-                            <img src={email} draggable="false" />
+                            <img src={email} draggable="false" alt="owner email" />
                             <span>{profile["owner-email"]}</span>
                         </div>
                         <div>
-                            <img src={home} draggable="false" />
+                            <img src={home} draggable="false" alt="owner state" />
                             <span>
                                 {profile["owner-city"]}, {profile["owner-state"]}
                             </span>

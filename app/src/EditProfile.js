@@ -179,7 +179,6 @@ export function EditProfile() {
                         <ImageUploader
                             id="pet-uploader"
                             withIcon={false}
-                            buttonText="Choose Pet's Image"
                             onChange={handlePetUpload}
                             imgExtension={[".jpg", ".jpeg", ".png"]}
                             maxFileSize={maxImageSize}
@@ -211,7 +210,6 @@ export function EditProfile() {
                         <ImageUploader
                             id="owner-uploader"
                             withIcon={false}
-                            buttonText="Choose Owner's Image"
                             onChange={handleOwnerUpload}
                             imgExtension={[".jpg", ".jpeg", ".png"]}
                             maxFileSize={maxImageSize}
@@ -241,7 +239,7 @@ export function EditProfile() {
                     <Row id="pet-info">
                         <header className="panel-title">About the Pet</header>
                         <div>
-                            <img src={breed} draggable="false" />
+                            <img src={breed} draggable="false" alt="pet breed"/>
                             <input 
                                 id="pet-breed-input"
                                 defaultValue={profile["pet-breed"]} 
@@ -249,7 +247,7 @@ export function EditProfile() {
                             />
                         </div>
                         <div>
-                            <img src={bday} draggable="false" />
+                            <img src={bday} draggable="false" alt="pet bday"/>
                             <input 
                                 id="pet-bday-input"
                                 type="month" 
@@ -257,7 +255,7 @@ export function EditProfile() {
                             />
                         </div>
                         <div>
-                            <img src={weight} draggable="false" />
+                            <img src={weight} draggable="false" alt="pet weight" />
                             <input 
                                 id="pet-weight-input"
                                 type="number" 
@@ -269,7 +267,7 @@ export function EditProfile() {
                     <Row id="owner-info">
                         <header className="panel-title">About the Owner</header>
                         <div>
-                            <img src={email} draggable="false" />
+                            <img src={email} draggable="false" alt="owner email"/>
                             <input 
                                 id="owner-email-input"
                                 type="email" 
@@ -278,7 +276,7 @@ export function EditProfile() {
                             />
                         </div>
                         <div id="owner-location-input">
-                            <img src={home} draggable="false" />
+                            <img src={home} draggable="false" alt="owner city"/>
                             <input 
                                 id="owner-city-input" 
                                 defaultValue={profile["owner-city"]} 

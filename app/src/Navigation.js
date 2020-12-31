@@ -31,7 +31,7 @@ export function Navigation() {
 
             <Navbar className="color-nav" expand="lg">
                 <Navbar.Brand id="site-name">
-                    <img id="logo" src={logo} />
+                    <img id="logo" src={logo} alt="App Logo"/>
                     Moo Moo
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />

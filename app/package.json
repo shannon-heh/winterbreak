@@ -11,6 +11,8 @@
     "bcryptjs": "^2.4.3",
     "bootstrap": "^4.5.3",
     "create-react-class": "^15.7.0",
+    "google-maps": "^4.3.3",
+    "google-maps-react": "^2.0.6",
     "react": "^17.0.1",
     "react-bootstrap": "^1.4.0",
     "react-bootstrap-date-picker": "^5.1.0",
