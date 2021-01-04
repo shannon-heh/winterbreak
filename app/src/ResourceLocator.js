@@ -3,6 +3,8 @@ import { Map, GoogleApiWrapper, Marker, InfoWindow } from "google-maps-react";
 import { server as backend } from "./App";
 import { APIKey } from "./GoogleAPIKey";
 
+var util = require("util");
+
 const mapStyles = {
     position: "relative",
     width: "50%",
@@ -20,9 +22,10 @@ const mapButtonUI = {
     borderRadius: "3px",
     boxShadow: "0 2px 6px rgba(0,0,0,.3)",
     cursor: "pointer",
-    marginTop: "25px",
+    marginLeft: "10px",
+    marginBottom: "5px",
     textAlign: "center",
-    title: "Click to recenter the map",
+    width: "100px",
 };
 
 const mapButtonText = {
@@ -32,15 +35,6 @@ const mapButtonText = {
     lineHeight: "38px",
     paddingLeft: "5px",
     paddingRight: "5px",
-};
-
-const markers = {
-    current: "",
-    Veterinarian: [],
-    "Dog park": [],
-    "Pet store": [],
-    "Pet hotel": [],
-    "Pet grooming": [],
 };
 
 const icons = {
@@ -61,6 +55,15 @@ export class ResourceLocator extends React.Component {
         showingInfoWindow: false,
         activeMarker: {},
         selectedPlace: {},
+        // markers: {
+        //     current: "",
+        //     Veterinarian: [],
+        //     "Dog park": [],
+        //     "Pet store": [],
+        //     "Pet hotel": [],
+        //     "Pet grooming": [],
+        // },
+        // refreshMarkers: false,
     };
 
     componentDidMount() {
@@ -102,6 +105,26 @@ export class ResourceLocator extends React.Component {
     };
 
     handleReady(props, map) {
+        // const parent = this.parent; // refers to ResourceLocator component
+        // const markers = parent.state.markers;
+        // console.log(parent.state);
+
+        let markers = localStorage.getItem("markers");
+        if (!markers) {
+            const newMarkers = {
+                current: "",
+                Veterinarian: [],
+                "Dog park": [],
+                "Pet store": [],
+                "Pet hotel": [],
+                "Pet grooming": [],
+            };
+
+            localStorage.setItem("markers", JSON.stringify(newMarkers));
+
+            markers = newMarkers;
+        } else markers = JSON.parse(markers);
+
         const fetchPlaces = (props, map, query) => {
             const { google } = props;
             const service = new google.maps.places.PlacesService(map);
@@ -116,13 +139,13 @@ export class ResourceLocator extends React.Component {
             };
 
             // clears current markers
-            let currMarker = markers.current;
+            let currMarker = markers.current; // current query
             if (currMarker) {
                 for (let i = 0; i < markers[currMarker].length; i++)
                     markers[currMarker][i].setMap(null);
             }
 
-            // updates next markers to be displayd
+            // updates next markers to be displayed
             markers.current = query;
 
             // displays cached markers if previously searched
@@ -137,7 +160,7 @@ export class ResourceLocator extends React.Component {
                 if (status === google.maps.places.PlacesServiceStatus.OK) {
                     for (let i = 0; i < results.length; i++) {
                         let place = results[i];
-                        // console.log(place);
+
                         let marker = new google.maps.Marker({
                             animation: google.maps.Animation.DROP,
                             position: new google.maps.LatLng(
@@ -151,8 +174,7 @@ export class ResourceLocator extends React.Component {
                             },
                         });
 
-                        const contentString =
-                            `<h5>${place.name}</h5>` + `<div>${place.formatted_address}</div>`;
+                        const contentString = `<h5>${place.name}</h5> <div>${place.formatted_address}</div>`;
 
                         const infowindow = new google.maps.InfoWindow({
                             content: contentString,
@@ -166,7 +188,18 @@ export class ResourceLocator extends React.Component {
                         marker.setMap(map);
                     }
                 }
+
+                // util.inspect(markers);
+                // console.log(markers);
+                // localStorage.setItem("markers", JSON.stringify(markers));
+                localStorage.setItem("markers", JSON.stringify(util.inspect(markers)));
             });
+
+            // console.log(allMarkers);
+            // console.log(JSON.stringify(allMarkers));
+
+            // console.log(JSON.stringify(markers));
+            // localStorage.setItem("markers", JSON.stringify(markers));
         };
 
         // creates and displays buttons on map - when clicked, buttons direct user
@@ -174,8 +207,6 @@ export class ResourceLocator extends React.Component {
         const createButton = (props, map, title, query) => {
             const { google } = props;
             const button = document.createElement("div");
-            // button.id = query.replace(" ", "");
-            // button.style.display = "none";
 
             const buttonUI = document.createElement("div");
             for (const [key, value] of Object.entries(mapButtonUI)) buttonUI.style[key] = value;
@@ -190,16 +221,11 @@ export class ResourceLocator extends React.Component {
                 fetchPlaces(props, map, query);
             });
 
-            map.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(button);
+            map.controls[google.maps.ControlPosition.LEFT_CENTER].push(button);
         };
 
         for (let i = 0; i < buttonTitles.length; i++)
             createButton(props, map, buttonTitles[i], searchQueries[i]);
-
-        // searchQueries.forEach((query) => {
-        //     const id = query.replace(" ", "");
-        //     document.getElementById(id).style.display = "inline-block";
-        // });
     }
 
     render() {
@@ -213,6 +239,7 @@ export class ResourceLocator extends React.Component {
                 center={this.state.location}
                 onClick={this.onMapClick}
                 onReady={this.handleReady}
+                // parent={this}
             >
                 <Marker
                     title="Current Location"
