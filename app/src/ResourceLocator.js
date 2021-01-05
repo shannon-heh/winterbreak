@@ -1,6 +1,5 @@
 import React from "react";
-import { Map, GoogleApiWrapper, Marker, InfoWindow } from "google-maps-react";
-import { server as backend } from "./App";
+import { Map, GoogleApiWrapper, Marker } from "google-maps-react";
 import { APIKey } from "./GoogleAPIKey";
 
 const mapStyles = {
@@ -35,6 +34,7 @@ const mapButtonText = {
     paddingRight: "5px",
 };
 
+// links to marker icons for different place categorise
 const icons = {
     Veterinarian: "https://www.flaticon.com/svg/static/icons/svg/2138/2138508.svg",
     "Dog park": "https://www.flaticon.com/svg/static/icons/svg/3048/3048384.svg",
@@ -43,60 +43,94 @@ const icons = {
     "Pet grooming": "https://www.flaticon.com/svg/static/icons/svg/3636/3636098.svg",
 };
 
+// place category names displayed to user
 const buttonTitles = ["Vets", "Dog Parks", "Pet Stores", "Pet Hotels", "Grooming"];
 
+// what is actually entered as search query into google maps API
 const searchQueries = ["Veterinarian", "Dog park", "Pet store", "Pet hotel", "Pet grooming"];
 
 export class ResourceLocator extends React.Component {
     state = {
-        location: { lat: 0, lng: 0 },
+        location: { lat: 0, lng: 0 }, // stores current location of user
         showingInfoWindow: false,
         activeMarker: {},
         selectedPlace: {},
-        currentMarkers: [],
+        currentMarkers: [], // stores markers currently displayed on map
     };
 
+    /* fetches user current location after component mount completion */
     componentDidMount() {
         this.getLocation();
     }
 
+    /* updates lat-lon location as stored in this.state */
     updateLocation(currLat, currLng) {
         this.setState(() => {
             return { location: { lat: currLat, lng: currLng } };
         });
     }
 
+    /* uses browser API to fetch current user location */
     getLocation() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 (position) => {
                     this.updateLocation(position.coords.latitude, position.coords.longitude);
+                    // try {
+                    //     document.getElementById("map-loading-text").remove();
+                    // } catch (error) {}
                 },
                 () => {}
             );
         }
     }
 
-    onMarkerClick = (props, marker, e) => {
-        this.setState({
-            selectedPlace: props,
-            activeMarker: marker,
-            showingInfoWindow: true,
-        });
-    };
-
-    onMapClick = (props) => {
-        if (this.state.showingInfoWindow) {
-            this.setState({
-                showingInfoWindow: false,
-                activeMarker: null,
-            });
-        }
-    };
-
+    /* manages creation of loading and places buttons, as well as querying of the Places API and
+    creation of markers */
     handleReady(props, map) {
-        let parent = this.parent;
+        /* helper method for loading and places button creation */
+        const createButtonHelper = (props, map, title) => {
+            const button = document.createElement("div");
 
+            const buttonUI = document.createElement("div");
+            for (const [key, value] of Object.entries(mapButtonUI)) buttonUI.style[key] = value;
+            button.appendChild(buttonUI);
+
+            const buttonText = document.createElement("div");
+            for (const [key, value] of Object.entries(mapButtonText)) buttonText.style[key] = value;
+            buttonText.innerHTML = title;
+            buttonUI.appendChild(buttonText);
+
+            return [button, buttonUI, buttonText];
+        };
+
+        /* creates and displays loading text on the map until user location is found */
+        // const createLoadingButton = (props, map) => {
+        //     const { google } = props;
+        //     const [button, , buttonText] = createButtonHelper(props, map, "Loading...");
+
+        //     button.id = "map-loading-text";
+        //     buttonText.style.cursor = "wait";
+        //     map.controls[google.maps.ControlPosition.CENTER].push(button);
+        // };
+
+        /* creates and displays buttons on map for different pet-related location categories */
+        const createPlaceButton = (props, map, title, query) => {
+            const { google } = props;
+            const [button, buttonUI] = createButtonHelper(props, map, title);
+
+            buttonUI.addEventListener("click", () => {
+                fetchPlaces(props, map, query);
+            });
+
+            map.controls[google.maps.ControlPosition.LEFT_CENTER].push(button);
+        };
+
+        // createLoadingButton(props, map);
+
+        let parent = this.parent; // parent refers to ResourceLocator component
+
+        /* displays relevant location markers on map when user clicks on place button */
         const fetchPlaces = (props, map, query) => {
             let places = localStorage.getItem("places");
 
@@ -207,30 +241,9 @@ export class ResourceLocator extends React.Component {
             localStorage.setItem("places", JSON.stringify(places));
         };
 
-        // creates and displays buttons on map - when clicked, buttons direct user
-        // to pet-related locations on the map
-        const createButton = (props, map, title, query) => {
-            const { google } = props;
-            const button = document.createElement("div");
-
-            const buttonUI = document.createElement("div");
-            for (const [key, value] of Object.entries(mapButtonUI)) buttonUI.style[key] = value;
-            button.appendChild(buttonUI);
-
-            const buttonText = document.createElement("div");
-            for (const [key, value] of Object.entries(mapButtonText)) buttonText.style[key] = value;
-            buttonText.innerHTML = title;
-            buttonUI.appendChild(buttonText);
-
-            buttonUI.addEventListener("click", () => {
-                fetchPlaces(props, map, query);
-            });
-
-            map.controls[google.maps.ControlPosition.LEFT_CENTER].push(button);
-        };
-
+        // creates buttons for different place categories on left end of map
         for (let i = 0; i < buttonTitles.length; i++)
-            createButton(props, map, buttonTitles[i], searchQueries[i]);
+            createPlaceButton(props, map, buttonTitles[i], searchQueries[i]);
     }
 
     render() {
@@ -242,23 +255,14 @@ export class ResourceLocator extends React.Component {
                 zoom={12}
                 initialCenter={{ lat: 0, lng: 0 }}
                 center={this.state.location}
-                onClick={this.onMapClick}
                 onReady={this.handleReady}
                 parent={this}
             >
                 <Marker
-                    title="Current Location"
+                    title="Look, it's you!"
                     name={"Current Location"}
                     position={this.state.location}
-                    onClick={this.onMarkerClick}
                 />
-
-                <InfoWindow marker={this.state.activeMarker} visible={this.state.showingInfoWindow}>
-                    <div>
-                        <h5>{this.state.selectedPlace.name}</h5>
-                        <div>Look, it's you!</div>
-                    </div>
-                </InfoWindow>
             </Map>
         );
     }
