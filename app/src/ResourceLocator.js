@@ -3,8 +3,6 @@ import { Map, GoogleApiWrapper, Marker, InfoWindow } from "google-maps-react";
 import { server as backend } from "./App";
 import { APIKey } from "./GoogleAPIKey";
 
-var util = require("util");
-
 const mapStyles = {
     position: "relative",
     width: "50%",
@@ -55,6 +53,7 @@ export class ResourceLocator extends React.Component {
         showingInfoWindow: false,
         activeMarker: {},
         selectedPlace: {},
+        currentMarkers: [],
     };
 
     componentDidMount() {
@@ -96,44 +95,25 @@ export class ResourceLocator extends React.Component {
     };
 
     handleReady(props, map) {
-        // let markers = localStorage.getItem("markers");
-
-        // if (!markers) {
-        //     const newMarkers = {
-        //         current: "",
-        //         Veterinarian: [],
-        //         "Dog park": [],
-        //         "Pet store": [],
-        //         "Pet hotel": [],
-        //         "Pet grooming": [],
-        //     };
-
-        //     localStorage.setItem("markers", JSON.stringify(newMarkers));
-
-        //     markers = newMarkers;
-        // } else markers = JSON.parse(markers);
+        let parent = this.parent;
 
         const fetchPlaces = (props, map, query) => {
-            let markers = localStorage.getItem("markers");
+            let places = localStorage.getItem("places");
 
-            if (!markers) {
-                // prettier-ignore
-                const newMarkers = {
-                    "current marker": "",
-                    "Veterinarian": [],
+            if (!places) {
+                const newPlaces = {
+                    current: "",
+                    Veterinarian: [],
                     "Dog park": [],
                     "Pet store": [],
                     "Pet hotel": [],
                     "Pet grooming": [],
                 };
 
-                localStorage.setItem("markers", JSON.stringify(newMarkers));
+                localStorage.setItem("places", JSON.stringify(newPlaces));
 
-                markers = newMarkers;
-            } else {
-                console.log(markers);
-                markers = JSON.parse(markers);
-            }
+                places = newPlaces;
+            } else places = JSON.parse(places);
 
             const { google } = props;
             const service = new google.maps.places.PlacesService(map);
@@ -143,43 +123,31 @@ export class ResourceLocator extends React.Component {
 
             const request = {
                 location: locObj,
-                radius: "50",
+                radius: "5000",
                 query: query,
             };
 
             // clears current markers
-            let currMarker = markers["current marker"]; // current query
-            if (currMarker) {
-                for (let i = 0; i < markers[currMarker].length; i++)
-                    markers[currMarker][i].setMap(null);
+            const currMarkers = parent.state.currentMarkers;
+            if (currMarkers.length !== 0) {
+                for (let i = 0; i < currMarkers.length; i++) currMarkers[i].setMap(null);
+                parent.setState({ currentMarkers: [] });
             }
 
-            // updates next markers to be displayed
-            markers["current marker"] = query;
+            // updates next place to be displayed
+            places.current = query;
+            let newMarkers = [];
 
-            // displays cached markers if previously searched
-            const allMarkers = markers[query];
-            if (allMarkers.length !== 0) {
-                for (let i = 0; i < allMarkers.length; i++) allMarkers[i].setMap(map);
-                return;
-            }
-
-            // creates, displays, and caches markers for new search
-            service.textSearch(request, (results, status) => {
-                if (status === google.maps.places.PlacesServiceStatus.OK) {
-                    for (let i = 0; i < results.length; i++) {
-                        let place = results[i];
-
-                        let marker = new google.maps.Marker({
-                            animation: google.maps.Animation.DROP,
-                            position: new google.maps.LatLng(
-                                place.geometry.location.lat(),
-                                place.geometry.location.lng()
-                            ),
-                            title: place.name,
-                            icon: {
-                                url: icons[request.query],
-                                scaledSize: new google.maps.Size(48, 48),
+            // displays markers for cached places if previously searched
+            const allPlaces = places[query];
+            if (allPlaces.length !== 0) {
+                for (let i = 0; i < allPlaces.length; i++) {
+                    service.getDetails({ placeId: allPlaces[i] }, (place, status) => {
+                        const marker = new google.maps.Marker({
+                            map: map,
+                            place: {
+                                placeId: allPlaces[i],
+                                location: place.geometry.location,
                             },
                         });
 
@@ -193,13 +161,50 @@ export class ResourceLocator extends React.Component {
                             infowindow.open(map, marker);
                         });
 
-                        allMarkers.push(marker);
+                        newMarkers.push(marker);
                         marker.setMap(map);
-                    }
+                    });
                 }
+            } else {
+                // creates, displays, and caches markers for new search
+                service.textSearch(request, (results, status) => {
+                    if (status === google.maps.places.PlacesServiceStatus.OK) {
+                        for (let i = 0; i < results.length; i++) {
+                            const place = results[i];
 
-                localStorage.setItem("markers", util.inspect(markers).replace(/'/, '"'));
-            });
+                            const marker = new google.maps.Marker({
+                                animation: google.maps.Animation.DROP,
+                                position: new google.maps.LatLng(
+                                    place.geometry.location.lat(),
+                                    place.geometry.location.lng()
+                                ),
+                                title: place.name,
+                                icon: {
+                                    url: icons[request.query],
+                                    scaledSize: new google.maps.Size(48, 48),
+                                },
+                            });
+
+                            const contentString = `<h5>${place.name}</h5> <div>${place.formatted_address}</div>`;
+
+                            const infowindow = new google.maps.InfoWindow({
+                                content: contentString,
+                            });
+
+                            marker.addListener("click", () => {
+                                infowindow.open(map, marker);
+                            });
+
+                            allPlaces.push(place.place_id);
+                            newMarkers.push(marker);
+                            marker.setMap(map);
+                        }
+                    }
+                });
+            }
+
+            parent.setState({ currentMarkers: newMarkers });
+            localStorage.setItem("places", JSON.stringify(places));
         };
 
         // creates and displays buttons on map - when clicked, buttons direct user
@@ -239,7 +244,7 @@ export class ResourceLocator extends React.Component {
                 center={this.state.location}
                 onClick={this.onMapClick}
                 onReady={this.handleReady}
-                // parent={this}
+                parent={this}
             >
                 <Marker
                     title="Current Location"
