@@ -534,3 +534,16 @@ div.errorMessage {
 div.spinner-border {
     display: none;
 }
+
+/* Resource Locator */
+div #map-container {
+    text-align: center;
+    margin-top: 25px;
+}
+
+div #map-loading-text {
+    font-size: 1.75em;
+    letter-spacing: 1.8px;
+    font-weight: 700;
+    color: var(--navbar-text);
+}

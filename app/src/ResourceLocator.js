@@ -1,13 +1,14 @@
 import React from "react";
 import { Map, GoogleApiWrapper, Marker } from "google-maps-react";
 import { APIKey } from "./GoogleAPIKey";
+import Spinner from "react-bootstrap/Spinner";
 
 const mapStyles = {
     position: "relative",
     width: "50%",
     height: "500px",
     marginLeft: "25%",
-    marginTop: "25px",
+    marginTop: "5px",
     boxShadow: "0px 8px 15px #00000026",
     border: "3px solid #80cbc4",
     borderRadius: "25px",
@@ -76,9 +77,7 @@ export class ResourceLocator extends React.Component {
             navigator.geolocation.getCurrentPosition(
                 (position) => {
                     this.updateLocation(position.coords.latitude, position.coords.longitude);
-                    // try {
-                    //     document.getElementById("map-loading-text").remove();
-                    // } catch (error) {}
+                    document.getElementById("map-loading-text").innerHTML = "Resource Locator";
                 },
                 () => {}
             );
@@ -104,16 +103,6 @@ export class ResourceLocator extends React.Component {
             return [button, buttonUI, buttonText];
         };
 
-        /* creates and displays loading text on the map until user location is found */
-        // const createLoadingButton = (props, map) => {
-        //     const { google } = props;
-        //     const [button, , buttonText] = createButtonHelper(props, map, "Loading...");
-
-        //     button.id = "map-loading-text";
-        //     buttonText.style.cursor = "wait";
-        //     map.controls[google.maps.ControlPosition.CENTER].push(button);
-        // };
-
         /* creates and displays buttons on map for different pet-related location categories */
         const createPlaceButton = (props, map, title, query) => {
             const { google } = props;
@@ -125,8 +114,6 @@ export class ResourceLocator extends React.Component {
 
             map.controls[google.maps.ControlPosition.LEFT_CENTER].push(button);
         };
-
-        // createLoadingButton(props, map);
 
         let parent = this.parent; // parent refers to ResourceLocator component
 
@@ -248,22 +235,34 @@ export class ResourceLocator extends React.Component {
 
     render() {
         return (
-            <Map
-                id="map"
-                google={this.props.google}
-                style={mapStyles}
-                zoom={12}
-                initialCenter={{ lat: 0, lng: 0 }}
-                center={this.state.location}
-                onReady={this.handleReady}
-                parent={this}
-            >
-                <Marker
-                    title="Look, it's you!"
-                    name={"Current Location"}
-                    position={this.state.location}
-                />
-            </Map>
+            <div id="map-container">
+                <div id="map-loading-text">
+                    Locating...{" "}
+                    <Spinner
+                        id="map-loading-spinner"
+                        animation="grow"
+                        variant="warning"
+                        size="md"
+                        style={{ display: "inline-block", color: "#c88719 !important" }}
+                    />
+                </div>
+                <Map
+                    id="map"
+                    google={this.props.google}
+                    style={mapStyles}
+                    zoom={12}
+                    initialCenter={{ lat: 0, lng: 0 }}
+                    center={this.state.location}
+                    onReady={this.handleReady}
+                    parent={this}
+                >
+                    <Marker
+                        title="Look, it's you!"
+                        name={"Current Location"}
+                        position={this.state.location}
+                    />
+                </Map>
+            </div>
         );
     }
 }

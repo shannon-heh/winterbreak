@@ -297,6 +297,7 @@ export function SignUp() {
                                     type="text"
                                     placeholder="e.g. CA"
                                     defaultValue=""
+                                    maxLength="2"
                                     onBlur={handleBlur}
                                 />
                                 <Form.Text id="owner-state-status" />
@@ -305,7 +306,7 @@ export function SignUp() {
                     </tr>
                 </table>
                 <Button variant="info" id="signup-submit" type="submit">
-                    Let's Go!
+                    Let's Go!{" "}
                     <Spinner id="signup-spinner" animation="border" variant="light" size="sm" />
                 </Button>
             </Form>

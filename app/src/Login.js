@@ -155,7 +155,7 @@ export function Login() {
                         <Form.Text id="password-status" />
                     </Form.Group>
                     <Button variant="info" id="login-submit" type="submit">
-                        Let's Go!
+                        Let's Go!{" "}
                         <Spinner id="login-spinner" animation="border" variant="light" size="sm" />
                     </Button>
                 </Form>
