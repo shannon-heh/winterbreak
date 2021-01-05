@@ -55,15 +55,6 @@ export class ResourceLocator extends React.Component {
         showingInfoWindow: false,
         activeMarker: {},
         selectedPlace: {},
-        // markers: {
-        //     current: "",
-        //     Veterinarian: [],
-        //     "Dog park": [],
-        //     "Pet store": [],
-        //     "Pet hotel": [],
-        //     "Pet grooming": [],
-        // },
-        // refreshMarkers: false,
     };
 
     componentDidMount() {
@@ -105,27 +96,45 @@ export class ResourceLocator extends React.Component {
     };
 
     handleReady(props, map) {
-        // const parent = this.parent; // refers to ResourceLocator component
-        // const markers = parent.state.markers;
-        // console.log(parent.state);
+        // let markers = localStorage.getItem("markers");
 
-        let markers = localStorage.getItem("markers");
-        if (!markers) {
-            const newMarkers = {
-                current: "",
-                Veterinarian: [],
-                "Dog park": [],
-                "Pet store": [],
-                "Pet hotel": [],
-                "Pet grooming": [],
-            };
+        // if (!markers) {
+        //     const newMarkers = {
+        //         current: "",
+        //         Veterinarian: [],
+        //         "Dog park": [],
+        //         "Pet store": [],
+        //         "Pet hotel": [],
+        //         "Pet grooming": [],
+        //     };
 
-            localStorage.setItem("markers", JSON.stringify(newMarkers));
+        //     localStorage.setItem("markers", JSON.stringify(newMarkers));
 
-            markers = newMarkers;
-        } else markers = JSON.parse(markers);
+        //     markers = newMarkers;
+        // } else markers = JSON.parse(markers);
 
         const fetchPlaces = (props, map, query) => {
+            let markers = localStorage.getItem("markers");
+
+            if (!markers) {
+                // prettier-ignore
+                const newMarkers = {
+                    "current marker": "",
+                    "Veterinarian": [],
+                    "Dog park": [],
+                    "Pet store": [],
+                    "Pet hotel": [],
+                    "Pet grooming": [],
+                };
+
+                localStorage.setItem("markers", JSON.stringify(newMarkers));
+
+                markers = newMarkers;
+            } else {
+                console.log(markers);
+                markers = JSON.parse(markers);
+            }
+
             const { google } = props;
             const service = new google.maps.places.PlacesService(map);
 
@@ -134,19 +143,19 @@ export class ResourceLocator extends React.Component {
 
             const request = {
                 location: locObj,
-                radius: "5000",
+                radius: "50",
                 query: query,
             };
 
             // clears current markers
-            let currMarker = markers.current; // current query
+            let currMarker = markers["current marker"]; // current query
             if (currMarker) {
                 for (let i = 0; i < markers[currMarker].length; i++)
                     markers[currMarker][i].setMap(null);
             }
 
             // updates next markers to be displayed
-            markers.current = query;
+            markers["current marker"] = query;
 
             // displays cached markers if previously searched
             const allMarkers = markers[query];
@@ -189,17 +198,8 @@ export class ResourceLocator extends React.Component {
                     }
                 }
 
-                // util.inspect(markers);
-                // console.log(markers);
-                // localStorage.setItem("markers", JSON.stringify(markers));
-                localStorage.setItem("markers", JSON.stringify(util.inspect(markers)));
+                localStorage.setItem("markers", util.inspect(markers).replace(/'/, '"'));
             });
-
-            // console.log(allMarkers);
-            // console.log(JSON.stringify(allMarkers));
-
-            // console.log(JSON.stringify(markers));
-            // localStorage.setItem("markers", JSON.stringify(markers));
         };
 
         // creates and displays buttons on map - when clicked, buttons direct user
