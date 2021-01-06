@@ -69,7 +69,7 @@ export function SignUp() {
             (error) => {
                 /* username doesn't exist */
                 setValidField(usernameField);
-                setSuccessStatus(usernameStatus, "Username available!");
+                setSuccessStatus(usernameStatus, "");
                 enableSubmit();
             }
         );

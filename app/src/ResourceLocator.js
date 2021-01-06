@@ -60,7 +60,7 @@ export class ResourceLocator extends React.Component {
     };
 
     /* fetches user current location after component mount completion */
-    componentDidMount() {
+    componentDidMount() {        
         this.getLocation();
     }
 
@@ -77,7 +77,11 @@ export class ResourceLocator extends React.Component {
             navigator.geolocation.getCurrentPosition(
                 (position) => {
                     this.updateLocation(position.coords.latitude, position.coords.longitude);
-                    document.getElementById("map-loading-text").innerHTML = "Resource Locator";
+                    try {
+                        document.getElementById("map-loading-text").innerHTML = "Resource Locator";
+                    } catch (error) {
+                        console.log(error);
+                    }
                 },
                 () => {}
             );

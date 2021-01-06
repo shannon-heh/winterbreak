@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { paths } from "./App";
 import { ResourceLocator } from "./ResourceLocator";
+import { Matchups } from "./Matchups";
 
 /* Home provides home functionality on /p/home */
 export function Home() {
@@ -9,5 +10,10 @@ export function Home() {
         document.title = "Home";
     });
 
-    return <ResourceLocator />;
+    return (
+    <>
+        <Matchups />
+        <ResourceLocator />
+    </>
+    );
 }
