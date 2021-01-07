@@ -167,7 +167,7 @@ export function EditProfile() {
     return (
         <Container id="profile-container">
             <Row id="profile-row">
-                <Col id="profile-left">
+                <Col className="profile-left">
                     <div class="profile-image-container">
                         <figure>
                             <img
@@ -240,8 +240,8 @@ export function EditProfile() {
                         </Button>
                     </div>
                 </Col>
-                <Col id="profile-middle">
-                    <Row id="pet-info">
+                <Col className="profile-middle">
+                    <Row className="pet-info">
                         <header className="panel-title">About the Pet</header>
                         <div>
                             <img src={breed} draggable="false" alt="pet breed" />
@@ -269,7 +269,7 @@ export function EditProfile() {
                             />
                         </div>
                     </Row>
-                    <Row id="owner-info">
+                    <Row className="owner-info">
                         <header className="panel-title">About the Owner</header>
                         <div>
                             <img src={email} draggable="false" alt="owner email" />
@@ -295,8 +295,8 @@ export function EditProfile() {
                         </div>
                     </Row>
                 </Col>
-                <Col id="profile-right">
-                    <Row id="pet-metrics">
+                <Col className="profile-right">
+                    <Row className="pet-metrics">
                         <header className="panel-title">Pet Traits</header>
                         <div id="energy-level-rating" className="pet-trait">
                             Energy Level
@@ -343,11 +343,11 @@ export function EditProfile() {
                             edit={true}
                         />
                         <br />
-                        <div id="pet-interests">
+                        <div className="pet-interests">
                             <header className="panel-title">Pet Interests</header>
                             <textarea
                                 id="interests-input"
-                                maxLength={200}
+                                maxLength={150}
                                 defaultValue={qualities["interests"]}
                                 placeholder="e.g. fetching, dog bones, play structures, grass fields, biscuits, long walks"
                             />

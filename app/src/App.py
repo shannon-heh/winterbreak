@@ -4,6 +4,7 @@ from flask import Flask, request, jsonify, make_response, render_template
 from flask_pymongo import PyMongo
 import googlemaps
 from datetime import datetime
+import json
 
 app = Flask(__name__)
 
@@ -201,10 +202,14 @@ def get_picture():
     password = request.json['password']
     image_type = request.json['image_type']  # 'pet' or 'owner'
 
-    image_profile = images.find_one({'username': username}, {'_id': False})
-
-    if image_profile is None or not bcrypt.checkpw(password.encode('utf-8'), image_profile['password']):
+    profile = users.find_one({'username': username}, {'_id': False})
+    if profile is None or not bcrypt.checkpw(password.encode('utf-8'), profile['password']):
         return make_response(jsonify(), 403)
+
+    if 'match_username' in request.json:
+        username = request.json['match_username']
+
+    image_profile = images.find_one({'username': username}, {'_id': False})
 
     return make_response(image_profile[image_type], 200)
 
@@ -400,11 +405,12 @@ def get_next_match():
         if duration_val < min_duration_val:
             min_distance_text = distance_text
             min_duration_text = duration_text
-            min_match = user
+            min_match['pet-name'] = user['pet-name']
+            min_match['pet-breed'] = user['pet-breed']
+            min_match['username'] = user['username']
 
     min_match['duration'] = min_duration_text
     min_match['distance'] = min_distance_text
-    del min_match['password']
 
     return make_response(jsonify(min_match), 200)
 

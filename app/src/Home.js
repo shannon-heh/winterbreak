@@ -13,7 +13,7 @@ export function Home() {
     return (
     <>
         <Matchups />
-        <ResourceLocator />
+        {/* <ResourceLocator /> */}
     </>
     );
 }

@@ -219,7 +219,8 @@ div.container#profile-container {
 
 /* PROFILE LEFT PANEL */
 
-img.profile-pic {
+.profile-left img.profile-pic,
+img.match-profile-pic {
     object-fit: cover;
     border-radius: 50%;
     height: 12vw;
@@ -231,14 +232,14 @@ img.profile-pic {
     transition: all 0.25s ease 0s;
 }
 
-img.profile-pic:hover {
+.profile-left img.profile-pic:hover {
     color: var(--white);
     box-shadow: 0px 15px 20px #00000031;
     color: #fff;
     transform: translateY(-3px);
 }
 
-#profile-left {
+.profile-left {
     min-width: 33%;
     padding: 0;
     padding-right: 5px;
@@ -251,12 +252,12 @@ img.profile-pic:hover {
     overflow: auto;
 }
 
-#profile-left figure {
+.profile-left figure {
     padding-top: 2em;
     margin-bottom: 0;
 }
 
-#profile-left figcaption {
+.profile-left figcaption {
     text-transform: uppercase;
     font-size: 1.1em;
     letter-spacing: 1.8px;
@@ -264,13 +265,13 @@ img.profile-pic:hover {
     padding-top: 0.8em;
 }
 
-#profile-buttons {
+.profile-left #profile-buttons {
     width: 100%;
 }
 
-button.btn#edit-profile,
-button.btn#delete-profile,
-button.btn#done-editing {
+.profile-left button.btn#edit-profile,
+.profile-left button.btn#delete-profile,
+.profile-left button.btn#done-editing {
     padding: 0;
     margin: auto;
     width: 45%;
@@ -279,15 +280,15 @@ button.btn#done-editing {
     height: 35px;
 }
 
-button.btn#edit-profile,
-button.btn#done-editing {
+.profile-left button.btn#edit-profile,
+.profile-left button.btn#done-editing {
     margin-top: 40px;
     margin-bottom: 15px;
 }
 
 /* PROFILE MIDDLE PANEL */
 
-#profile-middle {
+.profile-middle {
     min-width: 33%;
     padding: 0;
     padding-top: 25px;
@@ -295,8 +296,8 @@ button.btn#done-editing {
     background: var(--bg);
 }
 
-#pet-info,
-#owner-info {
+.profile-middle .pet-info,
+.profile-middle .owner-info {
     font-size: 1em;
     border: none;
     border-radius: 25px;
@@ -316,32 +317,32 @@ button.btn#done-editing {
     align-items: center;
 }
 
-#pet-info {
+.profile-middle .pet-info {
     height: 310px;
     margin-bottom: 0%;
 }
 
-#owner-info {
+.profile-middle .owner-info {
     height: 245px;
 }
 
-#pet-info div,
-#owner-info div {
+.profile-middle .pet-info div,
+.profile-middle .owner-info div {
     margin: 1em;
 }
 
-#profile-middle span {
+.profile-middle span {
     word-break: break-word;
 }
 
-#pet-info img,
-#owner-info img {
+.profile-middle .pet-info img,
+.profile-middle .owner-info img {
     height: 1.3em;
     margin-right: 8px;
 }
 
-#pet-info:hover,
-#owner-info:hover {
+.profile-middle .pet-info:hover,
+.profile-middle .owner-info:hover {
     box-shadow: 0px 15px 20px #00000031;
     transform: translateY(-3px);
 }
@@ -356,14 +357,14 @@ header.panel-title {
 
 /* PROFILE RIGHT PANEL */
 
-#profile-right {
+.profile-right {
     min-width: 33%;
     padding: 0;
     padding-top: 25px;
     background: var(--bg);
 }
 
-#pet-metrics {
+.profile-right .pet-metrics {
     font-size: 1em;
     margin-right: 8%;
     margin-top: 25px;
@@ -384,32 +385,32 @@ header.panel-title {
     background-size: cover;
 }
 
-#pet-metrics:hover {
+.profile-right .pet-metrics:hover {
     box-shadow: 0px 15px 20px #00000031;
     transform: translateY(-3px);
 }
 
-#pet-metrics > div.pet-trait {
+.profile-right .pet-metrics > div.pet-trait {
     margin: 3%;
     margin-bottom: 0.25%;
 }
 
-#pet-interests {
+.profile-right .pet-interests {
     padding-top: 5%;
     padding-left: 15%;
     padding-right: 15%;
     text-align: center;
 }
 
-#pet-interests > div {
+.profile-right .pet-interests > div {
     padding-top: 3%;
 }
 
 /* Medium devices (tablets, less than 992px) */
 @media (max-width: 991.98px) {
-    #pet-info,
-    #owner-info,
-    #pet-metrics {
+    .profile-middle .pet-info,
+    .profile-middle .owner-info,
+    .profile-right .pet-metrics {
         font-size: 0.8em;
     }
     button.btn#edit-profile,
@@ -425,13 +426,10 @@ header.panel-title {
 
 /* Small devices (landscape phones, less than 768px) */
 @media (max-width: 767.98px) {
-    #pet-info,
-    #owner-info,
-    #pet-metrics {
+    .profile-middle .pet-info,
+    .profile-middle .owner-info,
+    .profile-right .pet-metrics {
         font-size: 0.65em;
-    }
-    header.panel-title {
-        font-size: 0.9em;
     }
     button.btn#edit-profile,
     button.btn#delete-profile,
@@ -439,38 +437,41 @@ header.panel-title {
         font-size: 0.35em;
         width: 65%;
     }
+    header.panel-title {
+        font-size: 0.9em;
+    }
 }
 
 /* EDIT PROFILE */
 
-#pet-name-input,
-#owner-name-input {
+.profile-left #pet-name-input,
+.profile-left #owner-name-input {
     margin-top: 20px;
 }
 
-#profile-middle > input,
-#profile-right > input {
+.profile-middle > input,
+.profile-right > input {
     width: 80%;
 }
 
-#owner-location-input {
+.profile-middle #owner-location-input {
     text-align: center;
 }
 
-#owner-state-input {
+.profile-middle #owner-state-input {
     width: 10%;
 }
 
-#owner-city-input {
+.profile-middle #owner-city-input {
     width: 40%;
     margin-right: 1%;
 }
 
-#pet-interests {
+.profile-right .pet-interests {
     width: 100%;
 }
 
-#interests-input {
+.profile-right #interests-input {
     width: 100%;
     resize: none;
     height: 75%;
@@ -546,4 +547,82 @@ div #map-loading-text {
     letter-spacing: 1.8px;
     font-weight: 700;
     color: var(--navbar-text);
+}
+
+/* Pet Matchup Popup */
+.popup-content {
+    width: 950px;
+    /* height: 800px; */
+}
+
+.match-profile-left {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.match-profile-middle {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.match-profile-right {
+    padding-top: 10px;
+}
+
+.match-profile-left img.profile-pic {
+    height: 10vw;
+    width: 10vw;
+}
+
+.match-profile-left figure {
+    padding-top: 10px;
+}
+
+.match-profile-left figcaption {
+    font-size: 1em;
+}
+
+.match-profile-middle .match-pet-info,
+.match-profile-right .match-pet-metrics {
+    margin-top: 0px;
+}
+
+.match-profile-middle .match-pet-info {
+    font-size: 0.8em;
+    height: 250px;
+}
+
+.match-profile-middle .match-owner-info {
+    font-size: 0.8em;
+    height: 197px;
+}
+
+.match-profile-middle .match-pet-info div,
+.match-profile-middle .match-owner-info div {
+    margin: 0.5em;
+}
+
+.match-profile-right .match-pet-metrics {
+    font-size: 0.8em;
+    height: 472px;
+}
+
+/* Medium devices (tablets, less than 992px) */
+@media (max-width: 991.98px) {
+    .match-profile-middle .pet-info,
+    .match-profile-middle .owner-info,
+    .match-profile-right .pet-metrics,
+    header.panel-title {
+        font-size: 0.65em;
+    }
+}
+
+/* Small devices (landscape phones, less than 768px) */
+@media (max-width: 767.98px) {
+    .match-profile-middle .pet-info,
+    .match-profile-middle .owner-info,
+    .match-profile-right .pet-metrics,
+    header.panel-title {
+        font-size: 0.53em;
+    }
 }

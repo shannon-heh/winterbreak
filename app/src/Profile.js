@@ -37,7 +37,7 @@ export function Profile() {
     return (
         <Container id="profile-container">
             <Row id="profile-row">
-                <Col id="profile-left">
+                <Col className="profile-left">
                     <figure>
                         <img
                             id="pet-image"
@@ -65,8 +65,8 @@ export function Profile() {
                         </Button>
                     </div>
                 </Col>
-                <Col id="profile-middle">
-                    <Row id="pet-info">
+                <Col className="profile-middle">
+                    <Row className="pet-info">
                         <header className="panel-title">About the Pet</header>
                         <div>
                             <img src={breed} draggable="false" alt="pet breed" />
@@ -81,7 +81,7 @@ export function Profile() {
                             <span>{profile["pet-weight"]} pounds</span>
                         </div>
                     </Row>
-                    <Row id="owner-info">
+                    <Row className="owner-info">
                         <header className="panel-title">About the Owner</header>
                         <div>
                             <img src={email} draggable="false" alt="owner email" />
@@ -95,8 +95,8 @@ export function Profile() {
                         </div>
                     </Row>
                 </Col>
-                <Col id="profile-right">
-                    <Row id="pet-metrics">
+                <Col className="profile-right">
+                    <Row className="pet-metrics">
                         <header className="panel-title">Pet Traits</header>
                         <div className="pet-trait">Energy Level</div>
                         <ReactStars
@@ -135,7 +135,7 @@ export function Profile() {
                             edit={false}
                         />
                         <br />
-                        <div id="pet-interests">
+                        <div className="pet-interests">
                             <header className="panel-title">Pet Interests</header>
                             <div>{qualities["interests"]}</div>
                         </div>
