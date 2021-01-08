@@ -203,6 +203,7 @@ def get_picture():
     image_type = request.json['image_type']  # 'pet' or 'owner'
 
     profile = users.find_one({'username': username}, {'_id': False})
+
     if profile is None or not bcrypt.checkpw(password.encode('utf-8'), profile['password']):
         return make_response(jsonify(), 403)
 
@@ -245,10 +246,15 @@ def get_qualities():
     username = request.json['username']
     password = request.json['password']
 
-    pet_qualities = qualities.find_one({'username': username}, {'_id': False})
+    profile = users.find_one({'username': username}, {'_id': False})
 
-    if pet_qualities is None or not bcrypt.checkpw(password.encode('utf-8'), pet_qualities['password']):
+    if profile is None or not bcrypt.checkpw(password.encode('utf-8'), profile['password']):
         return make_response(jsonify(), 403)
+
+    if 'match_username' in request.json:
+        username = request.json['match_username']
+
+    pet_qualities = qualities.find_one({'username': username}, {'_id': False})
 
     del pet_qualities['username']
     del pet_qualities['password']
@@ -327,6 +333,9 @@ def update_match_status():
     if pet_matchups is None or not bcrypt.checkpw(password.encode('utf-8'), pet_matchups['password']):
         return make_response(jsonify(), 403)
 
+    match_profile = users.find_one(
+        {'username': match_username}, {'_id': False})
+
     if action == 'ignore':
         pet_matchups['ignored'][match_username] = 0
         if match_username in pet_matchups['saved']:
@@ -337,7 +346,8 @@ def update_match_status():
 
     # if action is 'save'
     else:
-        pet_matchups['saved'][match_username] = 0
+        pet_matchups['saved'][match_username] = {
+            'pet-name': match_profile['pet-name'], 'pet-breed': match_profile['pet-breed']}
         if match_username in pet_matchups['ignored']:
             del pet_matchups['ignored'][match_username]
 
@@ -345,6 +355,22 @@ def update_match_status():
                             '$set': {'ignored': pet_matchups['ignored'], 'saved': pet_matchups['saved']}})
 
     return make_response(jsonify(), 200)
+
+
+# Returns all saved matches for a given user
+# Returns 403 if unauthorized.
+# Returns 200 if saved matches successfully found.
+@ app.route('/get_saved_matches', methods=['POST'])
+def get_saved_matches():
+    username = request.json['username']
+    password = request.json['password']
+
+    pet_matchups = matchups.find_one({'username': username}, {'_id': False})
+
+    if pet_matchups is None or not bcrypt.checkpw(password.encode('utf-8'), pet_matchups['password']):
+        return make_response(jsonify(), 403)
+
+    return make_response(jsonify(pet_matchups['saved']), 200)
 
 
 # Gets next closest non-ignored non-saved match to current user.
@@ -403,6 +429,7 @@ def get_next_match():
         duration_text = directions_result[0]['legs'][0]['duration']['text']
 
         if duration_val < min_duration_val:
+            min_duration_val = duration_val
             min_distance_text = distance_text
             min_duration_text = duration_text
             min_match['pet-name'] = user['pet-name']
