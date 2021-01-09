@@ -30,7 +30,7 @@ export function Navigation() {
             {isLoggedIn() ? null : history.push(paths.landing)}
 
             <Navbar className="color-nav" expand="lg">
-                <Navbar.Brand id="site-name">
+                <Navbar.Brand id="site-name" href="/p/home">
                     <img id="logo" src={logo} alt="App Logo" />
                     Moo Moo
                 </Navbar.Brand>

@@ -338,6 +338,7 @@ def update_match_status():
 
     if action == 'ignore':
         pet_matchups['ignored'][match_username] = 0
+
         if match_username in pet_matchups['saved']:
             del pet_matchups['saved'][match_username]
 
@@ -396,10 +397,13 @@ def get_next_match():
     if len(saved) == len(all_users)-1 or len(all_users) <= 1:
         return make_response(jsonify(), 404)
 
+    start_over = False
+
     # when all users have been ignored or saved, start over
     if len(ignored) + len(saved) == len(all_users)-1:
         ignored = {}
         matchups.update_one({'username': username}, {'$set': {'ignored': {}}})
+        start_over = True
 
     this_user_loc = f"{this_user['owner-city']}, {this_user['owner-state']}"
     now = datetime.now()
@@ -438,6 +442,7 @@ def get_next_match():
 
     min_match['duration'] = min_duration_text
     min_match['distance'] = min_distance_text
+    min_match['start_over'] = start_over
 
     return make_response(jsonify(min_match), 200)
 

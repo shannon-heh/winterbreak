@@ -22,6 +22,8 @@ html,
     --navbar-text: #c88719;
     --navbar-text-hover: #ffca28;
     --bg: #fafafa;
+    --delete: #ef9a9a;
+    --delete-dark: #ef5350;
 }
 
 /* NAVBAR */
@@ -552,7 +554,6 @@ div #map-loading-text {
 /* Pet Matchup Popup */
 .popup-content {
     width: 950px;
-    /* height: 800px; */
 }
 
 .match-profile-left {
@@ -625,4 +626,40 @@ div #map-loading-text {
     header.panel-title {
         font-size: 0.53em;
     }
+}
+
+/* Edit Saved Matches */
+button.saved-match-delete {
+    text-transform: uppercase;
+    font-size: 1.65em;
+    content: center;
+    border: none;
+    border-radius: 10%;
+    background-color: var(--delete);
+    color: var(--white);
+    box-shadow: 0px 8px 15px #00000026;
+    transition: all 0.25s ease 0s;
+    cursor: pointer;
+    outline: none;
+    height: 25px;
+    width: 25px;
+    line-height: 0px;
+    margin-left: 5px;
+}
+
+button.saved-match-delete:hover {
+    background-color: var(--delete-dark);
+    color: var(--white);
+    box-shadow: 0px 15px 20px #00000031;
+    color: #fff;
+    transform: translateY(-3px);
+}
+
+li.saved-match-item {
+    transition: all 0.25s ease 0s;
+}
+
+li.saved-match-item:hover {
+    cursor: pointer;
+    font-weight: 700;
 }

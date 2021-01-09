@@ -40,6 +40,7 @@ export function Login() {
 
         spinner.style = "display: inline-block;";
         submitBtn.disabled = true;
+        submitBtn.style.cursor = "progress";
 
         let credentials = {};
 
@@ -62,6 +63,7 @@ export function Login() {
         if (existInvalidField) {
             spinner.style = "display: none;";
             submitBtn.disabled = false;
+            submitBtn.style.cursor = "pointer";
             return;
         }
 
@@ -110,6 +112,7 @@ export function Login() {
             (error) => {
                 spinner.style = "display: none;";
                 submitBtn.disabled = false;
+                submitBtn.style.cursor = "pointer";
                 usernameStatus.innerHTML = "";
                 setDangerStatus(passwordStatus, "Invalid username and/or password!");
             }

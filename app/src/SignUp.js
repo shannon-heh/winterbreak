@@ -26,11 +26,13 @@ export function SignUp() {
     /* enable the submit button */
     const enableSubmit = () => {
         document.getElementById("signup-submit").disabled = false;
+        document.getElementById("signup-submit").style.cursor = "pointer";
     };
 
     /* disable the submit button */
     const disableSubmit = () => {
         document.getElementById("signup-submit").disabled = true;
+        document.getElementById("signup-submit").style.cursor = "not-allowed";
     };
 
     /* checks that a username is non-empty, consists of only letters, 
