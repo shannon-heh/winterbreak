@@ -14,7 +14,6 @@ import email from "./images/email.svg";
 import home from "./images/home.svg";
 import bday from "./images/birthday-cake.svg";
 import weight from "./images/weight-scale.svg";
-import reactStars from "react-rating-stars-component";
 
 export function Matchups() {
     let username = localStorage.getItem("username");
@@ -38,6 +37,8 @@ export function Matchups() {
     /* constants for ratings in popup */
     const starColor = "#80cbc4";
     const starSize = 15;
+
+    const [savedMatches, setSavedMatches] = useState({});
 
     /* hooks for current match information */
     let currMatchUsername = "";
@@ -199,11 +200,12 @@ export function Matchups() {
         matchDeleteBtn.setAttribute("data-username", username);
         matchDeleteBtn.innerHTML = "×";
         matchDeleteBtn.style.display = "none";
-        matchDeleteBtn.onclick = handleMatchDelete;
+        matchDeleteBtn.onclick = handleDeleteMatch;
         matchItem.appendChild(matchDeleteBtn);
     };
 
-    const handleMatchDelete = (event) => {
+    const handleDeleteMatch = (event) => {
+        console.log("beginning", savedMatches);
         const match_username = event.target.getAttribute("data-username");
 
         const credentials = {
@@ -215,12 +217,24 @@ export function Matchups() {
 
         // move match_username from saved to ignored
         axios.post(`${server}update_match_status`, credentials).then(
-            (res) => {},
+            (res) => {
+                 // remove match from saved list
+                document.getElementById(`${match_username}-match-item`).remove();
+                // const temp = savedMatches;
+                // console.log("start of delete match: ", savedMatches)
+
+                // const idx = savedMatches.indexOf(match_username);
+                // // console.log("search for", match_username, ":: index", idx, " which is ", savedMatches[idx])
+
+                // console.log("BEFORE SPLICE", savedMatches);
+                // savedMatches.splice(idx);
+                // console.log("after slice", savedMatches);
+                delete savedMatches[match_username];
+                setSavedMatches(savedMatches);
+                // console.log("AFTER REMOVING SAVED MATCH: ", savedMatches)
+            },
             (error) => {}
         );
-
-        // remove match from saved list
-        document.getElementById(`${match_username}-match-item`).remove();
     };
 
     /* fetch list of saved matches for current user 
@@ -236,18 +250,27 @@ export function Matchups() {
         axios.post(`${server}get_saved_matches`, credentials).then(
             (res) => {
                 const matches = res.data;
+                const temp = {};
+
                 Object.keys(matches).forEach((username) => {
                     let matchItem = createMatchItem(
                         username,
                         `${matches[username]["pet-name"]}, ${matches[username]["pet-breed"]}`
                     );
+                    temp[username] = 0;
                     createMatchDeleteBtn(username, matchItem);
                     savedMatchesList.appendChild(matchItem);
                 });
+
+                setSavedMatches(temp);
             },
             (error) => {}
         );
     };
+
+    useEffect(() => {
+        console.log("new saved matches:", savedMatches)
+    }, [Object.keys(savedMatches)])
 
     /* called upon first render */
     useEffect(() => {
@@ -326,6 +349,7 @@ export function Matchups() {
     append this match under saved matches list, 
     and display next match */
     const handleSaveMatch = () => {
+        console.log("beginning", savedMatches)
         disableClicks();
         disableAllMatchButtons("not-allowed");
 
@@ -347,6 +371,10 @@ export function Matchups() {
                 createMatchDeleteBtn(currMatchProfile["username"], matchItem);
                 savedMatchesList.appendChild(matchItem);
 
+                // savedMatches.push(currMatchProfile["username"])
+                savedMatches[currMatchProfile["username"]] = 0;
+                setSavedMatches(savedMatches);
+
                 getNextMatch();
             },
             (error) => {}
@@ -367,11 +395,12 @@ export function Matchups() {
         };
 
         // const btn = document.querySelector(`button[data-search-username=${match_username}]`);
+        const btn = document.querySelector(`li[data-li-search-username=${match_username}]`).childNodes[1]
 
         axios.post(`${server}update_match_status`, credentials).then(
             (res) => {
-                // btn.disabled = true;
-                // btn.innerHTML = "Saved!"
+                btn.disabled = true;
+                btn.innerHTML = "Saved!"
                 const savedMatchesList = document.getElementById("saved-matches-list");
                 const matchItem = createMatchItem(match_username, match_pet_info);
                 createMatchDeleteBtn(match_username, matchItem);
@@ -380,8 +409,8 @@ export function Matchups() {
             },
             (error) => {
                 if (error.response.status === 409) {
-                    // btn.disabled = true;
-                    // btn.innerHTML = "Already Saved!"
+                    btn.disabled = true;
+                    btn.innerHTML = "Already Saved!"
                     enableClicks();
                     window.alert("This pet is already in your saved matches list!");
                 }
@@ -476,6 +505,7 @@ export function Matchups() {
                 ownerCity.toLowerCase().startsWith(searchTermLow) ||
                 ownerState.toLowerCase().startsWith(searchTermLow)
             )
+                // change to objct
                 res.push([petQuery, username, `${petName}, ${petBreed}`]);
         });
 
@@ -657,7 +687,7 @@ export function Matchups() {
                                 </figcaption>
                             </figure>
 
-                            <div style={{ "margin-top": "30px" }}>
+                            <div style={{ "marginTop": "30px" }}>
                                 {savedMatchDuration !== "1 min"
                                     ? `You're approx ${savedMatchDuration} apart!`
                                     : "You're in the same city!"}
@@ -783,7 +813,7 @@ export function Matchups() {
                     />
                     <ul id="all-pets-list">
                         {searchForPets().map((petArr) => (
-                            <li>
+                            <li key={petArr[1]} data-li-search-username={petArr[1]}>
                                 {petArr[0]}
                                 <button
                                     onClick={handleSaveSearchedPet}
