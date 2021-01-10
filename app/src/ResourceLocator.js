@@ -60,7 +60,7 @@ export class ResourceLocator extends React.Component {
     };
 
     /* fetches user current location after component mount completion */
-    componentDidMount() {        
+    componentDidMount() {
         this.getLocation();
     }
 

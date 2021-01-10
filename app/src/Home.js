@@ -11,9 +11,9 @@ export function Home() {
     });
 
     return (
-    <>
-        <Matchups />
-        {/* <ResourceLocator /> */}
-    </>
+        <>
+            <Matchups />
+            {/* <ResourceLocator /> */}
+        </>
     );
 }
