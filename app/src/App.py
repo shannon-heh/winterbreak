@@ -117,11 +117,7 @@ def create_user():
 @app.route('/delete_user', methods=['POST'])
 def delete_user():
     username = request.json['username']
-    password = request.json['password']
-
-    profile = users.find_one({'username': username}, {'_id': False})
-
-    if profile is None or not bcrypt.checkpw(password.encode('utf-8'), profile['password']):
+    if not is_valid_user(username, request.json['password']):
         return make_response(jsonify(), 403)
 
     users.delete_one({'username': username})
@@ -151,12 +147,10 @@ def check_user():
 @app.route('/update_profile', methods=['POST'])
 def update_profile():
     username = request.json['username']
-    password = request.json['password']
+    if not is_valid_user(username, request.json['password']):
+        return make_response(jsonify(), 403)
 
     profile = users.find_one({'username': username}, {'_id': False})
-
-    if profile is None or not bcrypt.checkpw(password.encode('utf-8'), profile['password']):
-        return make_response(jsonify(), 403)
 
     for field in request.json.keys():
         if field not in fields:
@@ -176,18 +170,16 @@ def update_profile():
 # Returns 200 if successful.
 @app.route('/update_picture', methods=['POST'])
 def update_picture():
-    username = request.form['username']
-    password = request.form['password']
+    username = request.json['username']
+    if not is_valid_user(username, request.json['password']):
+        return make_response(jsonify(), 403)
+
     image_type = request.form['image_type']  # pet or owner
     image = base64.b64encode(request.files['file'].read())
 
     image_profile = images.find_one({'username': username}, {'_id': False})
 
-    if image_profile is None or not bcrypt.checkpw(password.encode('utf-8'), image_profile['password']):
-        return make_response(jsonify(), 403)
-
     image_profile[image_type] = image
-
     images.update_one({'username': username}, {'$set': image_profile})
 
     return make_response(jsonify(), 200)
@@ -199,13 +191,10 @@ def update_picture():
 @app.route('/get_picture', methods=['POST'])
 def get_picture():
     username = request.json['username']
-    password = request.json['password']
-    image_type = request.json['image_type']  # 'pet' or 'owner'
-
-    profile = users.find_one({'username': username}, {'_id': False})
-
-    if profile is None or not bcrypt.checkpw(password.encode('utf-8'), profile['password']):
+    if not is_valid_user(username, request.json['password']):
         return make_response(jsonify(), 403)
+
+    image_type = request.json['image_type']  # 'pet' or 'owner'
 
     if 'match_username' in request.json:
         username = request.json['match_username']
@@ -221,14 +210,13 @@ def get_picture():
 @app.route('/update_qualities', methods=['POST'])
 def update_qualities():
     username = request.json['username']
-    password = request.json['password']
+    if not is_valid_user(username, request.json['password']):
+        return make_response(jsonify(), 403)
+
     traits = request.json['traits']
     interests = request.json['interests']
 
     pet_qualities = qualities.find_one({'username': username}, {'_id': False})
-
-    if pet_qualities is None or not bcrypt.checkpw(password.encode('utf-8'), pet_qualities['password']):
-        return make_response(jsonify(), 403)
 
     pet_qualities['traits'] = traits
     pet_qualities['interests'] = interests
@@ -244,11 +232,7 @@ def update_qualities():
 @ app.route('/get_qualities', methods=['POST'])
 def get_qualities():
     username = request.json['username']
-    password = request.json['password']
-
-    profile = users.find_one({'username': username}, {'_id': False})
-
-    if profile is None or not bcrypt.checkpw(password.encode('utf-8'), profile['password']):
+    if not is_valid_user(username, request.json['password']):
         return make_response(jsonify(), 403)
 
     if 'match_username' in request.json:
@@ -288,14 +272,13 @@ def auth():
 @ app.route('/get_match_profile', methods=['POST'])
 def get_match_profile():
     username = request.json['username']
-    password = request.json['password']
+    if not is_valid_user(username, request.json['password']):
+        return make_response(jsonify(), 403)
+
     match_username = request.json['match_username']
 
     this_user = users.find_one({'username': username}, {'_id': False})
     match_user = users.find_one({'username': match_username}, {'_id': False})
-
-    if this_user is None or not bcrypt.checkpw(password.encode('utf-8'), this_user['password']):
-        return make_response(jsonify(), 403)
 
     # no match found (user probably deleted profile)
     if match_user is None:
@@ -320,18 +303,18 @@ def get_match_profile():
 
 # Moves a match from saved to ignored, or vice versa.
 # Returns 403 if unauthorized.
+# Returns 409 if match_username is already in the saved set.
 # Returns 200 if match status successfuly updated
 @ app.route('/update_match_status', methods=['POST'])
 def update_match_status():
     username = request.json['username']
-    password = request.json['password']
+    if not is_valid_user(username, request.json['password']):
+        return make_response(jsonify(), 403)
+
     match_username = request.json['match_username']
     action = request.json['action']  # 'ignore' or 'save'
 
     pet_matchups = matchups.find_one({'username': username}, {'_id': False})
-
-    if pet_matchups is None or not bcrypt.checkpw(password.encode('utf-8'), pet_matchups['password']):
-        return make_response(jsonify(), 403)
 
     match_profile = users.find_one(
         {'username': match_username}, {'_id': False})
@@ -347,6 +330,9 @@ def update_match_status():
 
     # if action is 'save'
     else:
+        if match_username in pet_matchups['saved']:
+            return make_response(jsonify(), 409)
+
         pet_matchups['saved'][match_username] = {
             'pet-name': match_profile['pet-name'], 'pet-breed': match_profile['pet-breed']}
         if match_username in pet_matchups['ignored']:
@@ -364,12 +350,10 @@ def update_match_status():
 @ app.route('/get_saved_matches', methods=['POST'])
 def get_saved_matches():
     username = request.json['username']
-    password = request.json['password']
+    if not is_valid_user(username, request.json['password']):
+        return make_response(jsonify(), 403)
 
     pet_matchups = matchups.find_one({'username': username}, {'_id': False})
-
-    if pet_matchups is None or not bcrypt.checkpw(password.encode('utf-8'), pet_matchups['password']):
-        return make_response(jsonify(), 403)
 
     return make_response(jsonify(pet_matchups['saved']), 200)
 
@@ -381,13 +365,11 @@ def get_saved_matches():
 @ app.route('/get_next_match', methods=['POST'])
 def get_next_match():
     username = request.json['username']
-    password = request.json['password']
+    if not is_valid_user(username, request.json['password']):
+        return make_response(jsonify(), 403)
 
     this_user = users.find_one({'username': username}, {'_id': False})
     pet_matchups = matchups.find_one({'username': username}, {'_id': False})
-
-    if pet_matchups is None or not bcrypt.checkpw(password.encode('utf-8'), pet_matchups['password']):
-        return make_response(jsonify(), 403)
 
     ignored = pet_matchups['ignored']
     saved = pet_matchups['saved']
@@ -445,6 +427,26 @@ def get_next_match():
     min_match['start_over'] = start_over
 
     return make_response(jsonify(min_match), 200)
+
+
+@ app.route('/get_all_pet_search_terms', methods=['POST'])
+def get_all_pet_search_terms():
+    username = request.json['username']
+    if not is_valid_user(username, request.json['password']):
+        return make_response(jsonify(), 403)
+
+    all_users = list(users.find({}, {'_id': False}))
+    formatted_terms = {user['username']: f'{user["pet-name"]} — {user["pet-breed"]} — {user["owner-city"]} — {user["owner-state"]}'
+                       for user in all_users if user['username'] != username}
+
+    return make_response(jsonify(formatted_terms), 200)
+
+
+# Helper method
+# return True if user is valid, False otherwise
+def is_valid_user(username, password):
+    profile = users.find_one({'username': username}, {'_id': False})
+    return profile is not None and bcrypt.checkpw(password.encode('utf-8'), profile['password'])
 
 
 # Run server

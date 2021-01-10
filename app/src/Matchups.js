@@ -14,6 +14,7 @@ import email from "./images/email.svg";
 import home from "./images/home.svg";
 import bday from "./images/birthday-cake.svg";
 import weight from "./images/weight-scale.svg";
+import reactStars from "react-rating-stars-component";
 
 export function Matchups() {
     let username = localStorage.getItem("username");
@@ -26,6 +27,13 @@ export function Matchups() {
     /* hooks for saved match popup */
     const [openSavedMatchPopup, setOpenSavedMatchPopup] = useState(false);
     const closeSavedMatchPopup = () => setOpenSavedMatchPopup(false);
+
+    /* hooks for search all pets popup */
+    const [openSearchAllPetsPopup, setSearchAllPetsPopup] = useState(false);
+    const closeSearchAllPetsPopup = () => setSearchAllPetsPopup(false);
+
+    const [allPetQueries, setAllPetQueries] = useState({});
+    const [searchTerm, setSearchTerm] = useState("");
 
     /* constants for ratings in popup */
     const starColor = "#80cbc4";
@@ -40,7 +48,6 @@ export function Matchups() {
     const [currMatchOwnerImage, setCurrMatchOwnerImage] = useState("");
 
     /* hooks for saved match information */
-    let savedMatchUsername = "";
     const [savedMatchDuration, setSavedMatchDuration] = useState("");
     const [savedMatchProfile, setSavedMatchProfile] = useState({});
     const [savedMatchQualities, setSavedMatchQualities] = useState({ traits: {} });
@@ -75,6 +82,14 @@ export function Matchups() {
         disableMatchButton("no-thanks", cursor);
     }
 
+    const disableClicks = () => {
+        document.getElementById("root").style["pointer-events"] = "none";
+    }
+
+    const enableClicks = () => {
+        document.getElementById("root").style["pointer-events"] = "auto";
+    }
+
     /* fetches next best match for user and the match's profile information.
     displays key information about match.
     loads full profile information into pop-up (pop-up appears when user 
@@ -89,6 +104,8 @@ export function Matchups() {
     const getNextMatch = () => {
         disableAllMatchButtons("progress");
         disableMatchButton("edit-saved-matches", "progress");
+        disableMatchButton("search-all-pets", "progress");
+        disableClicks();
 
         const credentials = {
             username: username,
@@ -139,7 +156,9 @@ export function Matchups() {
                         setCurrMatchDuration(res[2].data["duration"]);
                         setCurrMatchQualities(res[3].data);
                         enableAllMatchButtons();
-                        enableMatchButton("edit-saved-matches", "progress");
+                        enableMatchButton("edit-saved-matches");
+                        enableMatchButton("search-all-pets");
+                        enableClicks();
                     },
                     (error) => {}
                 )
@@ -149,7 +168,9 @@ export function Matchups() {
                     document.getElementById("match-profile").style.display = "none";
                     document.getElementById("no-match-message").innerHTML = "No more matches - check back later!";
                     disableAllMatchButtons("not-allowed");
-                    enableMatchButton("edit-saved-matches", "progress");
+                    enableMatchButton("edit-saved-matches");
+                    enableMatchButton("search-all-pets");
+                    enableClicks();
                 }
             }
         );
@@ -195,7 +216,6 @@ export function Matchups() {
         
          // remove match from saved list
          document.getElementById(`${match_username}-match-item`).remove();
-
     }
 
      /* fetch list of saved matches for current user 
@@ -243,6 +263,7 @@ export function Matchups() {
     /* when user clicks on a saved match,
     displays popup with match's profile information */
     const handleSavedMatchClick = (event) => {
+        disableClicks();
         document.getElementById("root").style.cursor = "progress";
         
         const savedMatchUsername = event.target.getAttribute("data-username")
@@ -280,8 +301,9 @@ export function Matchups() {
                 setSavedMatchDuration(res[2].data["duration"]);
                 setSavedMatchQualities(res[3].data);
                 enableAllMatchButtons();
-                enableMatchButton("edit-saved-matches", "progress");
+                enableMatchButton("edit-saved-matches");
                 document.getElementById("root").style.cursor = "default";
+                enableClicks();
                 setOpenSavedMatchPopup((o) => !o);
             }
         )
@@ -296,6 +318,7 @@ export function Matchups() {
     append this match under saved matches list, 
     and display next match */
     const handleSaveMatch = () => {
+        disableClicks();
         disableAllMatchButtons("not-allowed");
 
         const credentials = {
@@ -307,21 +330,58 @@ export function Matchups() {
 
         axios.post(`${server}update_match_status`, credentials).then(
             (res) => {
+                /* add current match to saved matches list */
+                const savedMatchesList = document.getElementById("saved-matches-list");
+                const matchItem = createMatchItem(currMatchProfile["username"], `${currMatchProfile["pet-name"]}, ${currMatchProfile["pet-breed"]}`);
+                createMatchDeleteBtn(currMatchProfile["username"],matchItem);
+                savedMatchesList.appendChild(matchItem);
+                
                 getNextMatch();
             },
             (error) => {}
         );
-
-        /* add current match to saved matches list */
-        const savedMatchesList = document.getElementById("saved-matches-list");
-        const matchItem = createMatchItem(currMatchProfile["username"], `${currMatchProfile["pet-name"]}, ${currMatchProfile["pet-breed"]}`);
-        createMatchDeleteBtn(currMatchProfile["username"],matchItem);
-        savedMatchesList.appendChild(matchItem);
     };
+
+    const handleSaveSearchedPet = (event) => {
+        disableClicks();
+
+        const match_username = event.target.getAttribute('data-search-username')
+        const match_pet_info = event.target.getAttribute('data-pet-info')
+
+        const credentials = {
+            username: username,
+            password: password,
+            match_username: match_username,
+            action: "save",
+        };
+
+        // const btn = document.querySelector(`button[data-search-username=${match_username}]`);
+
+        axios.post(`${server}update_match_status`, credentials).then(
+            (res) => {
+                // btn.disabled = true;
+                // btn.innerHTML = "Saved!"
+                const savedMatchesList = document.getElementById("saved-matches-list");
+                const matchItem = createMatchItem(match_username, match_pet_info);
+                createMatchDeleteBtn(match_username, matchItem);
+                savedMatchesList.appendChild(matchItem);
+                enableClicks();
+            },
+            (error) => {
+                if (error.response.status === 409) {
+                    // btn.disabled = true;
+                    // btn.innerHTML = "Already Saved!"
+                    enableClicks();
+                    window.alert("This pet is already in your saved matches list!");
+                }
+            }
+        );
+    }
 
     /* when No Thanks button is clicked, ignore the current match 
     and display next match */
     const handleNoThanks = () => {
+        disableClicks();
         disableAllMatchButtons("not-allowed");
 
         const credentials = {
@@ -340,6 +400,7 @@ export function Matchups() {
     };
 
     const handleEditSavedMatches = () => {
+        disableClicks();
         disableAllMatchButtons("not-allowed");
         document.getElementById("edit-saved-matches-match-button").style.display = "none";
         document.getElementById("done-editing-match-button").style.display = "inline-block";
@@ -349,9 +410,12 @@ export function Matchups() {
             
         for (let item of document.getElementsByClassName("saved-match-item"))
             item.onclick = null;
+        
+        enableClicks();
     }
 
     const handleDoneEditing = () => {
+        disableClicks();
         document.getElementById("edit-saved-matches-match-button").style.display = "inline-block";
         document.getElementById("done-editing-match-button").style.display = "none";
 
@@ -362,6 +426,48 @@ export function Matchups() {
             item.onclick = handleSavedMatchClick;
 
         getNextMatch();
+    }
+
+    const handleSearchAllPets = () => {
+        const credentials = {
+            username: username,
+            password: password
+        };
+
+        axios.post(`${server}get_all_pet_search_terms`, credentials).then(
+            (res) => {
+                setAllPetQueries(res.data);
+                setSearchAllPetsPopup((o) => !o);
+            },
+            (error) => {}
+        );
+    }
+
+    const editSearchTerm = (event) => {
+        setSearchTerm(event.target.value)
+    }
+
+    const searchForPets = () => {
+        const res = [];
+
+        Object.keys(allPetQueries).forEach((username) => {
+            let petQuery = allPetQueries[username];
+            let searchTermLow = searchTerm.toLowerCase();
+            let petSubqueries = petQuery.split(" — ");
+
+            let petName = petSubqueries[0];
+            let petBreed = petSubqueries[1];
+            let ownerCity = petSubqueries[2];
+            let ownerState = petSubqueries[3];
+
+            if (petName.toLowerCase().startsWith(searchTermLow) ||
+                petBreed.toLowerCase().startsWith(searchTermLow) ||
+                ownerCity.toLowerCase().startsWith(searchTermLow) ||
+                ownerState.toLowerCase().startsWith(searchTermLow))
+                    res.push([petQuery, username, `${petName}, ${petBreed}`]);
+        });
+
+        return res;
     }
 
     return (
@@ -633,6 +739,17 @@ export function Matchups() {
                     Done Editing
                 </Button>
             </div>
+            <Button variant="info" onClick={handleSearchAllPets} id="search-all-pets-match-button">
+                Search All Pets
+            </Button>
+            <Popup open={openSearchAllPetsPopup} closeOnDocumentClick onClose={closeSearchAllPetsPopup}>
+                <div id="search-all-pets">
+                    <input type="text" value={searchTerm} onChange={editSearchTerm} placeholder="Start discovering!" />
+                    <ul id="all-pets-list">
+                        {searchForPets().map(petArr => <li>{petArr[0]}<button onClick={handleSaveSearchedPet} data-search-username={petArr[1]} data-pet-info={petArr[2]}>Save!</button></li>)}
+                    </ul>
+                </div>
+            </Popup>
         </div>
     );
 }
