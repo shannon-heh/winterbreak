@@ -21,9 +21,8 @@ with open('google.config', 'r') as f:
 db = mongo.db
 
 # creates collections
-users = db.users  # user profile
-images = db.images  # profile pics
-qualities = db.qualities  # pet traits & interests
+users = db.users
+images = db.images
 matchups = db.matchups
 goals = db.goals
 tracking = db.tracking
@@ -39,12 +38,14 @@ fields = ['username',
           'owner-name',
           'owner-email',
           'owner-city',
-          'owner-state']
+          'owner-state',
+          'traits',
+          'interests']
 
 
 @app.route('/')
 def index():
-    return '<h1>Flask-MongoDB Backend Service</h1>'
+    return '<h2>Flask-MongoDB Backend Service</h2>'
 
 
 # Inserts user profile into users collection.
@@ -78,35 +79,29 @@ def create_user():
     with open("images/owner_default.png", "rb") as f:
         owner_avatar = base64.b64encode(f.read())
 
+    profile['traits'] = {
+        'energy-level': 2.5,
+        'dog-friendly': 2.5,
+        'people-friendly': 2.5,
+        'tendency-to-bark': 2.5
+    }
+
+    profile['interests'] = 'e.g. fetching, dog bones, play structures, grass fields, biscuits, long walks'
+
     image_profile = {
         'username': profile['username'],
-        'password': profile['password'],
         'pet': pet_avatar,
         'owner': owner_avatar,
     }
 
-    pet_qualities = {
-        'username': profile['username'],
-        'password': profile['password'],
-        'traits': {
-            'energy-level': 2.5,
-            'dog-friendly': 2.5,
-            'people-friendly': 2.5,
-            'tendency-to-bark': 2.5
-        },
-        'interests': 'e.g. fetching, dog bones, play structures, grass fields, biscuits, long walks'
-    }
-
     pet_matchups = {
         'username': profile['username'],
-        'password': profile['password'],
         'ignored': {},
         'saved': {}
     }
 
     users.insert_one(profile)
     images.insert_one(image_profile)
-    qualities.insert_one(pet_qualities)
     matchups.insert_one(pet_matchups)
     return make_response(jsonify(), 201)
 
@@ -122,7 +117,6 @@ def delete_user():
 
     users.delete_one({'username': username})
     images.delete_one({'username': username})
-    qualities.delete_one({'username': username})
     matchups.delete_one({'username': username})
 
     return make_response(jsonify(), 200)
@@ -204,52 +198,10 @@ def get_picture():
     return make_response(image_profile[image_type], 200)
 
 
-# Updates either pet traits or pet interests.
-# Returns 403 if unauthorized.
-# Returns 200 if successful.
-@app.route('/update_qualities', methods=['POST'])
-def update_qualities():
-    username = request.json['username']
-    if not is_valid_user(username, request.json['password']):
-        return make_response(jsonify(), 403)
-
-    traits = request.json['traits']
-    interests = request.json['interests']
-
-    pet_qualities = qualities.find_one({'username': username}, {'_id': False})
-
-    pet_qualities['traits'] = traits
-    pet_qualities['interests'] = interests
-
-    qualities.update_one({'username': username}, {'$set': pet_qualities})
-
-    return make_response(jsonify(), 200)
-
-
-# Returns all pet qualities (traits and interests).
-# Returns 403 if unauthorized.
-# Returns 200 if successful.
-@ app.route('/get_qualities', methods=['POST'])
-def get_qualities():
-    username = request.json['username']
-    if not is_valid_user(username, request.json['password']):
-        return make_response(jsonify(), 403)
-
-    if 'match_username' in request.json:
-        username = request.json['match_username']
-
-    pet_qualities = qualities.find_one({'username': username}, {'_id': False})
-
-    del pet_qualities['username']
-    del pet_qualities['password']
-
-    return make_response(pet_qualities, 200)
-
-
 # Authenticates username and password
 # Returns 200 and user's profile data if authentication is successful
 # Returns 403 is authentication is unsuccessful
-@ app.route('/auth', methods=['POST'])
+@app.route('/auth', methods=['POST'])
 def auth():
     username = request.json['username']
     password = request.json['password']
@@ -269,7 +221,7 @@ def auth():
 # Returns 403 if unauthorized.
 # Returns 404 if no match found (user deleted profile).
 # Returns 200 if closest match found.
-@ app.route('/get_match_profile', methods=['POST'])
+@app.route('/get_match_profile', methods=['POST'])
 def get_match_profile():
     username = request.json['username']
     if not is_valid_user(username, request.json['password']):
@@ -303,9 +255,8 @@ def get_match_profile():
 
 # Moves a match from saved to ignored, or vice versa.
 # Returns 403 if unauthorized.
-# Returns 409 if match_username is already in the saved set.
 # Returns 200 if match status successfuly updated
-@ app.route('/update_match_status', methods=['POST'])
+@app.route('/update_match_status', methods=['POST'])
 def update_match_status():
     username = request.json['username']
     if not is_valid_user(username, request.json['password']):
@@ -330,9 +281,6 @@ def update_match_status():
 
     # if action is 'save'
     else:
-        if match_username in pet_matchups['saved']:
-            return make_response(jsonify(), 409)
-
         pet_matchups['saved'][match_username] = {
             'pet-name': match_profile['pet-name'], 'pet-breed': match_profile['pet-breed']}
         if match_username in pet_matchups['ignored']:
@@ -347,7 +295,7 @@ def update_match_status():
 # Returns all saved matches for a given user
 # Returns 403 if unauthorized.
 # Returns 200 if saved matches successfully found.
-@ app.route('/get_saved_matches', methods=['POST'])
+@app.route('/get_saved_matches', methods=['POST'])
 def get_saved_matches():
     username = request.json['username']
     if not is_valid_user(username, request.json['password']):
@@ -362,7 +310,7 @@ def get_saved_matches():
 # Returns 403 if unauthorized.
 # Returns 404 if no matches found.
 # Returns 200 if closest match found.
-@ app.route('/get_next_match', methods=['POST'])
+@app.route('/get_next_match', methods=['POST'])
 def get_next_match():
     username = request.json['username']
     if not is_valid_user(username, request.json['password']):
@@ -429,7 +377,10 @@ def get_next_match():
     return make_response(jsonify(min_match), 200)
 
 
-@ app.route('/get_all_pet_search_terms', methods=['POST'])
+# Creates formatted search terms for all users (except the current user).
+# Returns 403 is unauthorized.
+# Returns 200 if all search terms created.
+@app.route('/get_all_pet_search_terms', methods=['POST'])
 def get_all_pet_search_terms():
     username = request.json['username']
     if not is_valid_user(username, request.json['password']):
@@ -442,8 +393,8 @@ def get_all_pet_search_terms():
     return make_response(jsonify(formatted_terms), 200)
 
 
-# Helper method
-# return True if user is valid, False otherwise
+# Helper method for user authentication.
+# Return True if user is valid, False otherwise.
 def is_valid_user(username, password):
     profile = users.find_one({'username': username}, {'_id': False})
     return profile is not None and bcrypt.checkpw(password.encode('utf-8'), profile['password'])

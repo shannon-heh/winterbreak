@@ -21,7 +21,6 @@ export function EditProfile() {
     let username = localStorage.getItem("username");
     let password = localStorage.getItem("password");
     let profile = JSON.parse(localStorage.getItem("profile"));
-    let qualities = JSON.parse(localStorage.getItem("qualities"));
     let petImage = localStorage.getItem("pet-image");
     let ownerImage = localStorage.getItem("owner-image");
 
@@ -112,11 +111,10 @@ export function EditProfile() {
         });
 
         /* handle ratings in right panel */
-        let qualities = {};
-        qualities["username"] = username;
-        qualities["password"] = password;
-        qualities.traits = {};
-        qualities.interests = document.getElementById("interests-input").value;
+        let qualities = {
+            traits: {},
+            interests: document.getElementById("interests-input").value,
+        };
 
         ratingFields.forEach((field) => {
             qualities.traits[field] = document.getElementById(
@@ -124,22 +122,14 @@ export function EditProfile() {
             ).nextSibling.childNodes[0].childNodes[6].innerHTML;
         });
 
-        /* update local storage */
-        let newQualities = {
-            interests: qualities.interests,
-            traits: qualities.traits,
-        };
+        profile.interests = qualities.interests
+        profile.traits = qualities.traits
+
+        console.log(profile);
 
         localStorage.setItem("profile", JSON.stringify(profile));
-        localStorage.setItem("qualities", JSON.stringify(newQualities));
 
-        /* update backend*/
         axios.post(`${server}update_profile`, profile).then(
-            (res) => {},
-            (error) => {}
-        );
-
-        axios.post(`${server}update_qualities`, qualities).then(
             (res) => {},
             (error) => {}
         );
@@ -304,7 +294,7 @@ export function EditProfile() {
                         <ReactStars
                             count={5}
                             size={starSize}
-                            value={parseFloat(qualities.traits["energy-level"])}
+                            value={parseFloat(profile.traits["energy-level"])}
                             isHalf={true}
                             activeColor={starColor}
                             edit={true}
@@ -315,7 +305,7 @@ export function EditProfile() {
                         <ReactStars
                             count={5}
                             size={starSize}
-                            value={parseFloat(qualities.traits["dog-friendly"])}
+                            value={parseFloat(profile.traits["dog-friendly"])}
                             isHalf={true}
                             activeColor={starColor}
                             edit={true}
@@ -326,7 +316,7 @@ export function EditProfile() {
                         <ReactStars
                             count={5}
                             size={starSize}
-                            value={parseFloat(qualities.traits["people-friendly"])}
+                            value={parseFloat(profile.traits["people-friendly"])}
                             isHalf={true}
                             activeColor={starColor}
                             edit={true}
@@ -337,7 +327,7 @@ export function EditProfile() {
                         <ReactStars
                             count={5}
                             size={starSize}
-                            value={parseFloat(qualities.traits["tendency-to-bark"])}
+                            value={parseFloat(profile.traits["tendency-to-bark"])}
                             isHalf={true}
                             activeColor={starColor}
                             edit={true}
@@ -348,7 +338,7 @@ export function EditProfile() {
                             <textarea
                                 id="interests-input"
                                 maxLength={150}
-                                defaultValue={qualities["interests"]}
+                                defaultValue={profile["interests"]}
                                 placeholder="e.g. fetching, dog bones, play structures, grass fields, biscuits, long walks"
                             />
                         </div>

@@ -1,19 +1,11 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { server } from "./App";
+import { MatchPopup } from "./MatchPopup";
+import { SavedMatchesContainer } from "./SavedMatchesContainer";
+import { SearchPetsContainer } from "./SearchPetsContainer";
 import Button from "react-bootstrap/Button";
-import Popup from "reactjs-popup";
 import "reactjs-popup/dist/index.css";
-
-import ReactStars from "react-rating-stars-component";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import breed from "./images/dog.svg";
-import email from "./images/email.svg";
-import home from "./images/home.svg";
-import bday from "./images/birthday-cake.svg";
-import weight from "./images/weight-scale.svg";
 
 export function Matchups() {
     let username = localStorage.getItem("username");
@@ -31,32 +23,28 @@ export function Matchups() {
     const [openSearchAllPetsPopup, setSearchAllPetsPopup] = useState(false);
     const closeSearchAllPetsPopup = () => setSearchAllPetsPopup(false);
 
+    /* hooks for search pets functionality */
     const [allPetQueries, setAllPetQueries] = useState({});
     const [searchTerm, setSearchTerm] = useState("");
 
+    /* hook for saved match edit mode */
     const [inEditMode, setInEditMode] = useState(false)
 
-    /* constants for ratings in popup */
-    const starColor = "#80cbc4";
-    const starSize = 15;
-
+    /* hook to keep track of currently-saved matches */
     const [savedMatches, setSavedMatches] = useState({});
 
     /* hooks for current match information */
     let currMatchUsername = "";
-    const [currMatchDuration, setCurrMatchDuration] = useState("");
-    const [currMatchProfile, setCurrMatchProfile] = useState({});
-    const [currMatchQualities, setCurrMatchQualities] = useState({ traits: {} });
+    const [currMatchProfile, setCurrMatchProfile] = useState({traits: {}});
     const [currMatchPetImage, setCurrMatchPetImage] = useState("");
     const [currMatchOwnerImage, setCurrMatchOwnerImage] = useState("");
 
     /* hooks for saved match information */
-    const [savedMatchDuration, setSavedMatchDuration] = useState("");
-    const [savedMatchProfile, setSavedMatchProfile] = useState({});
-    const [savedMatchQualities, setSavedMatchQualities] = useState({ traits: {} });
+    const [savedMatchProfile, setSavedMatchProfile] = useState({traits: {}});
     const [savedMatchPetImage, setSavedMatchPetImage] = useState("");
     const [savedMatchOwnerImage, setSavedMatchOwnerImage] = useState("");
 
+    /*************** POINTER/CLICK UI FUNCTIONALITY ***************/
     /* enable a match button */
     const enableMatchButton = (name) => {
         const id = `${name}-match-button`;
@@ -85,18 +73,20 @@ export function Matchups() {
         disableMatchButton("no-thanks", cursor);
     };
 
-    const disableClicks = () => {
-        document.getElementById("root").style["pointer-events"] = "none";
-    };
-
+    /* enable all user clicks */
     const enableClicks = () => {
         document.getElementById("root").style["pointer-events"] = "auto";
     };
 
-    /* fetches next best match for user and the match's profile information.
-    displays key information about match.
-    loads full profile information into pop-up (pop-up appears when user 
-    clicks About Match button). 
+    /* disable all user clicks (needed during backend calls to prevent DOM corruption) */
+    const disableClicks = () => {
+        document.getElementById("root").style["pointer-events"] = "none";
+    };
+
+    /*************** HANDLE NEXT/SAVED MATCHES FUNCTIONALITY ***************/
+    /* fetches next best match for user and the match's profile information. 
+    displays key information about match. loads full profile information 
+    into pop-up (pop-up appears when user clicks About Match button). 
     
     if no matches can be displayed (i.e. all matches saved or only 1 user), 
     display messsage and disable all buttons.
@@ -153,15 +143,12 @@ export function Matchups() {
                         axios.post(`${server}get_picture`, matchPetImage),
                         axios.post(`${server}get_picture`, matchOwnerImage),
                         axios.post(`${server}get_match_profile`, credentials),
-                        axios.post(`${server}get_qualities`, credentials),
                     ])
                     .then(
                         (res) => {
                             setCurrMatchPetImage(`data:image/png;base64,${res[0].data}`);
                             setCurrMatchOwnerImage(`data:image/png;base64,${res[1].data}`);
                             setCurrMatchProfile(res[2].data);
-                            setCurrMatchDuration(res[2].data["duration"]);
-                            setCurrMatchQualities(res[3].data);
                             enableAllMatchButtons();
                             enableMatchButton("edit-saved-matches");
                             enableMatchButton("search-all-pets");
@@ -184,31 +171,7 @@ export function Matchups() {
         );
     };
 
-    const handleDeleteMatch = (event) => {
-        console.log("start of deletematch", JSON.parse(JSON.stringify(savedMatches)))
-        disableClicks();
-        const match_username = event.target.getAttribute("data-button-match-username");
-
-        const credentials = {
-            username: username,
-            password: password,
-            match_username: match_username,
-            action: "ignore",
-        };
-
-        // move match_username from saved to ignored
-        axios.post(`${server}update_match_status`, credentials).then(
-            (res) => {
-                const temp = JSON.parse(JSON.stringify(savedMatches));
-                delete temp[match_username];
-                setSavedMatches(temp);
-            },
-            (error) => {}
-        );
-    };
-
-    /* fetch list of saved matches for current user 
-     and displays each match's name and breed */
+    /* fetch list of saved matches for current user and displays each match's name and breed */
     const getSavedMatches = () => {
         const credentials = {
             username: username,
@@ -218,7 +181,6 @@ export function Matchups() {
         axios.post(`${server}get_saved_matches`, credentials).then(
             (res) => {
                 const matches = res.data;
-                console.log(matches)
                 const temp = {};
 
                 Object.keys(matches).forEach((username) => {
@@ -232,78 +194,7 @@ export function Matchups() {
         );
     };
 
-    useEffect(() => {
-        enableClicks();
-    }, [Object.keys(savedMatches)])
-
-    /* called upon first render */
-    useEffect(() => {
-        getNextMatch();
-        getSavedMatches();
-    }, []);
-
-    useEffect(() => {}, [
-        currMatchDuration,
-        currMatchPetImage,
-        currMatchOwnerImage,
-        currMatchProfile,
-        currMatchQualities,
-        savedMatchDuration,
-        savedMatchPetImage,
-        savedMatchOwnerImage,
-        savedMatchProfile,
-        savedMatchQualities,
-    ]);
-
-    /* when user clicks on a saved match,
-    displays popup with match's profile information */
-    const handleAboutSavedMatch = (event) => {
-        disableClicks();
-        document.getElementById("root").style.cursor = "progress";
-
-        const savedMatchUsername = event.target.getAttribute("data-span-match-username");
-
-        const matchPetImage = {
-            username: username,
-            password: password,
-            image_type: "pet",
-            match_username: savedMatchUsername,
-        };
-
-        const matchOwnerImage = {
-            username: username,
-            password: password,
-            image_type: "owner",
-            match_username: savedMatchUsername,
-        };
-
-        const credentials = {
-            username: username,
-            password: password,
-            match_username: savedMatchUsername,
-        };
-
-        axios
-            .all([
-                axios.post(`${server}get_picture`, matchPetImage),
-                axios.post(`${server}get_picture`, matchOwnerImage),
-                axios.post(`${server}get_match_profile`, credentials),
-                axios.post(`${server}get_qualities`, credentials),
-            ])
-            .then((res) => {
-                setSavedMatchPetImage(`data:image/png;base64,${res[0].data}`);
-                setSavedMatchOwnerImage(`data:image/png;base64,${res[1].data}`);
-                setSavedMatchProfile(res[2].data);
-                setSavedMatchDuration(res[2].data["duration"]);
-                setSavedMatchQualities(res[3].data);
-                enableAllMatchButtons();
-                enableMatchButton("edit-saved-matches");
-                document.getElementById("root").style.cursor = "default";
-                enableClicks();
-                setOpenSavedMatchPopup((o) => !o);
-            });
-    };
-
+    /*************** HANDLE MATCHUP BUTTON FUNCTIONALITY ***************/
     /* when About Match button is clicked, re-render componnt */
     const handleAboutMatch = () => {
         setOpenAboutMatchPopup((o) => !o);
@@ -334,39 +225,7 @@ export function Matchups() {
             (error) => {}
         );
     };
-
-    const handleSaveSearchedPet = (event) => {
-        disableClicks();
-
-        const match_username = event.target.getAttribute("data-search-username");
-        const match_pet_info = event.target.getAttribute("data-pet-info");
-
-        const credentials = {
-            username: username,
-            password: password,
-            match_username: match_username,
-            action: "save",
-        };
-
-        const btn = document.querySelector(`li[data-li-search-username=${match_username}]`).childNodes[1]
-
-        axios.post(`${server}update_match_status`, credentials).then(
-            (res) => {
-                btn.disabled = true;
-                btn.innerHTML = "Saved!"
-                enableClicks();
-            },
-            (error) => {
-                if (error.response.status === 409) {
-                    btn.disabled = true;
-                    btn.innerHTML = "Already Saved!"
-                    enableClicks();
-                    window.alert("This pet is already in your saved matches list!");
-                }
-            }
-        );
-    };
-
+    
     /* when No Thanks button is clicked, ignore the current match 
     and display next match */
     const handleNoThanks = () => {
@@ -388,10 +247,58 @@ export function Matchups() {
         );
     };
 
+    /*************** HANDLE SAVED MATCHES FUNCTIONALITY ***************/
+    /* when user clicks on a saved match, displays popup with match's profile information */
+    const handleAboutSavedMatch = (event) => {
+        disableClicks();
+
+        const savedMatchUsername = event.target.getAttribute("data-span-match-username");
+
+        const matchPetImage = {
+            username: username,
+            password: password,
+            image_type: "pet",
+            match_username: savedMatchUsername,
+        };
+
+        const matchOwnerImage = {
+            username: username,
+            password: password,
+            image_type: "owner",
+            match_username: savedMatchUsername,
+        };
+
+        const credentials = {
+            username: username,
+            password: password,
+            match_username: savedMatchUsername,
+        };
+
+        axios
+            .all([
+                axios.post(`${server}get_picture`, matchPetImage),
+                axios.post(`${server}get_picture`, matchOwnerImage),
+                axios.post(`${server}get_match_profile`, credentials),
+            ])
+            .then((res) => {
+                setSavedMatchPetImage(`data:image/png;base64,${res[0].data}`);
+                setSavedMatchOwnerImage(`data:image/png;base64,${res[1].data}`);
+                setSavedMatchProfile(res[2].data);
+                enableAllMatchButtons();
+                enableMatchButton("edit-saved-matches");
+                enableClicks();
+                setOpenSavedMatchPopup((o) => !o);
+            });
+    };
+
+    /* when user clicks on Edit Saved Matches button, displays Delete buttons 
+    next to each saved match and prevents match profile from being displayed */
     const handleEditSavedMatches = () => {
         disableClicks();
         setInEditMode(!inEditMode);
         disableAllMatchButtons("not-allowed");
+        disableMatchButton("search-all-pets", "not-allowed");
+
         document.getElementById("edit-saved-matches-match-button").style.display = "none";
         document.getElementById("done-editing-match-button").style.display = "inline-block";
 
@@ -405,6 +312,32 @@ export function Matchups() {
         enableClicks();
     };
 
+     /* when user clicks delete on a saved match, moves this match to their ignored matches 
+    and updates list of saved matches */
+    const handleDeleteMatch = (event) => {
+        disableClicks();
+        const match_username = event.target.getAttribute("data-button-match-username");
+
+        const credentials = {
+            username: username,
+            password: password,
+            match_username: match_username,
+            action: "ignore",
+        };
+
+        // move match_username from saved to ignored
+        axios.post(`${server}update_match_status`, credentials).then(
+            (res) => {
+                const temp = JSON.parse(JSON.stringify(savedMatches));
+                delete temp[match_username];
+                setSavedMatches(temp);
+            },
+            (error) => {}
+        );
+    };
+
+    /* when user clicks on Done Editing button, removes all Delete buttons and 
+    sets all matches back to clickable */
     const handleDoneEditing = () => {
         disableClicks();
         setInEditMode(!inEditMode);
@@ -420,7 +353,37 @@ export function Matchups() {
         getNextMatch();
     };
 
+    /*************** HANDLE SEARCH PETS FUNCTIONALITY ***************/
+    /* in search popup, when user clicks Save on a searched pet, 
+    updates list of saved matches */
+    const handleSaveSearchedPet = (event) => {
+        disableClicks();
+
+        const match_username = event.target.getAttribute("data-search-username");
+        const match_pet_info = event.target.getAttribute("data-pet-info");
+
+        const credentials = {
+            username: username,
+            password: password,
+            match_username: match_username,
+            action: "save",
+        };
+
+        axios.post(`${server}update_match_status`, credentials).then(
+            (res) => {
+                const temp = JSON.parse(JSON.stringify(savedMatches));
+                temp[match_username] = match_pet_info;
+                setSavedMatches(temp);
+
+                enableClicks();
+            },
+            (error) => {}
+        );
+    };
+
+    /* when user clicks Search All Pets, fetches pet queries for all users and displays them in popup */
     const handleSearchAllPets = () => {
+        disableClicks();
         const credentials = {
             username: username,
             password: password,
@@ -430,15 +393,19 @@ export function Matchups() {
             (res) => {
                 setAllPetQueries(res.data);
                 setSearchAllPetsPopup((o) => !o);
+                enableClicks();
             },
             (error) => {}
         );
     };
 
+    /* when user edits entered search query, updates hook */
     const editSearchTerm = (event) => {
         setSearchTerm(event.target.value);
     };
 
+    /* dynamically updates list of displayed pets in search popup shows pets 
+    whose name, breed, city, or state are prefixed by user's search query */
     const searchForPets = () => {
         const res = [];
 
@@ -459,16 +426,35 @@ export function Matchups() {
                 ownerState.toLowerCase().startsWith(searchTermLow)
             )
                 res.push({
-                            username: username,
-                            query: petQuery,
-                            info: `${petName}, ${petBreed}`,
-                            isSaved: savedMatches.hasOwnProperty(username),
+                    username: username,
+                    query: petQuery,
+                    info: `${petName} ${petBreed}`,
+                    isSaved: savedMatches.hasOwnProperty(username),
                 });
 
         });
         
         return res;
     };
+    
+    /* called upon first render */
+    useEffect(() => {
+        getNextMatch();
+        getSavedMatches();
+    }, []);
+
+    useEffect(() => {
+        enableClicks();
+    }, [savedMatches])
+
+    useEffect(() => {}, [
+        currMatchPetImage,
+        currMatchOwnerImage,
+        currMatchProfile,
+        savedMatchPetImage,
+        savedMatchOwnerImage,
+        savedMatchProfile,
+    ]);
 
     return (
         <div id="matchups-container">
@@ -484,8 +470,8 @@ export function Matchups() {
                 <div id="match-pet-name">{currMatchProfile["pet-name"]}</div>
                 <div id="match-pet-breed">{currMatchProfile["pet-breed"]}</div>
                 <div id="match-pet-duration">
-                    {currMatchDuration !== "1 min"
-                        ? `You're approx ${currMatchDuration} apart!`
+                    {currMatchProfile['duration'] !== "1 min"
+                        ? `You're approx ${currMatchProfile['duration']} apart!`
                         : "You're in the same city!"}
                 </div>
             </div>
@@ -500,314 +486,37 @@ export function Matchups() {
                     No Thanks
                 </Button>
             </div>
-            <Popup open={openAboutMatchPopup} closeOnDocumentClick onClose={closeAboutMatchPopup}>
-                <Container id="profile-container">
-                    <Row id="profile-row">
-                        <Col className="profile-left match-profile-left">
-                            <figure>
-                                <img
-                                    className="profile-pic"
-                                    alt="pet profile"
-                                    draggable="false"
-                                    src={currMatchPetImage}
-                                />
-                                <figcaption id="popup-match-pet-name">
-                                    {currMatchProfile["pet-name"]}
-                                </figcaption>
-                            </figure>
-
-                            <figure>
-                                <img
-                                    className="profile-pic"
-                                    alt="owner profile"
-                                    draggable="false"
-                                    src={currMatchOwnerImage}
-                                />
-                                <figcaption id="popup-match-owner-name">
-                                    {currMatchProfile["owner-name"]}
-                                </figcaption>
-                            </figure>
-
-                            <div style={{ marginTop: "30px" }}>
-                                {currMatchDuration !== "1 min"
-                                    ? `You're approx ${currMatchDuration} apart!`
-                                    : "You're in the same city!"}
-                            </div>
-                        </Col>
-                        <Col className="profile-middle match-profile-middle">
-                            <Row className="pet-info match-pet-info">
-                                <header className="panel-title">About the Pet</header>
-                                <div>
-                                    <img src={breed} draggable="false" alt="pet breed" />
-                                    <span>{currMatchProfile["pet-breed"]}</span>
-                                </div>
-                                <div>
-                                    <img src={bday} draggable="false" alt="pet birthday" />
-                                    <span>{currMatchProfile["pet-bday"]}</span>
-                                </div>
-                                <div>
-                                    <img src={weight} draggable="false" alt="pet weight" />
-                                    <span>{currMatchProfile["pet-weight"]} pounds</span>
-                                </div>
-                            </Row>
-                            <Row className="owner-info match-owner-info">
-                                <header className="panel-title">About the Owner</header>
-                                <div>
-                                    <img src={email} draggable="false" alt="owner email" />
-                                    <span>{currMatchProfile["owner-email"]}</span>
-                                </div>
-                                <div>
-                                    <img src={home} draggable="false" alt="owner state" />
-                                    <span>
-                                        {currMatchProfile["owner-city"]},{" "}
-                                        {currMatchProfile["owner-state"]}
-                                    </span>
-                                </div>
-                            </Row>
-                        </Col>
-                        <Col className="profile-right match-profile-right">
-                            <Row className="pet-metrics match-pet-metrics">
-                                <header className="panel-title">Pet Traits</header>
-                                <div className="pet-trait">Energy Level</div>
-                                <ReactStars
-                                    value={parseFloat(currMatchQualities.traits["energy-level"])}
-                                    count={5}
-                                    size={starSize}
-                                    isHalf={true}
-                                    activeColor={starColor}
-                                    edit={false}
-                                />
-                                <div className="pet-trait">Dog-Friendly</div>
-                                <ReactStars
-                                    value={parseFloat(currMatchQualities.traits["dog-friendly"])}
-                                    count={5}
-                                    size={starSize}
-                                    isHalf={true}
-                                    activeColor={starColor}
-                                    edit={false}
-                                />
-                                <div className="pet-trait">People-Friendly</div>
-                                <ReactStars
-                                    value={parseFloat(currMatchQualities.traits["people-friendly"])}
-                                    count={5}
-                                    size={starSize}
-                                    isHalf={true}
-                                    activeColor={starColor}
-                                    edit={false}
-                                />
-                                <div className="pet-trait">Tendency to Bark</div>
-                                <ReactStars
-                                    value={parseFloat(
-                                        currMatchQualities.traits["tendency-to-bark"]
-                                    )}
-                                    count={5}
-                                    size={starSize}
-                                    isHalf={true}
-                                    activeColor={starColor}
-                                    edit={false}
-                                />
-                                <br />
-                                <div className="pet-interests match-pet-interests">
-                                    <header className="panel-title">Pet Interests</header>
-                                    <div>{currMatchQualities.interests}</div>
-                                </div>
-                            </Row>
-                        </Col>
-                    </Row>
-                </Container>
-            </Popup>
-
-            <Popup open={openSavedMatchPopup} closeOnDocumentClick onClose={closeSavedMatchPopup}>
-                <Container id="profile-container">
-                    <Row id="profile-row">
-                        <Col className="profile-left match-profile-left">
-                            <figure>
-                                <img
-                                    className="profile-pic"
-                                    alt="pet profile"
-                                    draggable="false"
-                                    src={savedMatchPetImage}
-                                />
-                                <figcaption id="popup-match-pet-name">
-                                    {savedMatchProfile["pet-name"]}
-                                </figcaption>
-                            </figure>
-
-                            <figure>
-                                <img
-                                    className="profile-pic"
-                                    alt="owner profile"
-                                    draggable="false"
-                                    src={savedMatchOwnerImage}
-                                />
-                                <figcaption id="popup-match-owner-name">
-                                    {savedMatchProfile["owner-name"]}
-                                </figcaption>
-                            </figure>
-
-                            <div style={{ "marginTop": "30px" }}>
-                                {savedMatchDuration !== "1 min"
-                                    ? `You're approx ${savedMatchDuration} apart!`
-                                    : "You're in the same city!"}
-                            </div>
-                        </Col>
-                        <Col className="profile-middle match-profile-middle">
-                            <Row className="pet-info match-pet-info">
-                                <header className="panel-title">About the Pet</header>
-                                <div>
-                                    <img src={breed} draggable="false" alt="pet breed" />
-                                    <span>{savedMatchProfile["pet-breed"]}</span>
-                                </div>
-                                <div>
-                                    <img src={bday} draggable="false" alt="pet birthday" />
-                                    <span>{savedMatchProfile["pet-bday"]}</span>
-                                </div>
-                                <div>
-                                    <img src={weight} draggable="false" alt="pet weight" />
-                                    <span>{savedMatchProfile["pet-weight"]} pounds</span>
-                                </div>
-                            </Row>
-                            <Row className="owner-info match-owner-info">
-                                <header className="panel-title">About the Owner</header>
-                                <div>
-                                    <img src={email} draggable="false" alt="owner email" />
-                                    <span>{savedMatchProfile["owner-email"]}</span>
-                                </div>
-                                <div>
-                                    <img src={home} draggable="false" alt="owner state" />
-                                    <span>
-                                        {savedMatchProfile["owner-city"]},{" "}
-                                        {savedMatchProfile["owner-state"]}
-                                    </span>
-                                </div>
-                            </Row>
-                        </Col>
-                        <Col className="profile-right match-profile-right">
-                            <Row className="pet-metrics match-pet-metrics">
-                                <header className="panel-title">Pet Traits</header>
-                                <div className="pet-trait">Energy Level</div>
-                                <ReactStars
-                                    value={parseFloat(savedMatchQualities.traits["energy-level"])}
-                                    count={5}
-                                    size={starSize}
-                                    isHalf={true}
-                                    activeColor={starColor}
-                                    edit={false}
-                                />
-                                <div className="pet-trait">Dog-Friendly</div>
-                                <ReactStars
-                                    value={parseFloat(savedMatchQualities.traits["dog-friendly"])}
-                                    count={5}
-                                    size={starSize}
-                                    isHalf={true}
-                                    activeColor={starColor}
-                                    edit={false}
-                                />
-                                <div className="pet-trait">People-Friendly</div>
-                                <ReactStars
-                                    value={parseFloat(
-                                        savedMatchQualities.traits["people-friendly"]
-                                    )}
-                                    count={5}
-                                    size={starSize}
-                                    isHalf={true}
-                                    activeColor={starColor}
-                                    edit={false}
-                                />
-                                <div className="pet-trait">Tendency to Bark</div>
-                                <ReactStars
-                                    value={parseFloat(
-                                        savedMatchQualities.traits["tendency-to-bark"]
-                                    )}
-                                    count={5}
-                                    size={starSize}
-                                    isHalf={true}
-                                    activeColor={starColor}
-                                    edit={false}
-                                />
-                                <br />
-                                <div className="pet-interests match-pet-interests">
-                                    <header className="panel-title">Pet Interests</header>
-                                    <div>{savedMatchQualities.interests}</div>
-                                </div>
-                            </Row>
-                        </Col>
-                    </Row>
-                </Container>
-            </Popup>
-            <div id="saved-matches-container">
-                <div>Saved Matches</div>
-                    <ul id="saved-matches-list">
-                        {Object.keys(savedMatches).map((username) => (
-                            <li 
-                                key={username}
-                                data-li-match-username={username}
-                            >
-                                <span
-                                    className="saved-match-item"
-                                    data-span-match-username={username}
-                                    onClick={inEditMode ? null : handleAboutSavedMatch}
-                                >
-                                    {savedMatches[username]}
-                                </span>
-                                <button
-                                    className="saved-match-delete"
-                                    onClick={handleDeleteMatch}
-                                    data-button-match-username={username}
-                                    style={{"display": "none"}}> 
-                                        ×
-                                </button>
-                            </li>
-                        ))}
-                    </ul>
-                <Button
-                    variant="info"
-                    onClick={handleEditSavedMatches}
-                    id="edit-saved-matches-match-button"
-                >
-                    Edit Saved Matches
-                </Button>
-                <Button
-                    variant="info"
-                    onClick={handleDoneEditing}
-                    id="done-editing-match-button"
-                    style={{ display: "none" }}
-                >
-                    Done Editing
-                </Button>
-            </div>
-            <Button variant="info" onClick={handleSearchAllPets} id="search-all-pets-match-button">
-                Search All Pets
-            </Button>
-            <Popup
+            <MatchPopup
+                profile={currMatchProfile}
+                petImage={currMatchPetImage}
+                ownerImage={currMatchOwnerImage}
+                open={openAboutMatchPopup}
+                close={closeAboutMatchPopup}
+            />
+            <MatchPopup
+                profile={savedMatchProfile}
+                petImage={savedMatchPetImage}
+                ownerImage={savedMatchOwnerImage}
+                open={openSavedMatchPopup}
+                close={closeSavedMatchPopup}
+            />
+            <SavedMatchesContainer 
+                savedMatches={savedMatches}
+                inEditMode={inEditMode}
+                handleAboutSavedMatch={handleAboutSavedMatch}
+                handleDeleteMatch={handleDeleteMatch}
+                handleEditSavedMatches={handleEditSavedMatches}
+                handleDoneEditing={handleDoneEditing}
+            />
+            <SearchPetsContainer 
                 open={openSearchAllPetsPopup}
-                closeOnDocumentClick
-                onClose={closeSearchAllPetsPopup}
-            >
-                <div id="search-all-pets">
-                    <input
-                        type="text"
-                        value={searchTerm}
-                        onChange={editSearchTerm}
-                        placeholder="Start discovering!"
-                    />
-                    <ul id="all-pets-list">
-                        {searchForPets().map((pet) => (
-                            <li key={pet.username} data-li-search-username={pet.username}>
-                                {pet.info}
-                                <button
-                                    onClick={handleSaveSearchedPet}
-                                    data-search-username={pet.username}
-                                    data-pet-info={pet.info}
-                                    style={{ "display": pet.isSaved ? "none" : "inline-block" }}
-                                >
-                                    Save!
-                                </button>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            </Popup>
+                close={closeSearchAllPetsPopup}
+                searchTerm={searchTerm}
+                editSearchTerm={editSearchTerm}
+                searchForPets={searchForPets}
+                handleSearchAllPets={handleSearchAllPets}
+                handleSaveSearchedPet={handleSaveSearchedPet}
+            />
         </div>
     );
 }

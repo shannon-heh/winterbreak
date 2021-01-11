@@ -81,15 +81,7 @@ export function Login() {
                 localStorage.setItem("profile", JSON.stringify(profile));
                 localStorage.setItem("username", username);
                 localStorage.setItem("password", password);
-
-                axios.post(`${server}get_qualities`, credentials).then(
-                    (res) => {
-                        const qualities = res.data;
-                        localStorage.setItem("qualities", JSON.stringify(qualities));
-                    },
-                    (error) => {}
-                );
-
+    
                 imagesToLoad.forEach((image_type) => {
                     const image = {
                         username: username,

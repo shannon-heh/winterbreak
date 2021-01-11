@@ -17,7 +17,6 @@ export function Profile() {
     let history = useHistory();
 
     let profile = JSON.parse(localStorage.getItem("profile"));
-    let qualities = JSON.parse(localStorage.getItem("qualities"));
     let petImage = localStorage.getItem("pet-image");
     let ownerImage = localStorage.getItem("owner-image");
 
@@ -102,7 +101,7 @@ export function Profile() {
                         <ReactStars
                             count={5}
                             size={starSize}
-                            value={parseFloat(qualities.traits["energy-level"])}
+                            value={parseFloat(profile.traits["energy-level"])}
                             isHalf={true}
                             activeColor={starColor}
                             edit={false}
@@ -111,7 +110,7 @@ export function Profile() {
                         <ReactStars
                             count={5}
                             size={starSize}
-                            value={parseFloat(qualities.traits["dog-friendly"])}
+                            value={parseFloat(profile.traits["dog-friendly"])}
                             isHalf={true}
                             activeColor={starColor}
                             edit={false}
@@ -120,7 +119,7 @@ export function Profile() {
                         <ReactStars
                             count={5}
                             size={starSize}
-                            value={parseFloat(qualities.traits["people-friendly"])}
+                            value={parseFloat(profile.traits["people-friendly"])}
                             isHalf={true}
                             activeColor={starColor}
                             edit={false}
@@ -129,7 +128,7 @@ export function Profile() {
                         <ReactStars
                             count={5}
                             size={starSize}
-                            value={parseFloat(qualities.traits["tendency-to-bark"])}
+                            value={parseFloat(profile.traits["tendency-to-bark"])}
                             isHalf={true}
                             activeColor={starColor}
                             edit={false}
@@ -137,7 +136,7 @@ export function Profile() {
                         <br />
                         <div className="pet-interests">
                             <header className="panel-title">Pet Interests</header>
-                            <div>{qualities["interests"]}</div>
+                            <div>{profile["interests"]}</div>
                         </div>
                     </Row>
                 </Col>
