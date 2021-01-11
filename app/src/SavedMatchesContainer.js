@@ -6,10 +6,7 @@ export function SavedMatchesContainer(props) {
             <div>Saved Matches</div>
             <ul id="saved-matches-list">
                 {Object.keys(props.savedMatches).map((username) => (
-                    <li 
-                        key={username}
-                        data-li-match-username={username}
-                    >
+                    <li key={username} data-li-match-username={username}>
                         <span
                             className="saved-match-item"
                             data-span-match-username={username}
@@ -21,8 +18,9 @@ export function SavedMatchesContainer(props) {
                             className="saved-match-delete"
                             onClick={props.handleDeleteMatch}
                             data-button-match-username={username}
-                            style={{"display": "none"}}> 
-                                ×
+                            style={{ display: "none" }}
+                        >
+                            ×
                         </button>
                     </li>
                 ))}
@@ -43,5 +41,5 @@ export function SavedMatchesContainer(props) {
                 Done Editing
             </Button>
         </div>
-    )
+    );
 }

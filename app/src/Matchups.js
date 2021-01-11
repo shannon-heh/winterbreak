@@ -28,19 +28,19 @@ export function Matchups() {
     const [searchTerm, setSearchTerm] = useState("");
 
     /* hook for saved match edit mode */
-    const [inEditMode, setInEditMode] = useState(false)
+    const [inEditMode, setInEditMode] = useState(false);
 
     /* hook to keep track of currently-saved matches */
     const [savedMatches, setSavedMatches] = useState({});
 
     /* hooks for current match information */
     let currMatchUsername = "";
-    const [currMatchProfile, setCurrMatchProfile] = useState({traits: {}});
+    const [currMatchProfile, setCurrMatchProfile] = useState({ traits: {} });
     const [currMatchPetImage, setCurrMatchPetImage] = useState("");
     const [currMatchOwnerImage, setCurrMatchOwnerImage] = useState("");
 
     /* hooks for saved match information */
-    const [savedMatchProfile, setSavedMatchProfile] = useState({traits: {}});
+    const [savedMatchProfile, setSavedMatchProfile] = useState({ traits: {} });
     const [savedMatchPetImage, setSavedMatchPetImage] = useState("");
     const [savedMatchOwnerImage, setSavedMatchOwnerImage] = useState("");
 
@@ -217,7 +217,9 @@ export function Matchups() {
         axios.post(`${server}update_match_status`, credentials).then(
             (res) => {
                 const temp = JSON.parse(JSON.stringify(savedMatches));
-                temp[currMatchProfile["username"]] = `${currMatchProfile["pet-name"]}, ${currMatchProfile["pet-breed"]}`;;
+                temp[
+                    currMatchProfile["username"]
+                ] = `${currMatchProfile["pet-name"]}, ${currMatchProfile["pet-breed"]}`;
                 setSavedMatches(temp);
 
                 getNextMatch();
@@ -225,7 +227,7 @@ export function Matchups() {
             (error) => {}
         );
     };
-    
+
     /* when No Thanks button is clicked, ignore the current match 
     and display next match */
     const handleNoThanks = () => {
@@ -305,14 +307,13 @@ export function Matchups() {
         for (let button of document.getElementsByClassName("saved-match-delete"))
             button.style.display = "inline-block";
 
-            
         for (let item of document.getElementsByClassName("saved-match-item"))
             item.style.cursor = "default";
 
         enableClicks();
     };
 
-     /* when user clicks delete on a saved match, moves this match to their ignored matches 
+    /* when user clicks delete on a saved match, moves this match to their ignored matches 
     and updates list of saved matches */
     const handleDeleteMatch = (event) => {
         disableClicks();
@@ -431,12 +432,11 @@ export function Matchups() {
                     info: `${petName} ${petBreed}`,
                     isSaved: savedMatches.hasOwnProperty(username),
                 });
-
         });
-        
+
         return res;
     };
-    
+
     /* called upon first render */
     useEffect(() => {
         getNextMatch();
@@ -445,7 +445,7 @@ export function Matchups() {
 
     useEffect(() => {
         enableClicks();
-    }, [savedMatches])
+    }, [savedMatches]);
 
     useEffect(() => {}, [
         currMatchPetImage,
@@ -470,8 +470,8 @@ export function Matchups() {
                 <div id="match-pet-name">{currMatchProfile["pet-name"]}</div>
                 <div id="match-pet-breed">{currMatchProfile["pet-breed"]}</div>
                 <div id="match-pet-duration">
-                    {currMatchProfile['duration'] !== "1 min"
-                        ? `You're approx ${currMatchProfile['duration']} apart!`
+                    {currMatchProfile["duration"] !== "1 min"
+                        ? `You're approx ${currMatchProfile["duration"]} apart!`
                         : "You're in the same city!"}
                 </div>
             </div>
@@ -500,7 +500,7 @@ export function Matchups() {
                 open={openSavedMatchPopup}
                 close={closeSavedMatchPopup}
             />
-            <SavedMatchesContainer 
+            <SavedMatchesContainer
                 savedMatches={savedMatches}
                 inEditMode={inEditMode}
                 handleAboutSavedMatch={handleAboutSavedMatch}
@@ -508,7 +508,7 @@ export function Matchups() {
                 handleEditSavedMatches={handleEditSavedMatches}
                 handleDoneEditing={handleDoneEditing}
             />
-            <SearchPetsContainer 
+            <SearchPetsContainer
                 open={openSearchAllPetsPopup}
                 close={closeSearchAllPetsPopup}
                 searchTerm={searchTerm}

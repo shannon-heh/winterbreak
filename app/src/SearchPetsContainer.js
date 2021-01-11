@@ -4,14 +4,14 @@ import Popup from "reactjs-popup";
 export function SearchPetsContainer(props) {
     return (
         <>
-            <Button variant="info" onClick={props.handleSearchAllPets} id="search-all-pets-match-button">
+            <Button
+                variant="info"
+                onClick={props.handleSearchAllPets}
+                id="search-all-pets-match-button"
+            >
                 Search All Pets
             </Button>
-            <Popup
-                open={props.open}
-                closeOnDocumentClick
-                onClose={props.close}
-            >
+            <Popup open={props.open} closeOnDocumentClick onClose={props.close}>
                 <div id="search-all-pets">
                     <input
                         type="text"

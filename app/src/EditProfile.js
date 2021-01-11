@@ -122,8 +122,8 @@ export function EditProfile() {
             ).nextSibling.childNodes[0].childNodes[6].innerHTML;
         });
 
-        profile.interests = qualities.interests
-        profile.traits = qualities.traits
+        profile.interests = qualities.interests;
+        profile.traits = qualities.traits;
 
         console.log(profile);
 

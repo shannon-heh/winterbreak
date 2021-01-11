@@ -46,7 +46,7 @@ export function MatchPopup(props) {
 
                         <div style={{ marginTop: "30px" }}>
                             {props.profile["duration"] !== "1 min"
-                                ? `You're approx ${props.profile["duration"] } apart!`
+                                ? `You're approx ${props.profile["duration"]} apart!`
                                 : "You're in the same city!"}
                         </div>
                     </Col>
@@ -75,8 +75,7 @@ export function MatchPopup(props) {
                             <div>
                                 <img src={home} draggable="false" alt="owner state" />
                                 <span>
-                                    {props.profile["owner-city"]},{" "}
-                                    {props.profile["owner-state"]}
+                                    {props.profile["owner-city"]}, {props.profile["owner-state"]}
                                 </span>
                             </div>
                         </Row>
@@ -113,9 +112,7 @@ export function MatchPopup(props) {
                             />
                             <div className="pet-trait">Tendency to Bark</div>
                             <ReactStars
-                                value={parseFloat(
-                                    props.profile.traits["tendency-to-bark"]
-                                )}
+                                value={parseFloat(props.profile.traits["tendency-to-bark"])}
                                 count={5}
                                 size={starSize}
                                 isHalf={true}

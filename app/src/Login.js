@@ -81,7 +81,7 @@ export function Login() {
                 localStorage.setItem("profile", JSON.stringify(profile));
                 localStorage.setItem("username", username);
                 localStorage.setItem("password", password);
-    
+
                 imagesToLoad.forEach((image_type) => {
                     const image = {
                         username: username,
