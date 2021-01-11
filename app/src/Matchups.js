@@ -34,6 +34,8 @@ export function Matchups() {
     const [allPetQueries, setAllPetQueries] = useState({});
     const [searchTerm, setSearchTerm] = useState("");
 
+    const [inEditMode, setInEditMode] = useState(false)
+
     /* constants for ratings in popup */
     const starColor = "#80cbc4";
     const starSize = 15;
@@ -182,36 +184,10 @@ export function Matchups() {
         );
     };
 
-    const createMatchItem = (username, petNameAndBreed) => {
-        const matchItem = document.createElement("LI");
-        matchItem.id = `${username}-match-item`;
-        matchItem.className = "saved-match-item";
-        matchItem.innerHTML = petNameAndBreed;
-        matchItem.onclick = handleSavedMatchClick;
-        matchItem.setAttribute("data-username", username);
-        return matchItem;
-    };
-
-    /* creates delete button that appears next to each saved match 
-    and appends it to DOM */
-    const createMatchDeleteBtn = (username, matchItem) => {
-        const matchDeleteBtn = document.createElement("BUTTON");
-        matchDeleteBtn.className = "saved-match-delete";
-        matchDeleteBtn.setAttribute("data-username", username);
-        matchDeleteBtn.innerHTML = "×";
-        matchDeleteBtn.style.display = "none";
-        console.log("B4", savedMatches)
-        matchDeleteBtn.onclick = handleDeleteMatch;
-        console.log("AFTER", savedMatches)
-        matchItem.appendChild(matchDeleteBtn);
-    };
-
     const handleDeleteMatch = (event) => {
         console.log("start of deletematch", JSON.parse(JSON.stringify(savedMatches)))
         disableClicks();
-        const match_username = event.target.getAttribute("data-username");
-
-        console.log(match_username);
+        const match_username = event.target.getAttribute("data-button-match-username");
 
         const credentials = {
             username: username,
@@ -223,13 +199,8 @@ export function Matchups() {
         // move match_username from saved to ignored
         axios.post(`${server}update_match_status`, credentials).then(
             (res) => {
-                 // remove match from saved list
-                document.getElementById(`${match_username}-match-item`).remove();
-
-                // const temp = {...savedMatches};
                 const temp = JSON.parse(JSON.stringify(savedMatches));
                 delete temp[match_username];
-                console.log("this is about to be savedMatches:", temp);
                 setSavedMatches(temp);
             },
             (error) => {}
@@ -237,28 +208,22 @@ export function Matchups() {
     };
 
     /* fetch list of saved matches for current user 
-     and displays each match's name and breec */
+     and displays each match's name and breed */
     const getSavedMatches = () => {
         const credentials = {
             username: username,
             password: password,
         };
 
-        const savedMatchesList = document.getElementById("saved-matches-list");
-
         axios.post(`${server}get_saved_matches`, credentials).then(
             (res) => {
                 const matches = res.data;
+                console.log(matches)
                 const temp = {};
 
                 Object.keys(matches).forEach((username) => {
-                    let matchItem = createMatchItem(
-                        username,
-                        `${matches[username]["pet-name"]}, ${matches[username]["pet-breed"]}`
-                    );
-                    temp[username] = 0;
-                    createMatchDeleteBtn(username, matchItem);
-                    savedMatchesList.appendChild(matchItem);
+                    const match = matches[username];
+                    temp[username] = `${match["pet-name"]}, ${match["pet-breed"]}`;
                 });
 
                 setSavedMatches(temp);
@@ -269,8 +234,7 @@ export function Matchups() {
 
     useEffect(() => {
         enableClicks();
-        console.log(savedMatches);
-    }, [Object.keys(savedMatches).length])
+    }, [Object.keys(savedMatches)])
 
     /* called upon first render */
     useEffect(() => {
@@ -293,11 +257,11 @@ export function Matchups() {
 
     /* when user clicks on a saved match,
     displays popup with match's profile information */
-    const handleSavedMatchClick = (event) => {
+    const handleAboutSavedMatch = (event) => {
         disableClicks();
         document.getElementById("root").style.cursor = "progress";
 
-        const savedMatchUsername = event.target.getAttribute("data-username");
+        const savedMatchUsername = event.target.getAttribute("data-span-match-username");
 
         const matchPetImage = {
             username: username,
@@ -361,18 +325,8 @@ export function Matchups() {
 
         axios.post(`${server}update_match_status`, credentials).then(
             (res) => {
-                /* add current match to saved matches list */
-                const savedMatchesList = document.getElementById("saved-matches-list");
-                const matchItem = createMatchItem(
-                    currMatchProfile["username"],
-                    `${currMatchProfile["pet-name"]}, ${currMatchProfile["pet-breed"]}`
-                );
-                createMatchDeleteBtn(currMatchProfile["username"], matchItem);
-                savedMatchesList.appendChild(matchItem);
-
-                // savedMatches.push(currMatchProfile["username"])
                 const temp = JSON.parse(JSON.stringify(savedMatches));
-                temp[currMatchProfile["username"]] = 0;
+                temp[currMatchProfile["username"]] = `${currMatchProfile["pet-name"]}, ${currMatchProfile["pet-breed"]}`;;
                 setSavedMatches(temp);
 
                 getNextMatch();
@@ -394,17 +348,12 @@ export function Matchups() {
             action: "save",
         };
 
-        // const btn = document.querySelector(`button[data-search-username=${match_username}]`);
         const btn = document.querySelector(`li[data-li-search-username=${match_username}]`).childNodes[1]
 
         axios.post(`${server}update_match_status`, credentials).then(
             (res) => {
                 btn.disabled = true;
                 btn.innerHTML = "Saved!"
-                const savedMatchesList = document.getElementById("saved-matches-list");
-                const matchItem = createMatchItem(match_username, match_pet_info);
-                createMatchDeleteBtn(match_username, matchItem);
-                savedMatchesList.appendChild(matchItem);
                 enableClicks();
             },
             (error) => {
@@ -440,8 +389,8 @@ export function Matchups() {
     };
 
     const handleEditSavedMatches = () => {
-        console.log("before editsavedmatches", savedMatches)
         disableClicks();
+        setInEditMode(!inEditMode);
         disableAllMatchButtons("not-allowed");
         document.getElementById("edit-saved-matches-match-button").style.display = "none";
         document.getElementById("done-editing-match-button").style.display = "inline-block";
@@ -449,15 +398,16 @@ export function Matchups() {
         for (let button of document.getElementsByClassName("saved-match-delete"))
             button.style.display = "inline-block";
 
-        for (let item of document.getElementsByClassName("saved-match-item")) item.onclick = null;
-
-        console.log("after editsavedmatches", savedMatches)
+            
+        for (let item of document.getElementsByClassName("saved-match-item"))
+            item.style.cursor = "default";
 
         enableClicks();
     };
 
     const handleDoneEditing = () => {
         disableClicks();
+        setInEditMode(!inEditMode);
         document.getElementById("edit-saved-matches-match-button").style.display = "inline-block";
         document.getElementById("done-editing-match-button").style.display = "none";
 
@@ -465,7 +415,7 @@ export function Matchups() {
             button.style.display = "none";
 
         for (let item of document.getElementsByClassName("saved-match-item"))
-            item.onclick = handleSavedMatchClick;
+            item.style.cursor = "pointer";
 
         getNextMatch();
     };
@@ -787,7 +737,29 @@ export function Matchups() {
             </Popup>
             <div id="saved-matches-container">
                 <div>Saved Matches</div>
-                <ul id="saved-matches-list"></ul>
+                    <ul id="saved-matches-list">
+                        {Object.keys(savedMatches).map((username) => (
+                            <li 
+                                key={username}
+                                data-li-match-username={username}
+                            >
+                                <span
+                                    className="saved-match-item"
+                                    data-span-match-username={username}
+                                    onClick={inEditMode ? null : handleAboutSavedMatch}
+                                >
+                                    {savedMatches[username]}
+                                </span>
+                                <button
+                                    className="saved-match-delete"
+                                    onClick={handleDeleteMatch}
+                                    data-button-match-username={username}
+                                    style={{"display": "none"}}> 
+                                        ×
+                                </button>
+                            </li>
+                        ))}
+                    </ul>
                 <Button
                     variant="info"
                     onClick={handleEditSavedMatches}
