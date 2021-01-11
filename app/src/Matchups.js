@@ -200,13 +200,18 @@ export function Matchups() {
         matchDeleteBtn.setAttribute("data-username", username);
         matchDeleteBtn.innerHTML = "×";
         matchDeleteBtn.style.display = "none";
+        console.log("B4", savedMatches)
         matchDeleteBtn.onclick = handleDeleteMatch;
+        console.log("AFTER", savedMatches)
         matchItem.appendChild(matchDeleteBtn);
     };
 
     const handleDeleteMatch = (event) => {
-        console.log("beginning", savedMatches);
+        console.log("start of deletematch", JSON.parse(JSON.stringify(savedMatches)))
+        disableClicks();
         const match_username = event.target.getAttribute("data-username");
+
+        console.log(match_username);
 
         const credentials = {
             username: username,
@@ -220,18 +225,12 @@ export function Matchups() {
             (res) => {
                  // remove match from saved list
                 document.getElementById(`${match_username}-match-item`).remove();
-                // const temp = savedMatches;
-                // console.log("start of delete match: ", savedMatches)
 
-                // const idx = savedMatches.indexOf(match_username);
-                // // console.log("search for", match_username, ":: index", idx, " which is ", savedMatches[idx])
-
-                // console.log("BEFORE SPLICE", savedMatches);
-                // savedMatches.splice(idx);
-                // console.log("after slice", savedMatches);
-                delete savedMatches[match_username];
-                setSavedMatches(savedMatches);
-                // console.log("AFTER REMOVING SAVED MATCH: ", savedMatches)
+                // const temp = {...savedMatches};
+                const temp = JSON.parse(JSON.stringify(savedMatches));
+                delete temp[match_username];
+                console.log("this is about to be savedMatches:", temp);
+                setSavedMatches(temp);
             },
             (error) => {}
         );
@@ -269,8 +268,9 @@ export function Matchups() {
     };
 
     useEffect(() => {
-        console.log("new saved matches:", savedMatches)
-    }, [Object.keys(savedMatches)])
+        enableClicks();
+        console.log(savedMatches);
+    }, [Object.keys(savedMatches).length])
 
     /* called upon first render */
     useEffect(() => {
@@ -349,7 +349,6 @@ export function Matchups() {
     append this match under saved matches list, 
     and display next match */
     const handleSaveMatch = () => {
-        console.log("beginning", savedMatches)
         disableClicks();
         disableAllMatchButtons("not-allowed");
 
@@ -372,8 +371,9 @@ export function Matchups() {
                 savedMatchesList.appendChild(matchItem);
 
                 // savedMatches.push(currMatchProfile["username"])
-                savedMatches[currMatchProfile["username"]] = 0;
-                setSavedMatches(savedMatches);
+                const temp = JSON.parse(JSON.stringify(savedMatches));
+                temp[currMatchProfile["username"]] = 0;
+                setSavedMatches(temp);
 
                 getNextMatch();
             },
@@ -440,6 +440,7 @@ export function Matchups() {
     };
 
     const handleEditSavedMatches = () => {
+        console.log("before editsavedmatches", savedMatches)
         disableClicks();
         disableAllMatchButtons("not-allowed");
         document.getElementById("edit-saved-matches-match-button").style.display = "none";
@@ -449,6 +450,8 @@ export function Matchups() {
             button.style.display = "inline-block";
 
         for (let item of document.getElementsByClassName("saved-match-item")) item.onclick = null;
+
+        console.log("after editsavedmatches", savedMatches)
 
         enableClicks();
     };
@@ -505,10 +508,15 @@ export function Matchups() {
                 ownerCity.toLowerCase().startsWith(searchTermLow) ||
                 ownerState.toLowerCase().startsWith(searchTermLow)
             )
-                // change to objct
-                res.push([petQuery, username, `${petName}, ${petBreed}`]);
-        });
+                res.push({
+                            username: username,
+                            query: petQuery,
+                            info: `${petName}, ${petBreed}`,
+                            isSaved: savedMatches.hasOwnProperty(username),
+                });
 
+        });
+        
         return res;
     };
 
@@ -812,13 +820,14 @@ export function Matchups() {
                         placeholder="Start discovering!"
                     />
                     <ul id="all-pets-list">
-                        {searchForPets().map((petArr) => (
-                            <li key={petArr[1]} data-li-search-username={petArr[1]}>
-                                {petArr[0]}
+                        {searchForPets().map((pet) => (
+                            <li key={pet.username} data-li-search-username={pet.username}>
+                                {pet.info}
                                 <button
                                     onClick={handleSaveSearchedPet}
-                                    data-search-username={petArr[1]}
-                                    data-pet-info={petArr[2]}
+                                    data-search-username={pet.username}
+                                    data-pet-info={pet.info}
+                                    style={{ "display": pet.isSaved ? "none" : "inline-block" }}
                                 >
                                     Save!
                                 </button>
