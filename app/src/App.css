@@ -655,11 +655,184 @@ button.saved-match-delete:hover {
     transform: translateY(-3px);
 }
 
-li.saved-match-item {
-    transition: all 0.25s ease 0s;
+#saved-matches-list {
+    list-style-type: none;
+    list-style-position: inside;
+    text-align: center;
+    padding-left: 0;
 }
 
-span.saved-match-item:hover {
+span.saved-match-span:hover {
     cursor: pointer;
     font-weight: 700;
+}
+
+/***** MATCHUPS STYLING *****/
+#matchups-container {
+    width: 50%;
+    height: 500px;
+    margin-left: 25%;
+    margin-top: 5px;
+    box-shadow: 0px 8px 15px #00000026;
+    border: 3px solid var(--pri-color-dark);
+    border-radius: 25px;
+    transition: all 0.25s ease 0s;
+
+    background-image: url("images/panel_bg.jpeg");
+    background-size: cover;
+}
+
+#matchups-container:hover {
+    box-shadow: 0px 15px 20px #00000031;
+    transform: translateY(-3px);
+}
+
+#match-profile-pic:hover {
+    box-shadow: 0px 15px 20px #00000031;
+    transform: translateY(-3px);
+}
+
+/* Match Column */
+#matchups-match-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#match-profile,
+#no-match-message {
+    text-align: center;
+}
+
+/* Matchup Buttons Column */
+#matchups-buttons-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Saved Matches + Search Column */
+#matchups-saved-matches-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#saved-matches-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#saved-matches-list-container {
+    height: 200px;
+    width: 200px;
+    margin-bottom: 20px;
+    overflow: auto;
+    overflow-x: scroll;
+}
+
+#saved-matches-title {
+    text-transform: uppercase;
+    font-size: 1.2em;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    margin-bottom: 20px;
+}
+
+.match-pet-info {
+    padding-top: 0.3em;
+}
+
+#match-pet-name,
+#match-pet-breed {
+    text-transform: uppercase;
+    font-size: 1.1em;
+    letter-spacing: 1.8px;
+    font-weight: 700;
+}
+
+#match-pet-name {
+    margin-top: 1.5em;
+}
+
+#match-pet-breed {
+    margin-bottom: 0.8em;
+}
+
+button.saved-matches-button {
+    width: 200px;
+    margin-bottom: 20px;
+}
+
+button.single-match-button {
+    width: 150px;
+    margin-bottom: 25px;
+}
+
+#matchups-buttons-column img {
+    height: 3em;
+    margin-bottom: 10px;
+}
+
+/* Search Styling  */
+.search-pets-content {
+    width: 750px;
+    height: 500px;
+}
+
+#search-pets-header {
+    height: 150px;
+    background-image: url("images/panel_bg.jpeg");
+    background-size: cover;
+
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+}
+
+#search-pets-popup-title {
+    font-size: 1.5em;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    margin-bottom: 5px;
+    padding-top: 20px;
+}
+
+#search-pets-popup-input {
+    width: 400px;
+    height: 35px;
+    margin-top: 15px;
+    text-align: center;
+}
+
+#search-pets-content {
+    height: 340px;
+    overflow: auto;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    text-align: center;
+    background-color: var(--bg);
+}
+
+#all-pets-list {
+    list-style-type: none;
+    list-style-position: inside;
+    text-align: center;
+    padding-left: 0;
+}
+
+.search-pets-item {
+    margin-bottom: 10px;
+}
+
+.search-pets-item:hover {
+    font-weight: 700;
+}
+
+.search-pets-item-button {
+    margin-left: 20px;
 }

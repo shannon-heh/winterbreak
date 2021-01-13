@@ -56,12 +56,12 @@ def index():
 def create_user():
     def validate_profile(profile):
         try:
-            for field in fields:
+            for field in fields[:10]:
                 profile[field]
         except:
             return False
 
-        return len(profile) == len(fields)
+        return len(profile) == len(fields[:10])
 
     profile = request.json
     if not validate_profile(profile):

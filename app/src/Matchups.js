@@ -3,9 +3,14 @@ import { useEffect, useState } from "react";
 import { server } from "./App";
 import { MatchPopup } from "./MatchPopup";
 import { SavedMatchesContainer } from "./SavedMatchesContainer";
-import { SearchPetsContainer } from "./SearchPetsContainer";
+import { SearchPetsPopup } from "./SearchPetsPopup";
 import Button from "react-bootstrap/Button";
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
 import "reactjs-popup/dist/index.css";
+import aboutMatch from "./images/about-match.svg";
+import saveMatch from "./images/save-match.svg";
+import noThanks from "./images/no-thanks.svg";
 
 export function Matchups() {
     let username = localStorage.getItem("username");
@@ -34,7 +39,7 @@ export function Matchups() {
     const [savedMatches, setSavedMatches] = useState({});
 
     /* hooks for current match information */
-    let currMatchUsername = "";
+    const [currMatchUsername, setCurrMatchUsername] = useState("");
     const [currMatchProfile, setCurrMatchProfile] = useState({ traits: {} });
     const [currMatchPetImage, setCurrMatchPetImage] = useState("");
     const [currMatchOwnerImage, setCurrMatchOwnerImage] = useState("");
@@ -116,26 +121,27 @@ export function Matchups() {
                         "All potential matches have now either been saved or ignored.\nLet's revisit matches you haven't yet saved!\nNote that you may see matches you've seen before."
                     );
 
-                currMatchUsername = res.data["username"];
+                const matchUsername = res.data["username"];
+                setCurrMatchUsername(matchUsername);
 
                 const matchPetImage = {
                     username: username,
                     password: password,
                     image_type: "pet",
-                    match_username: currMatchUsername,
+                    match_username: matchUsername,
                 };
 
                 const matchOwnerImage = {
                     username: username,
                     password: password,
                     image_type: "owner",
-                    match_username: currMatchUsername,
+                    match_username: matchUsername,
                 };
 
                 const credentials = {
                     username: username,
                     password: password,
-                    match_username: currMatchUsername,
+                    match_username: matchUsername,
                 };
 
                 axios
@@ -360,22 +366,24 @@ export function Matchups() {
     const handleSaveSearchedPet = (event) => {
         disableClicks();
 
-        const match_username = event.target.getAttribute("data-search-username");
-        const match_pet_info = event.target.getAttribute("data-pet-info");
+        const matchUsername = event.target.getAttribute("data-search-username");
+        const matchPetInfo = event.target.getAttribute("data-pet-info");
 
         const credentials = {
             username: username,
             password: password,
-            match_username: match_username,
+            match_username: matchUsername,
             action: "save",
         };
 
         axios.post(`${server}update_match_status`, credentials).then(
             (res) => {
                 const temp = JSON.parse(JSON.stringify(savedMatches));
-                temp[match_username] = match_pet_info;
+                temp[matchUsername] = matchPetInfo;
                 setSavedMatches(temp);
 
+                /* if user saves currently displayed match */
+                if (matchUsername === currMatchUsername) getNextMatch();
                 enableClicks();
             },
             (error) => {}
@@ -429,7 +437,7 @@ export function Matchups() {
                 res.push({
                     username: username,
                     query: petQuery,
-                    info: `${petName} ${petBreed}`,
+                    info: `${petName}, ${petBreed}`,
                     isSaved: savedMatches.hasOwnProperty(username),
                 });
         });
@@ -457,35 +465,80 @@ export function Matchups() {
     ]);
 
     return (
-        <div id="matchups-container">
-            <div id="no-match-message"></div>
-            <div id="match-profile">
-                <img
-                    id="match-profile-pic"
-                    className="match-profile-pic"
-                    src={currMatchPetImage}
-                    alt="match"
-                    draggable="false"
-                />
-                <div id="match-pet-name">{currMatchProfile["pet-name"]}</div>
-                <div id="match-pet-breed">{currMatchProfile["pet-breed"]}</div>
-                <div id="match-pet-duration">
-                    {currMatchProfile["duration"] !== "1 min"
-                        ? `You're approx ${currMatchProfile["duration"]} apart!`
-                        : "You're in the same city!"}
+        <Row id="matchups-container">
+            <Col id="matchups-match-column" className="col-4">
+                <div id="no-match-message"></div>
+                <div id="match-profile">
+                    <img
+                        id="match-profile-pic"
+                        className="match-profile-pic"
+                        src={currMatchPetImage}
+                        alt="match"
+                        draggable="false"
+                    />
+                    <div id="match-pet-name" className="match-pet-info">
+                        {currMatchProfile["pet-name"]}
+                    </div>
+                    <div id="match-pet-breed" className="match-pet-info">
+                        The {currMatchProfile["pet-breed"]}
+                    </div>
+                    <div id="match-pet-duration" className="match-pet-info">
+                        {currMatchProfile["duration"] !== "1 min"
+                            ? `You're approx ${currMatchProfile["duration"]} apart!`
+                            : "You're in the same city!"}
+                    </div>
                 </div>
-            </div>
-            <div>
-                <Button variant="info" id="about-match-button" onClick={handleAboutMatch}>
-                    About Match
-                </Button>
-                <Button variant="info" onClick={handleSaveMatch} id="save-match-button">
-                    Save Match
-                </Button>
-                <Button variant="info" onClick={handleNoThanks} id="no-thanks-match-button">
-                    No Thanks
-                </Button>
-            </div>
+            </Col>
+            <Col id="matchups-buttons-column" className="col-3">
+                <Row>
+                    <img src={aboutMatch} draggable="false" alt="about match" />
+                </Row>
+                <Row>
+                    <Button
+                        variant="info"
+                        id="about-match-button"
+                        onClick={handleAboutMatch}
+                        className="single-match-button"
+                    >
+                        About Match
+                    </Button>
+                </Row>
+                <Row>
+                    <img src={saveMatch} draggable="false" alt="save match" />
+                </Row>
+                <Row>
+                    <Button
+                        variant="info"
+                        onClick={handleSaveMatch}
+                        id="save-match-button"
+                        className="single-match-button"
+                    >
+                        Save Match
+                    </Button>
+                </Row>
+                <Row>
+                    <img src={noThanks} draggable="false" alt="no thanks" />
+                </Row>
+                <Row>
+                    <Button
+                        variant="info"
+                        onClick={handleNoThanks}
+                        id="no-thanks-match-button"
+                        className="single-match-button"
+                    >
+                        No Thanks
+                    </Button>
+                </Row>
+            </Col>
+            <SavedMatchesContainer
+                savedMatches={savedMatches}
+                inEditMode={inEditMode}
+                handleAboutSavedMatch={handleAboutSavedMatch}
+                handleDeleteMatch={handleDeleteMatch}
+                handleEditSavedMatches={handleEditSavedMatches}
+                handleDoneEditing={handleDoneEditing}
+                handleSearchAllPets={handleSearchAllPets}
+            />
             <MatchPopup
                 profile={currMatchProfile}
                 petImage={currMatchPetImage}
@@ -500,23 +553,14 @@ export function Matchups() {
                 open={openSavedMatchPopup}
                 close={closeSavedMatchPopup}
             />
-            <SavedMatchesContainer
-                savedMatches={savedMatches}
-                inEditMode={inEditMode}
-                handleAboutSavedMatch={handleAboutSavedMatch}
-                handleDeleteMatch={handleDeleteMatch}
-                handleEditSavedMatches={handleEditSavedMatches}
-                handleDoneEditing={handleDoneEditing}
-            />
-            <SearchPetsContainer
+            <SearchPetsPopup
                 open={openSearchAllPetsPopup}
                 close={closeSearchAllPetsPopup}
                 searchTerm={searchTerm}
                 editSearchTerm={editSearchTerm}
                 searchForPets={searchForPets}
-                handleSearchAllPets={handleSearchAllPets}
                 handleSaveSearchedPet={handleSaveSearchedPet}
             />
-        </div>
+        </Row>
     );
 }
