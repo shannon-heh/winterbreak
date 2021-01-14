@@ -9,6 +9,9 @@ export function SavedMatchesContainer(props) {
                 <div id="saved-matches-title">Saved Matches</div>
                 <div id="saved-matches-list-container">
                     <ul id="saved-matches-list">
+                        <li id="no-saved-matches-message">{Object.keys(props.savedMatches).length === 0 ? 
+                            "You have no saved matches! Click About Match to learn more about the displayed pet, Save Match to add this pet to your list, or No Thanks to reconsider this pet at a later time."
+                        : "" }</li>
                         {Object.keys(props.savedMatches).map((username) => (
                             <li
                                 key={username}

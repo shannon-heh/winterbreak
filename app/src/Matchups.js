@@ -7,10 +7,12 @@ import { SearchPetsPopup } from "./SearchPetsPopup";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
+import Spinner from "react-bootstrap/Spinner";
 import "reactjs-popup/dist/index.css";
 import aboutMatch from "./images/about-match.svg";
 import saveMatch from "./images/save-match.svg";
 import noThanks from "./images/no-thanks.svg";
+import noMatch from "./images/no-match.svg";
 
 export function Matchups() {
     let username = localStorage.getItem("username");
@@ -88,6 +90,15 @@ export function Matchups() {
         document.getElementById("root").style["pointer-events"] = "none";
     };
 
+    /* changes the header loading text to "Pet Match Finder" and removes spinner */
+    const disableLoadingText = () => {
+        try {
+            document.getElementById("matches-loading-text").innerHTML = "Pet Match Finder";
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     /*************** HANDLE NEXT/SAVED MATCHES FUNCTIONALITY ***************/
     /* fetches next best match for user and the match's profile information. 
     displays key information about match. loads full profile information 
@@ -113,7 +124,7 @@ export function Matchups() {
         axios.post(`${server}get_next_match`, credentials).then(
             (res) => {
                 document.getElementById("match-profile").style.display = "inline-block";
-                document.getElementById("no-match-message").innerHTML = "";
+                document.getElementById("no-match-message").style.display = "none";
 
                 // all possible matches have either been saved or ignored
                 if (res.data["start_over"])
@@ -158,6 +169,7 @@ export function Matchups() {
                             enableAllMatchButtons();
                             enableMatchButton("edit-saved-matches");
                             enableMatchButton("search-all-pets");
+                            disableLoadingText();
                             enableClicks();
                         },
                         (error) => {}
@@ -166,11 +178,11 @@ export function Matchups() {
             (error) => {
                 if (error.response.status === 404) {
                     document.getElementById("match-profile").style.display = "none";
-                    document.getElementById("no-match-message").innerHTML =
-                        "No more matches - check back later!";
+                    document.getElementById("no-match-message").style.display = "inline-block";
                     disableAllMatchButtons("not-allowed");
                     enableMatchButton("edit-saved-matches");
                     enableMatchButton("search-all-pets");
+                    disableLoadingText();
                     enableClicks();
                 }
             }
@@ -393,6 +405,7 @@ export function Matchups() {
     /* when user clicks Search All Pets, fetches pet queries for all users and displays them in popup */
     const handleSearchAllPets = () => {
         disableClicks();
+
         const credentials = {
             username: username,
             password: password,
@@ -465,102 +478,118 @@ export function Matchups() {
     ]);
 
     return (
-        <Row id="matchups-container">
-            <Col id="matchups-match-column" className="col-4">
-                <div id="no-match-message"></div>
-                <div id="match-profile">
-                    <img
-                        id="match-profile-pic"
-                        className="match-profile-pic"
-                        src={currMatchPetImage}
-                        alt="match"
-                        draggable="false"
-                    />
-                    <div id="match-pet-name" className="match-pet-info">
-                        {currMatchProfile["pet-name"]}
+        <div id="matches-outer-container">
+            <div id="matches-loading-text">
+                Loading...{" "}
+                <Spinner
+                    id="map-loading-spinner"
+                    animation="grow"
+                    variant="warning"
+                    size="md"
+                    style={{ display: "inline-block", color: "#c88719 !important" }}
+                />
+            </div>
+            <Row id="matchups-container">
+                <Col id="matchups-match-column" className="col-4">
+                    <div id="no-match-message">
+                        <img src={noMatch} draggable="false" alt="no match message" />
+                        <br />
+                        No more matches - Please check back later!
                     </div>
-                    <div id="match-pet-breed" className="match-pet-info">
-                        The {currMatchProfile["pet-breed"]}
+                    <div id="match-profile">
+                        <img
+                            id="match-profile-pic"
+                            className="match-profile-pic"
+                            src={currMatchPetImage}
+                            alt="match"
+                            draggable="false"
+                        />
+                        <div id="match-pet-name" className="match-pet-info">
+                            {currMatchProfile["pet-name"]}
+                        </div>
+                        <div id="match-pet-breed" className="match-pet-info">
+                            The {currMatchProfile["pet-breed"]}
+                        </div>
+                        <div id="match-pet-duration" className="match-pet-info">
+                            {currMatchProfile["duration"] !== "1 min"
+                                ? `You're approx ${currMatchProfile["duration"]} apart!`
+                                : "You're in the same city!"}
+                        </div>
                     </div>
-                    <div id="match-pet-duration" className="match-pet-info">
-                        {currMatchProfile["duration"] !== "1 min"
-                            ? `You're approx ${currMatchProfile["duration"]} apart!`
-                            : "You're in the same city!"}
-                    </div>
-                </div>
-            </Col>
-            <Col id="matchups-buttons-column" className="col-3">
-                <Row>
-                    <img src={aboutMatch} draggable="false" alt="about match" />
-                </Row>
-                <Row>
-                    <Button
-                        variant="info"
-                        id="about-match-button"
-                        onClick={handleAboutMatch}
-                        className="single-match-button"
-                    >
-                        About Match
-                    </Button>
-                </Row>
-                <Row>
-                    <img src={saveMatch} draggable="false" alt="save match" />
-                </Row>
-                <Row>
-                    <Button
-                        variant="info"
-                        onClick={handleSaveMatch}
-                        id="save-match-button"
-                        className="single-match-button"
-                    >
-                        Save Match
-                    </Button>
-                </Row>
-                <Row>
-                    <img src={noThanks} draggable="false" alt="no thanks" />
-                </Row>
-                <Row>
-                    <Button
-                        variant="info"
-                        onClick={handleNoThanks}
-                        id="no-thanks-match-button"
-                        className="single-match-button"
-                    >
-                        No Thanks
-                    </Button>
-                </Row>
-            </Col>
-            <SavedMatchesContainer
-                savedMatches={savedMatches}
-                inEditMode={inEditMode}
-                handleAboutSavedMatch={handleAboutSavedMatch}
-                handleDeleteMatch={handleDeleteMatch}
-                handleEditSavedMatches={handleEditSavedMatches}
-                handleDoneEditing={handleDoneEditing}
-                handleSearchAllPets={handleSearchAllPets}
-            />
-            <MatchPopup
-                profile={currMatchProfile}
-                petImage={currMatchPetImage}
-                ownerImage={currMatchOwnerImage}
-                open={openAboutMatchPopup}
-                close={closeAboutMatchPopup}
-            />
-            <MatchPopup
-                profile={savedMatchProfile}
-                petImage={savedMatchPetImage}
-                ownerImage={savedMatchOwnerImage}
-                open={openSavedMatchPopup}
-                close={closeSavedMatchPopup}
-            />
-            <SearchPetsPopup
-                open={openSearchAllPetsPopup}
-                close={closeSearchAllPetsPopup}
-                searchTerm={searchTerm}
-                editSearchTerm={editSearchTerm}
-                searchForPets={searchForPets}
-                handleSaveSearchedPet={handleSaveSearchedPet}
-            />
-        </Row>
+                </Col>
+                <Col id="matchups-buttons-column" className="col-3">
+                    <Row>
+                        <img src={aboutMatch} draggable="false" alt="about match" />
+                    </Row>
+                    <Row>
+                        <Button
+                            variant="info"
+                            id="about-match-button"
+                            onClick={handleAboutMatch}
+                            className="single-match-button"
+                        >
+                            About Match
+                        </Button>
+                    </Row>
+                    <Row>
+                        <img src={saveMatch} draggable="false" alt="save match" />
+                    </Row>
+                    <Row>
+                        <Button
+                            variant="info"
+                            onClick={handleSaveMatch}
+                            id="save-match-button"
+                            className="single-match-button"
+                        >
+                            Save Match
+                        </Button>
+                    </Row>
+                    <Row>
+                        <img src={noThanks} draggable="false" alt="no thanks" />
+                    </Row>
+                    <Row>
+                        <Button
+                            variant="info"
+                            onClick={handleNoThanks}
+                            id="no-thanks-match-button"
+                            className="single-match-button"
+                        >
+                            No Thanks
+                        </Button>
+                    </Row>
+                </Col>
+                <SavedMatchesContainer
+                    savedMatches={savedMatches}
+                    inEditMode={inEditMode}
+                    handleAboutSavedMatch={handleAboutSavedMatch}
+                    handleDeleteMatch={handleDeleteMatch}
+                    handleEditSavedMatches={handleEditSavedMatches}
+                    handleDoneEditing={handleDoneEditing}
+                    handleSearchAllPets={handleSearchAllPets}
+                />
+                <MatchPopup
+                    profile={currMatchProfile}
+                    petImage={currMatchPetImage}
+                    ownerImage={currMatchOwnerImage}
+                    open={openAboutMatchPopup}
+                    close={closeAboutMatchPopup}
+                />
+                <MatchPopup
+                    profile={savedMatchProfile}
+                    petImage={savedMatchPetImage}
+                    ownerImage={savedMatchOwnerImage}
+                    open={openSavedMatchPopup}
+                    close={closeSavedMatchPopup}
+                />
+                <SearchPetsPopup
+                    open={openSearchAllPetsPopup}
+                    close={closeSearchAllPetsPopup}
+                    searchTerm={searchTerm}
+                    editSearchTerm={editSearchTerm}
+                    searchForPets={searchForPets}
+                    handleSaveSearchedPet={handleSaveSearchedPet}
+                />
+            </Row>
+        </div>
     );
 }

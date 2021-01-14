@@ -539,12 +539,14 @@ div.spinner-border {
 }
 
 /* Resource Locator */
-div #map-container {
+div #map-container,
+div #matches-outer-container {
     text-align: center;
     margin-top: 25px;
 }
 
-div #map-loading-text {
+div #map-loading-text,
+div #matches-loading-text {
     font-size: 1.75em;
     letter-spacing: 1.8px;
     font-weight: 700;
@@ -722,25 +724,37 @@ span.saved-match-span:hover {
 }
 
 #saved-matches-container {
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
+li.saved-match-item {
+    margin-top: 12px;
+}
+
+#no-saved-matches-message {
+    width: 60%;
+    text-align: center;
+    margin: auto;
+}
+
 #saved-matches-list-container {
-    height: 200px;
-    width: 200px;
+    height: 175px;
+    width: 100%;
     margin-bottom: 20px;
     overflow: auto;
     overflow-x: scroll;
 }
 
 #saved-matches-title {
+    text-align: center;
     text-transform: uppercase;
     font-size: 1.2em;
     font-weight: 700;
     letter-spacing: 1.5px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .match-pet-info {
@@ -763,19 +777,43 @@ span.saved-match-span:hover {
     margin-bottom: 0.8em;
 }
 
-button.saved-matches-button {
-    width: 200px;
-    margin-bottom: 20px;
+#matchups-buttons-column .row,
+#matchups-saved-matches-column .row {
+    width: 100%;
+}
+
+#matchups-buttons-column {
+    padding-right: 0;
+}
+
+#matchups-saved-matches-column {
+    padding-left: 0;
 }
 
 button.single-match-button {
-    width: 150px;
+    width: 100%;
     margin-bottom: 25px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-#matchups-buttons-column img {
+button.saved-matches-button {
+    width: 60%;
+    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#matchups-buttons-column img,
+#no-match-message img {
     height: 3em;
     margin-bottom: 10px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#no-match-message img {
+    height: 5em;
 }
 
 /* Search Styling  */
@@ -835,4 +873,82 @@ button.single-match-button {
 
 .search-pets-item-button {
     margin-left: 20px;
+}
+
+/* Medium devices (tablets, less than 992px) */
+@media (max-width: 991.98px) {
+    #saved-matches-title,
+    #match-pet-name,
+    #match-pet-breed {
+        font-size: 0.8em;
+    }
+
+    #match-pet-duration,
+    .saved-match-span,
+    #no-match-message,
+    #no-saved-matches-message {
+        font-size: 0.7em;
+    }
+
+    button.single-match-button,
+    #edit-saved-matches-match-button,
+    #done-editing-match-button,
+    #search-all-pets-match-button {
+        font-size: 0.75em;
+        letter-spacing: 1px;
+    }
+
+    #matchups-buttons-column img {
+        height: 1.5em;
+    }
+
+    #no-match-message img {
+        height: 4em;
+    }
+
+    button.saved-match-delete {
+        font-size: 1.2em;
+        height: 15px;
+        width: 15px;
+    }
+
+    #saved-matches-list-container {
+        height: 125px;
+    }
+}
+
+/* Small devices (landscape phones, less than 768px) */
+@media (max-width: 767.98px) {
+    #saved-matches-title,
+    #match-pet-name,
+    #match-pet-breed {
+        font-size: 0.65em;
+    }
+
+    #match-pet-duration,
+    .saved-match-span,
+    #no-match-message,
+    #no-saved-matches-message {
+        font-size: 0.6em;
+    }
+
+    #matchups-buttons-column img {
+        height: 1.2em;
+    }
+
+    #no-match-message img {
+        height: 3em;
+    }
+
+    button.single-match-button,
+    #edit-saved-matches-match-button,
+    #done-editing-match-button,
+    #search-all-pets-match-button {
+        font-size: 0.4em;
+        letter-spacing: 0.75px;
+    }
+
+    #saved-matches-list-container {
+        height: 100px;
+    }
 }
