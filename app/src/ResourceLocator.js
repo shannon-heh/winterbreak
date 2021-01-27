@@ -8,7 +8,7 @@ const mapStyles = {
     width: "50%",
     height: "500px",
     marginLeft: "25%",
-    marginTop: "5px",
+    paddingBottom: "25px",
     boxShadow: "0px 8px 15px #00000026",
     border: "3px solid #80cbc4",
     borderRadius: "25px",

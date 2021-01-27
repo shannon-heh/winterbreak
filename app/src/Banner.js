@@ -7,7 +7,7 @@ export function Banner() {
             <Navbar className="color-nav justify-content-center" expand="lg" fixed="top">
                 <Navbar.Brand id="site-name" href="/landing">
                     <img id="logo" src={logo} alt="logo" />
-                    Moo Moo
+                    Winterbreak
                 </Navbar.Brand>
             </Navbar>
 

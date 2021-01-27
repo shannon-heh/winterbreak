@@ -97,7 +97,7 @@ export function Matchups() {
         } catch (error) {
             console.log(error);
         }
-    }
+    };
 
     /*************** HANDLE NEXT/SAVED MATCHES FUNCTIONALITY ***************/
     /* fetches next best match for user and the match's profile information. 
@@ -127,10 +127,10 @@ export function Matchups() {
                 document.getElementById("no-match-message").style.display = "none";
 
                 // all possible matches have either been saved or ignored
-                if (res.data["start_over"])
-                    window.alert(
-                        "All potential matches have now either been saved or ignored.\nLet's revisit matches you haven't yet saved!\nNote that you may see matches you've seen before."
-                    );
+                if (res.data["start_over"]) console.log("Recycling matches");
+                // window.alert(
+                //     "All potential matches have now either been saved or ignored.\nLet's revisit matches you haven't yet saved!\nNote that you may see matches you've seen before."
+                // );
 
                 const matchUsername = res.data["username"];
                 setCurrMatchUsername(matchUsername);

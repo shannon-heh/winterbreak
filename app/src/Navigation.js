@@ -32,7 +32,7 @@ export function Navigation() {
             <Navbar className="color-nav" expand="lg">
                 <Navbar.Brand id="site-name" href="/p/home">
                     <img id="logo" src={logo} alt="App Logo" />
-                    Moo Moo
+                    Winterbreak
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">

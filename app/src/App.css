@@ -1,7 +1,7 @@
 * {
     font-family: "Karla", sans-serif;
     font-weight: 500;
-    user-select: none;
+    user-select: none !important;
     color: #616161;
 }
 
@@ -545,8 +545,13 @@ div #matches-outer-container {
     margin-top: 25px;
 }
 
+div #matches-outer-container {
+    padding-bottom: 25px;
+}
+
 div #map-loading-text,
-div #matches-loading-text {
+div #matches-loading-text,
+div #random-image-loading-text {
     font-size: 1.75em;
     letter-spacing: 1.8px;
     font-weight: 700;
@@ -873,6 +878,40 @@ button.saved-matches-button {
 
 .search-pets-item-button {
     margin-left: 20px;
+}
+
+/* RANDOM IMAGE */
+#random-image {
+    object-fit: cover;
+    width: 250px;
+    height: 250px;
+}
+
+#random-image {
+    text-align: center;
+    box-shadow: 0px 8px 15px #00000026;
+    border: 3px solid var(--pri-color-dark);
+    border-radius: 25px;
+    transition: all 0.25s ease 0s;
+    width: 250px;
+}
+
+#random-image:hover {
+    box-shadow: 0px 15px 20px #00000031;
+    transform: translateY(-3px);
+}
+
+/* GOALS */
+
+#image-and-goals-container {
+    text-align: center;
+    padding-top: 20px;
+    padding-bottom: 20px;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
 }
 
 /* Medium devices (tablets, less than 992px) */
